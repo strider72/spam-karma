@@ -189,7 +189,7 @@ class sk2_pjw_simpledigest extends sk2_plugin
 			}
 			else
 			{
-				$this->log_msg(__("Comment would have caused digest but no new spam recieved since last digest."), 4);
+				$this->log_msg(__("Comment would have caused digest but no new spam recieved since last digest.", 'sk2'), 4);
 				// Reset the last run time so that the next comment will trigger a digest as we overwrote it at the first possible moment
 				// so as to ensure the least possiblity of multiple digest emails
 				$this->set_option_value('last_run', $last_run);
@@ -200,7 +200,7 @@ class sk2_pjw_simpledigest extends sk2_plugin
 			// Check to see if last_run is in the future - being really paranoid!
 			if ($last_run > time())
 			{
-				$this->log_msg(__("Last run time in the future - resetting to now"), 5);
+				$this->log_msg(__("Last run time in the future - resetting to now", 'sk2'), 5);
 				$this->set_option_value('last_run', time());
 			}
 		}
@@ -220,7 +220,7 @@ class sk2_pjw_simpledigest extends sk2_plugin
 	function version_update($cur_version)
 	{
 		$this->set_option_value('last_run', time());
-		$this->log_msg(__("Stored initial last run time stamp"), 4);
+		$this->log_msg(__("Stored initial last run time stamp", 'sk2'), 4);
 		return true;
 	}
 

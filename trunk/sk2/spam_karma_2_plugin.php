@@ -966,9 +966,9 @@ function sk2_settings_ui($name, $type = false, $options_size = false)
 			{
 				$key = str_replace("\"", "&#34;", $key);
 				if ($value == $key)
-					$str .= "<option value=\"$key\" selected>" . __($text) . "</option>";
+					$str .= "<option value=\"$key\" selected>" . __($text, 'sk2') . "</option>";
 				else
-					$str .= "<option value=\"$key\">" . __($text) . "</option>";
+					$str .= "<option value=\"$key\">" . __($text, 'sk2') . "</option>";
 			}
 			
 			$str .= "</select>";
@@ -1127,26 +1127,26 @@ if ( !function_exists('wp_notify_moderator') )
 			$comment_author_domain = gethostbyaddr($comment->comment_author_IP);
 			$comments_waiting = $wpdb->get_var("SELECT count(comment_ID) FROM $wpdb->comments WHERE comment_approved = '0'");
 	
-			$notify_message  = sprintf( __('A new comment on the post #%1$s "%2$s" is waiting for your approval'), $post->ID, $post->post_title ) . "\r\n";
+			$notify_message  = sprintf( __('A new comment on the post #%1$s "%2$s" is waiting for your approval', 'sk2'), $post->ID, $post->post_title ) . "\r\n";
 			$notify_message .= get_permalink($comment->comment_post_ID) . "\r\n\r\n";
-			$notify_message .= sprintf( __('Author : %1$s (IP: %2$s , %3$s)'), $comment->comment_author, $comment->comment_author_IP, $comment_author_domain ) . "\r\n";
-			$notify_message .= sprintf( __('E-mail : %s'), $comment->comment_author_email ) . "\r\n";
-			$notify_message .= sprintf( __('URI    : %s'), $comment->comment_author_url ) . "\r\n";
-			$notify_message .= sprintf( __('Whois  : http://ws.arin.net/cgi-bin/whois.pl?queryinput=%s'), $comment->comment_author_IP ) . "\r\n";
-			$notify_message .= __('Comment: ') . "\r\n" . $comment->comment_content . "\r\n\r\n";
+			$notify_message .= sprintf( __('Author : %1$s (IP: %2$s , %3$s)', 'sk2'), $comment->comment_author, $comment->comment_author_IP, $comment_author_domain ) . "\r\n";
+			$notify_message .= sprintf( __('E-mail : %s', 'sk2'), $comment->comment_author_email ) . "\r\n";
+			$notify_message .= sprintf( __('URI    : %s', 'sk2'), $comment->comment_author_url ) . "\r\n";
+			$notify_message .= sprintf( __('Whois  : http://ws.arin.net/cgi-bin/whois.pl?queryinput=%s', 'sk2'), $comment->comment_author_IP ) . "\r\n";
+			$notify_message .= __('Comment: ', 'sk2') . "\r\n" . $comment->comment_content . "\r\n\r\n";
 
 //### DdV Mods
 			$location = get_bloginfo('wpurl') . "/wp-admin/edit.php?page=spamkarma2";
 
-			$notify_message .= sprintf( __('To approve this comment, visit: %s'), sk2_nonce_email_url($post->post_author, $location . "&recover_selection=1&comment_grp_check%5B$comment_id%5D=$comment_id&sk2_section=spam"))  . "\r\n";
+			$notify_message .= sprintf( __('To approve this comment, visit: %s', 'sk2'), sk2_nonce_email_url($post->post_author, $location . "&recover_selection=1&comment_grp_check%5B$comment_id%5D=$comment_id&sk2_section=spam"))  . "\r\n";
 			//### Add l10n:
 			$notify_message .= sprintf( __('To flag this comment as spam, visit: %s', 'sk2'), sk2_nonce_email_url($post->post_author, $location . "&recover_selection=1&comment_grp_check%5B$comment_id%5D=$comment_id&sk2_section=approved&sql_score_threshold=-30")) . "\r\n";
-			$notify_message .= sprintf( __('Currently %s comments are waiting for approval. Please visit the moderation panel:'), $comments_waiting ) . "\r\n";
+			$notify_message .= sprintf( __('Currently %s comments are waiting for approval. Please visit the moderation panel:', 'sk2'), $comments_waiting ) . "\r\n";
 			$notify_message .= sk2_nonce_email_url($post->post_author, $location . "&sk2_section=spam") . "\r\n";
 
 //### end DdV Mods
 	
-			$subject = sprintf( __('[%1$s] Please moderate: "%2$s"'), get_settings('blogname'), $post->post_title );
+			$subject = sprintf( __('[%1$s] Please moderate: "%2$s"', 'sk2'), get_settings('blogname'), $post->post_title );
 			$admin_email = get_settings("admin_email");
 	
 			$notify_message = apply_filters('comment_moderation_text', $notify_message);
@@ -1179,28 +1179,28 @@ if ( ! function_exists('wp_notify_postauthor') )
 			if ( empty( $comment_type ) ) $comment_type = 'comment';
 			
 			if ('comment' == $comment_type) {
-				$notify_message  = sprintf( __('New comment on your post #%1$s "%2$s"'), $comment->comment_post_ID, $post->post_title ) . "\r\n";
-				$notify_message .= sprintf( __('Author : %1$s (IP: %2$s , %3$s)'), $comment->comment_author, $comment->comment_author_IP, $comment_author_domain ) . "\r\n";
-				$notify_message .= sprintf( __('E-mail : %s'), $comment->comment_author_email ) . "\r\n";
-				$notify_message .= sprintf( __('URI    : %s'), $comment->comment_author_url ) . "\r\n";
-				$notify_message .= sprintf( __('Whois  : http://ws.arin.net/cgi-bin/whois.pl?queryinput=%s'), $comment->comment_author_IP ) . "\r\n";
-				$notify_message .= __('Comment: ') . "\r\n" . $comment->comment_content . "\r\n\r\n";
-				$notify_message .= __('You can see all comments on this post here: ') . "\r\n";
-				$subject = sprintf( __('[%1$s] Comment: "%2$s"'), $blogname, $post->post_title );
+				$notify_message  = sprintf( __('New comment on your post #%1$s "%2$s"', 'sk2'), $comment->comment_post_ID, $post->post_title ) . "\r\n";
+				$notify_message .= sprintf( __('Author : %1$s (IP: %2$s , %3$s)', 'sk2'), $comment->comment_author, $comment->comment_author_IP, $comment_author_domain ) . "\r\n";
+				$notify_message .= sprintf( __('E-mail : %s', 'sk2'), $comment->comment_author_email ) . "\r\n";
+				$notify_message .= sprintf( __('URI    : %s', 'sk2'), $comment->comment_author_url ) . "\r\n";
+				$notify_message .= sprintf( __('Whois  : http://ws.arin.net/cgi-bin/whois.pl?queryinput=%s', 'sk2'), $comment->comment_author_IP ) . "\r\n";
+				$notify_message .= __('Comment: ', 'sk2') . "\r\n" . $comment->comment_content . "\r\n\r\n";
+				$notify_message .= __('You can see all comments on this post here: ', 'sk2') . "\r\n";
+				$subject = sprintf( __('[%1$s] Comment: "%2$s"', 'sk2'), $blogname, $post->post_title );
 			} elseif ('trackback' == $comment_type) {
-				$notify_message  = sprintf( __('New trackback on your post #%1$s "%2$s"'), $comment->comment_post_ID, $post->post_title ) . "\r\n";
-				$notify_message .= sprintf( __('Website: %1$s (IP: %2$s , %3$s)'), $comment->comment_author, $comment->comment_author_IP, $comment_author_domain ) . "\r\n";
-				$notify_message .= sprintf( __('URI    : %s'), $comment->comment_author_url ) . "\r\n";
-				$notify_message .= __('Excerpt: ') . "\r\n" . $comment->comment_content . "\r\n\r\n";
-				$notify_message .= __('You can see all trackbacks on this post here: ') . "\r\n";
-				$subject = sprintf( __('[%1$s] Trackback: "%2$s"'), $blogname, $post->post_title );
+				$notify_message  = sprintf( __('New trackback on your post #%1$s "%2$s"', 'sk2'), $comment->comment_post_ID, $post->post_title ) . "\r\n";
+				$notify_message .= sprintf( __('Website: %1$s (IP: %2$s , %3$s)', 'sk2'), $comment->comment_author, $comment->comment_author_IP, $comment_author_domain ) . "\r\n";
+				$notify_message .= sprintf( __('URI    : %s', 'sk2'), $comment->comment_author_url ) . "\r\n";
+				$notify_message .= __('Excerpt: ', 'sk2') . "\r\n" . $comment->comment_content . "\r\n\r\n";
+				$notify_message .= __('You can see all trackbacks on this post here: ', 'sk2') . "\r\n";
+				$subject = sprintf( __('[%1$s] Trackback: "%2$s"', 'sk2'), $blogname, $post->post_title );
 			} elseif ('pingback' == $comment_type) {
-				$notify_message  = sprintf( __('New pingback on your post #%1$s "%2$s"'), $comment->comment_post_ID, $post->post_title ) . "\r\n";
-				$notify_message .= sprintf( __('Website: %1$s (IP: %2$s , %3$s)'), $comment->comment_author, $comment->comment_author_IP, $comment_author_domain ) . "\r\n";
-				$notify_message .= sprintf( __('URI    : %s'), $comment->comment_author_url ) . "\r\n";
-				$notify_message .= __('Excerpt: ') . "\r\n" . sprintf('[...] %s [...]', $comment->comment_content ) . "\r\n\r\n";
-				$notify_message .= __('You can see all pingbacks on this post here: ') . "\r\n";
-				$subject = sprintf( __('[%1$s] Pingback: "%2$s"'), $blogname, $post->post_title );
+				$notify_message  = sprintf( __('New pingback on your post #%1$s "%2$s"', 'sk2'), $comment->comment_post_ID, $post->post_title ) . "\r\n";
+				$notify_message .= sprintf( __('Website: %1$s (IP: %2$s , %3$s)', 'sk2'), $comment->comment_author, $comment->comment_author_IP, $comment_author_domain ) . "\r\n";
+				$notify_message .= sprintf( __('URI    : %s', 'sk2'), $comment->comment_author_url ) . "\r\n";
+				$notify_message .= __('Excerpt: ', 'sk2') . "\r\n" . sprintf('[...] %s [...]', $comment->comment_content ) . "\r\n\r\n";
+				$notify_message .= __('You can see all pingbacks on this post here: ', 'sk2') . "\r\n";
+				$subject = sprintf( __('[%1$s] Pingback: "%2$s"', 'sk2'), $blogname, $post->post_title );
 			}
 			$notify_message .= get_permalink($comment->comment_post_ID) . "#comments\r\n\r\n";
 
@@ -1208,7 +1208,7 @@ if ( ! function_exists('wp_notify_postauthor') )
 				$location = get_bloginfo('wpurl') . "/wp-admin/edit.php?page=spamkarma2";
 	//	echo "##" . print_r($comment_id, true) . "##" . ($location . '&recover_selection=1&comment_grp_check[' . $comment_id . ']=' . $comment_id . '&sk2_section=approved') . "**" . sk2_nonce_url($location . '&recover_selection=1&comment_grp_check[' . $comment_id . ']=' . $comment_id . '&sk2_section=approved') . "**" . sk2_nonce_email_url($location . '&recover_selection=1&comment_grp_check[' . $comment_id . ']=' . $comment_id . '&sk2_section=approved') . "**";
 				$notify_message .= sprintf( __('To flag this comment as spam, visit: %s', 'sk2'), sk2_nonce_email_url($post->post_author, $location . "&recover_selection=1&comment_grp_check%5B$comment_id%5D=$comment_id&sk2_section=approved&sql_score_threshold=-30")) . "\r\n";
-				$notify_message .= sprintf( __('To delete this comment (without flagging it as spam), visit: %s'), get_settings('siteurl').'/wp-admin/comment.php?action=cdc&c=' . $comment_id) . "\r\n";
+				$notify_message .= sprintf( __('To delete this comment (without flagging it as spam), visit: %s', 'sk2'), get_settings('siteurl').'/wp-admin/comment.php?action=cdc&c=' . $comment_id) . "\r\n";
 	//###
 
 			$wp_email = 'wordpress@' . preg_replace('#^www\.#', '', strtolower($_SERVER['SERVER_NAME']));
@@ -1259,28 +1259,28 @@ if ( ! function_exists('wp_notify_postauthor') )
 				if ( empty( $comment_type ) ) $comment_type = 'comment';
 				
 				if ('comment' == $comment_type) {
-						$notify_message  = sprintf( __('New comment on your post #%1$s "%2$s"'), $comment->comment_post_ID, $post->post_title ) . "\r\n";
-						$notify_message .= sprintf( __('Author : %1$s (IP: %2$s , %3$s)'), $comment->comment_author, $comment->comment_author_IP, $comment_author_domain ) . "\r\n";
-						$notify_message .= sprintf( __('E-mail : %s'), $comment->comment_author_email ) . "\r\n";
-						$notify_message .= sprintf( __('URI    : %s'), $comment->comment_author_url ) . "\r\n";
-						$notify_message .= sprintf( __('Whois  : http://ws.arin.net/cgi-bin/whois.pl?queryinput=%s'), $comment->comment_author_IP ) . "\r\n";
-						$notify_message .= __('Comment: ') . "\r\n" . $comment->comment_content . "\r\n\r\n";
-						$notify_message .= __('You can see all comments on this post here: ') . "\r\n";
-						$subject = sprintf( __('[%1$s] Comment: "%2$s"'), $blogname, $post->post_title );
+						$notify_message  = sprintf( __('New comment on your post #%1$s "%2$s"', 'sk2'), $comment->comment_post_ID, $post->post_title ) . "\r\n";
+						$notify_message .= sprintf( __('Author : %1$s (IP: %2$s , %3$s)', 'sk2'), $comment->comment_author, $comment->comment_author_IP, $comment_author_domain ) . "\r\n";
+						$notify_message .= sprintf( __('E-mail : %s', 'sk2'), $comment->comment_author_email ) . "\r\n";
+						$notify_message .= sprintf( __('URI    : %s', 'sk2'), $comment->comment_author_url ) . "\r\n";
+						$notify_message .= sprintf( __('Whois  : http://ws.arin.net/cgi-bin/whois.pl?queryinput=%s', 'sk2'), $comment->comment_author_IP ) . "\r\n";
+						$notify_message .= __('Comment: ', 'sk2') . "\r\n" . $comment->comment_content . "\r\n\r\n";
+						$notify_message .= __('You can see all comments on this post here: ', 'sk2') . "\r\n";
+						$subject = sprintf( __('[%1$s] Comment: "%2$s"', 'sk2'), $blogname, $post->post_title );
 				} elseif ('trackback' == $comment_type) {
-						$notify_message  = sprintf( __('New trackback on your post #%1$s "%2$s"'), $comment->comment_post_ID, $post->post_title ) . "\r\n";
-						$notify_message .= sprintf( __('Website: %1$s (IP: %2$s , %3$s)'), $comment->comment_author, $comment->comment_author_IP, $comment_author_domain ) . "\r\n";
-						$notify_message .= sprintf( __('URI    : %s'), $comment->comment_author_url ) . "\r\n";
-						$notify_message .= __('Excerpt: ') . "\r\n" . $comment->comment_content . "\r\n\r\n";
-						$notify_message .= __('You can see all trackbacks on this post here: ') . "\r\n";
-						$subject = sprintf( __('[%1$s] Trackback: "%2$s"'), $blogname, $post->post_title );
+						$notify_message  = sprintf( __('New trackback on your post #%1$s "%2$s"', 'sk2'), $comment->comment_post_ID, $post->post_title ) . "\r\n";
+						$notify_message .= sprintf( __('Website: %1$s (IP: %2$s , %3$s)', 'sk2'), $comment->comment_author, $comment->comment_author_IP, $comment_author_domain ) . "\r\n";
+						$notify_message .= sprintf( __('URI    : %s', 'sk2'), $comment->comment_author_url ) . "\r\n";
+						$notify_message .= __('Excerpt: ', 'sk2') . "\r\n" . $comment->comment_content . "\r\n\r\n";
+						$notify_message .= __('You can see all trackbacks on this post here: ', 'sk2') . "\r\n";
+						$subject = sprintf( __('[%1$s] Trackback: "%2$s"', 'sk2'), $blogname, $post->post_title );
 				} elseif ('pingback' == $comment_type) {
-						$notify_message  = sprintf( __('New pingback on your post #%1$s "%2$s"'), $comment->comment_post_ID, $post->post_title ) . "\r\n";
-						$notify_message .= sprintf( __('Website: %1$s (IP: %2$s , %3$s)'), $comment->comment_author, $comment->comment_author_IP, $comment_author_domain ) . "\r\n";
-						$notify_message .= sprintf( __('URI    : %s'), $comment->comment_author_url ) . "\r\n";
-						$notify_message .= __('Excerpt: ') . "\r\n" . sprintf( __('[...] %s [...]'), $comment->comment_content ) . "\r\n\r\n";
-						$notify_message .= __('You can see all pingbacks on this post here: ') . "\r\n";
-						$subject = sprintf( __('[%1$s] Pingback: "%2$s"'), $blogname, $post->post_title );
+						$notify_message  = sprintf( __('New pingback on your post #%1$s "%2$s"', 'sk2'), $comment->comment_post_ID, $post->post_title ) . "\r\n";
+						$notify_message .= sprintf( __('Website: %1$s (IP: %2$s , %3$s)', 'sk2'), $comment->comment_author, $comment->comment_author_IP, $comment_author_domain ) . "\r\n";
+						$notify_message .= sprintf( __('URI    : %s', 'sk2'), $comment->comment_author_url ) . "\r\n";
+						$notify_message .= __('Excerpt: ', 'sk2') . "\r\n" . sprintf( __('[...] %s [...]', 'sk2'), $comment->comment_content ) . "\r\n\r\n";
+						$notify_message .= __('You can see all pingbacks on this post here: ', 'sk2') . "\r\n";
+						$subject = sprintf( __('[%1$s] Pingback: "%2$s"', 'sk2'), $blogname, $post->post_title );
 				}
 				$notify_message .= get_permalink($comment->comment_post_ID) . "#comments\r\n\r\n";
 	
@@ -1288,7 +1288,7 @@ if ( ! function_exists('wp_notify_postauthor') )
 				$location = get_bloginfo('wpurl') . "/wp-admin/edit.php?page=spamkarma2";
 	
 				$notify_message .= sprintf( __('To flag this comment as spam, visit: %s', 'sk2'), sk2_nonce_email_url($post->post_author, $location . "&recover_selection=1&comment_grp_check%5B$comment_id%5D=$comment_id&sk2_section=approved&sql_score_threshold=-30")) . "\r\n";
-				$notify_message .= sprintf( __('To delete this comment (without flagging it as spam), visit: %s'), get_settings('siteurl'). '/wp-admin/comment.php?action=cdc&c=' . $comment_id) . "\r\n";
+				$notify_message .= sprintf( __('To delete this comment (without flagging it as spam), visit: %s', 'sk2'), get_settings('siteurl'). '/wp-admin/comment.php?action=cdc&c=' . $comment_id) . "\r\n";
 	//###
 			
 				if ( '' == $comment->comment_author ) {

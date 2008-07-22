@@ -239,7 +239,7 @@ class sk2_rbl_plugin extends sk2_plugin
 		//check if we have curl
 		if (function_exists('curl_init'))
 		{
-				$this->log_msg(__("Submitting to URL using CURL"), 3);
+				$this->log_msg(__("Submitting to URL using CURL", 'sk2'), 3);
 				
 				//new submit logic
 				// build a postlist of <ip|url>: <data>
@@ -287,7 +287,7 @@ class sk2_rbl_plugin extends sk2_plugin
 		}
 			
 		//curl doesn't exist, so do it the old way...
-		$this->log_msg(__("Submitting to URL using GET"), 3);
+		$this->log_msg(__("Submitting to URL using GET", 'sk2'), 3);
 		
 		$ipcount = $uricount = 0;
 		

@@ -67,7 +67,7 @@ class sk2_comment
 		// LAZY WAY:
 		if (! $cmt_array = $wpdb->get_row ("SELECT `comment_table`.*, `posts_table`.*, `users_table`.*, `spam_table`.*, `spam_table`.`id` AS `spam_table_id`, NOW() AS `now_sql` FROM `". $wpdb->comments . "` AS `comment_table` LEFT JOIN `". $wpdb->posts . "` AS `posts_table` ON `posts_table`.`ID` = `comment_table`.`comment_post_ID` LEFT JOIN `". $wpdb->users . "` AS `users_table` ON `users_table`.`ID` = `comment_table`.`user_id` LEFT JOIN `". sk2_kSpamTable ."` AS `spam_table` ON `spam_table`.`comment_ID` = `comment_table`.`comment_ID` WHERE `comment_table`.`comment_ID` = '" . mysql_escape_string($comment_id) . "'"))
 		{
-			$this->log_msg(__("sk2_comment: Cannot fetch comment record from table."), 9, true);
+			$this->log_msg(__("sk2_comment: Cannot fetch comment record from table.", 'sk2'), 9, true);
 			return false;
 		}	
 		$this->ID = $comment_id;
@@ -226,7 +226,7 @@ class sk2_comment
 				if( is_object( $c ) ) 
 					$wpdb->query( "UPDATE $wpdb->posts SET comment_count = '$c->c' WHERE ID = '$this->post_ID'" );				
 				else 
-					$this->log_msg(sprintf(__(" Comment count update for comment_id %d failed", "sk2"), $cmt_object->comment_id), 7); 
+					$this->log_msg(sprintf(__(" Comment count update for comment_id %d failed", 'sk2'), $cmt_object->comment_id), 7); 
 			}
 			return true;
 		}

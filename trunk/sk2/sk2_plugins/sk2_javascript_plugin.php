@@ -116,7 +116,7 @@ class sk2_javascript_plugin extends sk2_plugin
 		$karma_diff = 0;
 		if ($cmt_object->is_post_proc())
 		{
-			$log = __("Cannot check Javascript payload in post_proc mode.");
+			$log = __("Cannot check Javascript payload in post_proc mode.", 'sk2');
 			$this->log_msg($log, 4);
 			return;
 		}	
@@ -128,11 +128,11 @@ class sk2_javascript_plugin extends sk2_plugin
 		{
 			if ($this->get_option_value("no-penalty"))
 			{
-				$this->log_msg(__("Browser doesn't support Javascript. Penalty disabled"), 4);
+				$this->log_msg(__("Browser doesn't support Javascript. Penalty disabled", 'sk2'), 4);
 			}
 			else
 			{
-				$log = __("Browser doesn't support Javascript");
+				$log = __("Browser doesn't support Javascript", 'sk2');
 				$karma_diff = -2;				
 			}
 		}
@@ -142,13 +142,13 @@ class sk2_javascript_plugin extends sk2_plugin
 		
 			if ($_REQUEST['sk2_my_js_check2'] != md5($_REQUEST['sk2_my_js_payload'] . $_REQUEST['sk2_my_js_check1'] . $seed))
 			{
-				$log = __("Fake Javascript Payload.");
+				$log = __("Fake Javascript Payload.", 'sk2');
 				$karma_diff = -10;
 				$this->log_msg($log, 6);
 			}
 			else
 			{
-				$log = __("Valid Javascript payload (can be fake).");
+				$log = __("Valid Javascript payload (can be fake).", 'sk2');
 				$karma_diff = 0.5;
 			}
 		}

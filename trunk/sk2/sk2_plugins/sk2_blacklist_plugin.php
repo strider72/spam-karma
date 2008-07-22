@@ -171,9 +171,9 @@ class sk2_blacklist_plugin extends sk2_plugin
 				if ($this->{$opposite . 'match_count'})
 				{
 					if ($opposite == "black")
-						$this->log_msg(__("Downgrading blacklist entries."), 5)	;	
+						$this->log_msg(__("Downgrading blacklist entries.", 'sk2'), 5)	;	
 					else
-						$this->log_msg(__("Downgrading whitelist entries."), 5);	
+						$this->log_msg(__("Downgrading whitelist entries.", 'sk2'), 5);	
 					$sk2_blacklist->downgrade_entries($this->{$opposite . '_ids'});
 				}
 			}
