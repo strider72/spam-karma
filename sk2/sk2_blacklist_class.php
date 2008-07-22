@@ -42,7 +42,7 @@ class sk2_blacklist
 		$value = trim($value);
 		if (empty($value))
 		{
-			$this->log_msg(__("Cannot add blacklist entry. Please fill in a value."), 7);
+			$this->log_msg(__("Cannot add blacklist entry. Please fill in a value.", 'sk2'), 7);
 			return false;
 		}
 		elseif ($wpdb->get_var("SELECT COUNT(*) FROM `". sk2_kBlacklistTable . "` WHERE `type`='$type' AND `value`='" . sk2_escape_string($value) . "' LIMIT 1"))
@@ -67,7 +67,7 @@ class sk2_blacklist
 		$score = min(100, max($score, 0));
 		
 		if (empty($value))
-			$this->log_msg(__("Cannot add blacklist entry. Please fill in a value."), 7);
+			$this->log_msg(__("Cannot add blacklist entry. Please fill in a value.", 'sk2'), 7);
 		elseif	 (($type == "domain_black" || $type == "domain_white")
 			&& ($grey_rslt = $wpdb->get_results("SELECT * FROM `" . sk2_kBlacklistTable . "` WHERE `type` = 'domain_grey' AND `value` = '$value'")))
 		{
@@ -171,7 +171,7 @@ class sk2_blacklist
 					&& ($grey_rslt = $wpdb->get_results("SELECT * FROM `" . sk2_kBlacklistTable . "` WHERE `type` = 'domain_grey' AND `value` $sql_match")))
 				{
 					$query_where = "";
-					$this->log_msg(__("Grey blacklist match: ignoring."), 6);				
+					$this->log_msg(__("Grey blacklist match: ignoring.", 'sk2'), 6);				
 				}
 				else
 					$query_where = "(`value` $sql_match AND `type` = '" . $match_type . "')";
@@ -189,7 +189,7 @@ class sk2_blacklist
 					&& ($grey_rslt = $wpdb->get_results("SELECT * FROM `" . sk2_kBlacklistTable . "` WHERE `type` = 'domain_grey' AND `value` $sql_match")))
 				{
 					$query_where = "";
-					$this->log_msg(__("Grey blacklist match: ignoring."), 6);					
+					$this->log_msg(__("Grey blacklist match: ignoring.", 'sk2'), 6);					
 				}
 				else
 				{

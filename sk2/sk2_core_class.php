@@ -114,7 +114,7 @@ class sk2_core
 
 		if (! $this->cur_comment)
 		{
-			$this->log_msg(__("Cannot run <code>filter_comment</code>: no valid comment provided."), 9);
+			$this->log_msg(__("Cannot run <code>filter_comment</code>: no valid comment provided.", 'sk2'), 9);
 			return;
 		}
 		
@@ -143,7 +143,7 @@ class sk2_core
 
 		if (! $this->cur_comment)
 		{
-			$this->log_msg(__("Cannot run <code>treat_comment</code>: no valid comment provided."), 9);
+			$this->log_msg(__("Cannot run <code>treat_comment</code>: no valid comment provided.", 'sk2'), 9);
 			return;
 		}
 
@@ -612,7 +612,7 @@ class sk2_core
 		{
 			if (! $this->cur_comment->ID)
 			{
-				$this->log_msg(__("Cannot update sk2_kSpamTable info (no comment ID provided)."), 8);
+				$this->log_msg(__("Cannot update sk2_kSpamTable info (no comment ID provided).", 'sk2'), 8);
 				return false;
 			}
 
@@ -688,7 +688,7 @@ class sk2_core
 		if (! $comment_ID)
 		{
 		echo 
-			$this->log_msg(__("get_comment_sk_info: Cannot get sk2_kSpamTable info (no comment ID provided)."), 8);
+			$this->log_msg(__("get_comment_sk_info: Cannot get sk2_kSpamTable info (no comment ID provided).", 'sk2'), 8);
 			return false;
 		}
 
@@ -752,31 +752,31 @@ class sk2_core
 		if (isset($run_tools['force_sql_update']))
 		{
 			$sk2_settings->set_core_settings("", "mysql_updates");
-			$this->log_msg(__("Forcing MySQL updates on core and plugins."), 3);
+			$this->log_msg(__("Forcing MySQL updates on core and plugins.", 'sk2'), 3);
 		}
 		
 		if (isset($run_tools['reinit_plugins']))
 		{
 			$sk2_settings->set_core_settings("", "version_updates");
 			$sk2_settings->reset_plugin_settings();
-			$this->log_msg(__("Reinitialize all plugins."), 3);
+			$this->log_msg(__("Reinitialize all plugins.", 'sk2'), 3);
 		}
 		
 		if (isset($run_tools['reinit_all']))
 		{
 			$sk2_settings->reset_all_settings();
-			$this->log_msg(__("Reinitialize everything to factory settings."), 3);
+			$this->log_msg(__("Reinitialize everything to factory settings.", 'sk2'), 3);
 		}
 		
 		if (isset($run_tools['reset_all_tables']))
 		{
-			$this->log_msg(__("Dropping all SK2 Tables!"), 8);
+			$this->log_msg(__("Dropping all SK2 Tables!", 'sk2'), 8);
 			$wpdb->query("DROP TABLE `". sk2_kSpamTable . "`;");
 			$wpdb->query("DROP TABLE `". sk2_kLogTable . "`;");
 			$wpdb->query("DROP TABLE `". sk2_kBlacklistTable . "`;");
-			$this->log_msg(__("Dropped all SK2 Tables!"), 7);
+			$this->log_msg(__("Dropped all SK2 Tables!", 'sk2'), 7);
 			$sk2_settings->set_core_settings("", "mysql_updates");
-			$this->log_msg(__("Forcing MySQL updates on core and plugins."), 6, 0, "web_UI");
+			$this->log_msg(__("Forcing MySQL updates on core and plugins.", 'sk2'), 6, 0, "web_UI");
 		}
 	
 		if(isset($run_tools['check_comment_form']))

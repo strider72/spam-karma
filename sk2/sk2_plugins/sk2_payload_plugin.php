@@ -31,7 +31,7 @@ class sk2_payload_plugin extends sk2_plugin
 		{
 			$seed = sk2_rand_str(10);
 			$this->set_option_value('secret_seed', $seed);
-			$this->log_msg(__("Resetting secret seed to: $seed."), 5);
+			$this->log_msg(__("Resetting secret seed to: $seed.", 'sk2'), 5);
 		}
 		$time = time();
 		$ip = $_SERVER['REMOTE_ADDR'];
@@ -54,7 +54,7 @@ class sk2_payload_plugin extends sk2_plugin
 	{					
 		if ($cmt_object->is_post_proc())
 		{
-			$log = __("Cannot check encrypted payload in post_proc mode.");
+			$log = __("Cannot check encrypted payload in post_proc mode.", 'sk2');
 			$this->log_msg($log, 4);
 			return;
 		}	
@@ -64,7 +64,7 @@ class sk2_payload_plugin extends sk2_plugin
 		
 		if (empty($_REQUEST['sk2_payload']))
 		{
-			$log = __("Encrypted Payload missing from form.");
+			$log = __("Encrypted Payload missing from form.", 'sk2');
 			$karma_diff = -20;
 			$this->log_msg($log, 1);
 		}
@@ -80,18 +80,18 @@ class sk2_payload_plugin extends sk2_plugin
 		
 			if ($_REQUEST['sk2_payload'] != md5($_REQUEST['sk2_time'] . $seed . $_REQUEST['sk2_ip'] . $cmt_object->post_ID))
 			{
-				$log = __("Fake Payload.");
+				$log = __("Fake Payload.", 'sk2');
 				$karma_diff = -20;
 				$this->log_msg($log, 2);
 			}
 			elseif ($_REQUEST['sk2_ip'] == $_SERVER['REMOTE_ADDR'])
 			{
-				$log = __("Encrypted payload valid: IP matching.");
+				$log = __("Encrypted payload valid: IP matching.", 'sk2');
 				$karma_diff = 0;
 			}
 			else
 			{
-				$log = __("Encrypted payload valid: IP <strong>not</strong> matching.");
+				$log = __("Encrypted payload valid: IP <strong>not</strong> matching.", 'sk2');
 				$karma_diff = - 2.5;
 			}
 		}
