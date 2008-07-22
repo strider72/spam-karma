@@ -1083,7 +1083,7 @@ function sk2_filter_comment($comment_ID)
 			else
 				wp_notify_moderator($comment_ID);
 		}
-		elseif ( get_settings('comments_notify'))
+		elseif ( get_option('comments_notify'))
 		{
 			wp_notify_postauthor($comment_ID, $sk2_core->cur_comment->type);
 		}
@@ -1118,7 +1118,7 @@ if ( !function_exists('wp_notify_moderator') )
 	{
 			global $wpdb;
 	
-			if( get_settings( "moderation_notify" ) == 0 )
+			if( get_option( "moderation_notify" ) == 0 )
 					return true; 
 		
 			$comment = $wpdb->get_row("SELECT * FROM $wpdb->comments WHERE comment_ID='$comment_id' LIMIT 1");
@@ -1146,8 +1146,8 @@ if ( !function_exists('wp_notify_moderator') )
 
 //### end DdV Mods
 	
-			$subject = sprintf( __('[%1$s] Please moderate: "%2$s"', 'sk2'), get_settings('blogname'), $post->post_title );
-			$admin_email = get_settings("admin_email");
+			$subject = sprintf( __('[%1$s] Please moderate: "%2$s"', 'sk2'), get_option('blogname'), $post->post_title );
+			$admin_email = get_option("admin_email");
 	
 			$notify_message = apply_filters('comment_moderation_text', $notify_message);
 			$subject = apply_filters('comment_moderation_subject', $subject);
@@ -1174,7 +1174,7 @@ if ( ! function_exists('wp_notify_postauthor') )
 		
 			$comment_author_domain = gethostbyaddr($comment->comment_author_IP);
 		
-			$blogname = get_settings('blogname');
+			$blogname = get_option('blogname');
 			
 			if ( empty( $comment_type ) ) $comment_type = 'comment';
 			
@@ -1208,7 +1208,7 @@ if ( ! function_exists('wp_notify_postauthor') )
 				$location = get_bloginfo('wpurl') . "/wp-admin/edit.php?page=spamkarma2";
 	//	echo "##" . print_r($comment_id, true) . "##" . ($location . '&recover_selection=1&comment_grp_check[' . $comment_id . ']=' . $comment_id . '&sk2_section=approved') . "**" . sk2_nonce_url($location . '&recover_selection=1&comment_grp_check[' . $comment_id . ']=' . $comment_id . '&sk2_section=approved') . "**" . sk2_nonce_email_url($location . '&recover_selection=1&comment_grp_check[' . $comment_id . ']=' . $comment_id . '&sk2_section=approved') . "**";
 				$notify_message .= sprintf( __('To flag this comment as spam, visit: %s', 'sk2'), sk2_nonce_email_url($post->post_author, $location . "&recover_selection=1&comment_grp_check%5B$comment_id%5D=$comment_id&sk2_section=approved&sql_score_threshold=-30")) . "\r\n";
-				$notify_message .= sprintf( __('To delete this comment (without flagging it as spam), visit: %s', 'sk2'), get_settings('siteurl').'/wp-admin/comment.php?action=cdc&c=' . $comment_id) . "\r\n";
+				$notify_message .= sprintf( __('To delete this comment (without flagging it as spam), visit: %s', 'sk2'), get_option('siteurl').'/wp-admin/comment.php?action=cdc&c=' . $comment_id) . "\r\n";
 	//###
 
 			$wp_email = 'wordpress@' . preg_replace('#^www\.#', '', strtolower($_SERVER['SERVER_NAME']));
@@ -1225,7 +1225,7 @@ if ( ! function_exists('wp_notify_postauthor') )
 		
 			$message_headers = "MIME-Version: 1.0\n"
 				. "$from\n"
-				. "Content-Type: text/plain; charset=\"" . get_settings('blog_charset') . "\"\n";
+				. "Content-Type: text/plain; charset=\"" . get_option('blog_charset') . "\"\n";
 		
 			if ( isset($reply_to) )
 				$message_headers .= $reply_to . "\n";
@@ -1254,7 +1254,7 @@ if ( ! function_exists('wp_notify_postauthor') )
 		
 				$comment_author_domain = gethostbyaddr($comment->comment_author_IP);
 		
-				$blogname = get_settings('blogname');
+				$blogname = get_option('blogname');
 				
 				if ( empty( $comment_type ) ) $comment_type = 'comment';
 				
@@ -1288,7 +1288,7 @@ if ( ! function_exists('wp_notify_postauthor') )
 				$location = get_bloginfo('wpurl') . "/wp-admin/edit.php?page=spamkarma2";
 	
 				$notify_message .= sprintf( __('To flag this comment as spam, visit: %s', 'sk2'), sk2_nonce_email_url($post->post_author, $location . "&recover_selection=1&comment_grp_check%5B$comment_id%5D=$comment_id&sk2_section=approved&sql_score_threshold=-30")) . "\r\n";
-				$notify_message .= sprintf( __('To delete this comment (without flagging it as spam), visit: %s', 'sk2'), get_settings('siteurl'). '/wp-admin/comment.php?action=cdc&c=' . $comment_id) . "\r\n";
+				$notify_message .= sprintf( __('To delete this comment (without flagging it as spam), visit: %s', 'sk2'), get_option('siteurl'). '/wp-admin/comment.php?action=cdc&c=' . $comment_id) . "\r\n";
 	//###
 			
 				if ( '' == $comment->comment_author ) {
@@ -1305,7 +1305,7 @@ if ( ! function_exists('wp_notify_postauthor') )
 				$subject = apply_filters('comment_notification_subject', $subject);
 				$message_headers = "MIME-Version: 1.0\n"
 						. "$from\n"
-						. "Content-Type: text/plain; charset=\"" . get_settings('blog_charset') . "\"\n";
+						. "Content-Type: text/plain; charset=\"" . get_option('blog_charset') . "\"\n";
 				if ( isset($reply_to) )
 					$message_headers .= $reply_to . "\n";
 	

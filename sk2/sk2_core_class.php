@@ -212,7 +212,7 @@ class sk2_core
 					if ($this->cur_comment->approved == '1')
 					{
 						echo __("Thank you. Your comment has been approved.", 'sk2');
-						if ( get_settings('comments_notify') )
+						if ( get_option('comments_notify') )
 							wp_notify_postauthor($this->cur_comment->ID, $this->cur_comment->type);
 						//TODO redirect to comment page...
 					}
