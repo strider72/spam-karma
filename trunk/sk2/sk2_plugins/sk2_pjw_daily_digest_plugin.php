@@ -78,12 +78,12 @@ class sk2_pjw_simpledigest extends sk2_plugin
 
 			$cur_moderated = $wpdb->get_var("SELECT COUNT(*) FROM `$wpdb->comments` WHERE `comment_approved`= '0'");	
 			
-			$mail_subj = "[". get_settings('blogname') ."] Spam Karma 2: " . __("Simple Digest Report", 'sk2');
+			$mail_subj = "[". get_option('blogname') ."] Spam Karma 2: " . __("Simple Digest Report", 'sk2');
 			$mail_content = sprintf(__ngettext("There is currently one comment in moderation", "There are currently %d comments in moderation", $cur_moderated, 'sk2'), $cur_moderated)."\r\n";
 
 			$post = get_post($cmt_object->post_ID);
 
-			$mail_content .= sk2_nonce_email_url($post->post_author, get_settings('siteurl') . '/wp-admin/edit.php?page=spamkarma2&sk2_section=spam') ."\r\n\r\n";
+			$mail_content .= sk2_nonce_email_url($post->post_author, get_option('siteurl') . '/wp-admin/edit.php?page=spamkarma2&sk2_section=spam') ."\r\n\r\n";
 			//### l10n Add
 			$mail_content .= sprintf(__ngettext("There has been one comment spam caught since the last digest report %s ago.", "There have been %s comment spams caught since the last digest report %s ago.", $new_spams, 'sk2'), $new_spams, sk2_time_since($last_run)) ."\r\n";
 			$mail_content .= "\r\n";
@@ -177,15 +177,15 @@ class sk2_pjw_simpledigest extends sk2_plugin
 					$mail_content .= "\r\nAll spams caught recently are under the threshold (go to SK2 Admin screen to see them).\r\n";
 				}
 			
-				$headers = "From: " . get_settings('admin_email') . "\r\n"
-      			 			."Reply-To: " . get_settings('admin_email') . "\r\n"
+				$headers = "From: " . get_option('admin_email') . "\r\n"
+      			 			."Reply-To: " . get_option('admin_email') . "\r\n"
 						 	."X-Mailer: PHP/" . phpversion() . "\r\n"
 							."X-WordPress-Version: WordPress/" . $wp_version . "/" .$wp_db_version ."\r\n"
 							."X-WordPress-Plugin: " . $this->name . "/" . $this->plugin_version . "/" .$this->release_string ."\r\n"
 						 	."Content-Type: text/plain; "
-					   		."charset=\"".get_settings('blog_charset')."\"\r\n";
+					   		."charset=\"".get_option('blog_charset')."\"\r\n";
 
-				wp_mail(get_settings("admin_email"), $mail_subj, $mail_content, $headers);
+				wp_mail(get_option("admin_email"), $mail_subj, $mail_content, $headers);
 			}
 			else
 			{
@@ -250,7 +250,7 @@ class sk2_pjw_simpledigest extends sk2_plugin
 			//Spam
 			$links .= __("Rescue comment from spam: ", 'sk2');
 
-			$link = get_settings('siteurl') . "/wp-admin/edit.php";
+			$link = get_option('siteurl') . "/wp-admin/edit.php";
 			$link .= "?page=spamkarma2&sk2_section=spam";
 			$link .= "&recover_selection=Recover%20Selected";
 			$link .= "&comment_grp_check%5B" . $cmt_row->comment_ID ."%5D";
@@ -261,7 +261,7 @@ class sk2_pjw_simpledigest extends sk2_plugin
 			//Moderation
 			$links .= __("Spank comment in moderation: ", 'sk2');
 			
-			$link = get_settings('siteurl') . "/wp-admin/edit.php";
+			$link = get_option('siteurl') . "/wp-admin/edit.php";
 			$link .= "?page=spamkarma2&sk2_section=approved";
 			$link .= "&recover_selection=Spank%20Selected";
 			$link .= "&comment_grp_check%5B" . $cmt_row->comment_ID ."%5D";
