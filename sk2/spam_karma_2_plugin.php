@@ -14,11 +14,11 @@
 ************************************************************************************************/
 ?><?php
 /*
-Plugin Name: Spam Karma 2
+Plugin Name: Spam Karma
 Plugin URI: http://unknowngenius.com/blog/wordpress/spam-karma/
 Description: Ultimate Spam Killer for WordPress.<br/> Activate the plugin and go to <a href="edit.php?page=spamkarma2">Manage >> Spam Karma 2</a> to configure.<br/> See <a href="edit.php?page=spamkarma2&sk2_section=about">Spam Karma 2 >> About</a> for details.
 Author: dr Dave
-Version: 2.3 rc4
+Version: 2.3
 Author URI: http://unknowngenius.com/blog/
  Copyright 2007 - drDave
  
@@ -43,7 +43,7 @@ define("sk2_auto_purge_interval",  600);
 
 if (! isset($_SERVER['PHP_SELF']))
 	$_SERVER['PHP_SELF'] = @$PHP_SELF;
-		
+
 function sk2_add_options() 
 {
     add_management_page(__('Spam Karma 2 Options', 'sk2'), 'Spam Karma 2', 7, "spamkarma2", 'sk2_option_page');
@@ -52,9 +52,10 @@ function sk2_add_options()
 
 function sk2_init ()
 {
-	//bind_textdomain_codeset('sk2', get_bloginfo('charset'));
-	load_plugin_textdomain('sk2');
-	//bind_textdomain_codeset('sk2', 'iso-8859-15');
+	$skdir = basename( dirname( __FILE__ ) );
+	load_plugin_textdomain( 'sk2',
+		'wp-content/plugins/' . $skdir . '/lang',
+		$skdir . '/lang' );
 }
 
 function sk2_option_page()
