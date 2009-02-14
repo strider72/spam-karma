@@ -21,7 +21,7 @@ class sk_snowball_plugin extends sk_plugin
 {
 	var $name = "Snowball Effect";
 	var $author = "";
-	var $plugin_help_url = "http://wp-plugins.net/wiki/?title=SK2_Snowball_Plugin";
+	var $plugin_help_url = "http://wp-plugins.net/wiki/?title=sk_Snowball_Plugin";
 	var $description = "Granularity check (regular commenters get rewarded, unknown commenters are kept on watch).";
 	var $filter = true;
 	var $skip_under = -20;

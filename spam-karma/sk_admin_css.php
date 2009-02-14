@@ -85,7 +85,7 @@ color: #fff;
 	margin: 5px 0px 0px 3px;
 }
 
-#sk_settings_pane dl dd.sk2_filter_option 
+#sk_settings_pane dl dd.sk_filter_option 
 {
 	font-style: normal;
 	margin-top: 0px;
@@ -195,7 +195,7 @@ color: #fff;
 	color: #66F;
 }
 
-p.sk2_form
+p.sk_form
 {
 	padding: 0px;
 	margin: 0px 0px 4px 0px;
@@ -288,12 +288,12 @@ border: 2px solid red;
 	margin-top: 0px;
 }
 
-.sk_about fieldset.sk2_cast p
+.sk_about fieldset.sk_cast p
 {
 	text-indent: 0px;
 }
 
-.sk_about fieldset.sk2_cast
+.sk_about fieldset.sk_cast
 {
 	margin-top: 10px;
 	padding: 2px 13px 5px 13px;

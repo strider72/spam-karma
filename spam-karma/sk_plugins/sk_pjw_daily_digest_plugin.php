@@ -28,7 +28,7 @@ class SK_PJW_SimpleDigest extends sk_plugin
 	var $show_version =true;
 	var $author = "Peter Westwood";
 	var $author_email = "peter.westwood@ftwr.co.uk";
-	var $plugin_help_url = "http://www.ftwr.co.uk/blog/wordpress/sk2-simple-digest-plugin/";
+	var $plugin_help_url = "http://www.ftwr.co.uk/blog/wordpress/sk-simple-digest-plugin/";
 	var $description = "Emails a spam summary. (Sent first comment past interval)";
 	var $treatment = true;
 	var $weight_levels = array("0" => "Disabled", "1.0" => "Enabled");
@@ -83,7 +83,7 @@ class SK_PJW_SimpleDigest extends sk_plugin
 
 			$post = get_post($cmt_object->post_ID);
 
-			$mail_content .= sk_nonce_email_url($post->post_author, get_option('siteurl') . '/wp-admin/edit.php?page=spamkarma&sk2_section=spam') ."\r\n\r\n";
+			$mail_content .= sk_nonce_email_url($post->post_author, get_option('siteurl') . '/wp-admin/edit.php?page=spamkarma&sk_section=spam') ."\r\n\r\n";
 			//### l10n Add
 			$mail_content .= sprintf(__ngettext("There has been one comment spam caught since the last digest report %s ago.", "There have been %s comment spams caught since the last digest report %s ago.", $new_spams, 'spam-karma'), $new_spams, sk_time_since($last_run)) ."\r\n";
 			$mail_content .= "\r\n";
@@ -101,7 +101,7 @@ class SK_PJW_SimpleDigest extends sk_plugin
 			*/
 			if ((int) $new_spams > 0 )
 			{
-				//Query stolen from SK2 core.
+				//Query stolen from SK core.
 				$digest_query =	"SELECT `posts_table`.`post_title`, `spam_table`.`karma`, "
 								."`spam_table`.`id` as `spam_id`,`spam_table`.`karma_cmts`, "
 								."`comments_table`.* FROM `"
@@ -174,7 +174,7 @@ class SK_PJW_SimpleDigest extends sk_plugin
 				}
 				else
 				{
-					$mail_content .= "\r\nAll spams caught recently are under the threshold (go to SK2 Admin screen to see them).\r\n";
+					$mail_content .= "\r\nAll spams caught recently are under the threshold (go to SK Admin screen to see them).\r\n";
 				}
 			
 				$headers = "From: " . get_option('admin_email') . "\r\n"
@@ -251,7 +251,7 @@ class SK_PJW_SimpleDigest extends sk_plugin
 			$links .= __("Rescue comment from spam: ", 'spam-karma');
 
 			$link = get_option('siteurl') . "/wp-admin/edit.php";
-			$link .= "?page=spamkarma&sk2_section=spam";
+			$link .= "?page=spamkarma&sk_section=spam";
 			$link .= "&recover_selection=Recover%20Selected";
 			$link .= "&comment_grp_check%5B" . $cmt_row->comment_ID ."%5D";
 			$link .= "=" . $cmt_row->spam_id;
@@ -262,7 +262,7 @@ class SK_PJW_SimpleDigest extends sk_plugin
 			$links .= __("Spank comment in moderation: ", 'spam-karma');
 			
 			$link = get_option('siteurl') . "/wp-admin/edit.php";
-			$link .= "?page=spamkarma&sk2_section=approved";
+			$link .= "?page=spamkarma&sk_section=approved";
 			$link .= "&recover_selection=Spank%20Selected";
 			$link .= "&comment_grp_check%5B" . $cmt_row->comment_ID ."%5D";
 			$link .= "=" . $cmt_row->spam_id;

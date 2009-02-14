@@ -146,14 +146,14 @@ class sk_plugin
 			echo " <a href=\"mailto:$this->author_email\">[@]</a>";
 		
 		if (! empty($this->plugin_help_url))
-			echo " <a href=\"$this->plugin_help_url\" target=\"sk2_help\">[?]</a>";
+			echo " <a href=\"$this->plugin_help_url\" target=\"sk_help\">[?]</a>";
 
 		if (! empty($this->description))
 			echo "<dd>" . __($this->description, 'spam-karma') . "</dd>\n";
 			
 		if (count($this->settings_format) > 1) // not counting weight in there
 		{
-			echo "<dd class=\"sk2_filter_option\"><dl>\n";
+			echo "<dd class=\"sk_filter_option\"><dl>\n";
 			foreach($this->settings_format as $name => $format)
 			{
 				if ($name == "weight")
@@ -167,7 +167,7 @@ class sk_plugin
 				{
 					$this->output_UI_input($name, "checkbox", $this->get_option_value($name));
 					{
-						echo "<label for=\"sk2_filter_options[". get_class($this) . "][$name]\">";
+						echo "<label for=\"sk_filter_options[". get_class($this) . "][$name]\">";
 						echo " " . __($format['caption'], 'spam-karma');
 						echo "</label>";
 					}
@@ -199,7 +199,7 @@ class sk_plugin
 		if (! $component)
 			$component = get_class($this);
 
-		echo "<select name=\"sk2_filter_options[". $component . "][$name]\" id=\"sk2_filter_options[". $component . "][$name]\">\n";
+		echo "<select name=\"sk_filter_options[". $component . "][$name]\" id=\"sk_filter_options[". $component . "][$name]\">\n";
 		foreach($choices as $value => $label)
 		{
 			$value = addslashes($value);
@@ -219,7 +219,7 @@ class sk_plugin
 		if (! $size)
 			$size = 16;
 
-		echo "<input type=\"$type\" name=\"sk2_filter_options[". get_class($this) . "][$name]\" id=\"sk2_filter_options[". get_class($this) . "][$name]\" ";
+		echo "<input type=\"$type\" name=\"sk_filter_options[". get_class($this) . "][$name]\" id=\"sk_filter_options[". get_class($this) . "][$name]\" ";
 		if (($type == "checkbox" ) && $value)
 		{
 			$value = "1";
@@ -232,7 +232,7 @@ class sk_plugin
 		echo " />";
 		if (($type == "checkbox" ) && $value)
 		{
-			echo "<input type=\"hidden\" name=\"sk2_filter_checkboxes[". get_class($this) . "]\" name=\"sk2_filter_checkboxes[". get_class($this) . "]\" value=\"$name\" />\n";
+			echo "<input type=\"hidden\" name=\"sk_filter_checkboxes[". get_class($this) . "]\" name=\"sk_filter_checkboxes[". get_class($this) . "]\" value=\"$name\" />\n";
 		}
 	}
 	

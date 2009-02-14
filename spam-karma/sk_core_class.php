@@ -177,13 +177,13 @@ class sk_core
 			
 		if($rem_attempts <= 0)
 		{
-			echo ("<div class=\"sk2_box\">" . __("Too many unlock attempts.", 'spam-karma') . "</div>");
+			echo ("<div class=\"sk_box\">" . __("Too many unlock attempts.", 'spam-karma') . "</div>");
 			return false;
 		}
 		
 		if (! $this->cur_comment->can_unlock())
 		{
-			echo ("<div class=\"sk2_box\">" . __("This comment wasn't given a second chance.", 'spam-karma') . "</div>");
+			echo ("<div class=\"sk_box\">" . __("This comment wasn't given a second chance.", 'spam-karma') . "</div>");
 			return false;
 		}
 		
@@ -200,7 +200,7 @@ class sk_core
 				&& $my_plugin->is_enabled())
 			{
 				
-				echo "<div class=\"sk2_box\">";
+				echo "<div class=\"sk_box\">";
 				if ($my_plugin->treat_second_chance($this->cur_comment, $this_key['key']))
 				{
 					$this->cur_comment->post_proc = true; // just making sure we don't run into loops here
@@ -230,11 +230,11 @@ class sk_core
 						//if ($anubis = $this->get_plugin('sk_anubis_plugin'))
 						//	$anubis->treat_this($this->cur_comment);
 						$this->treat_comment($this->cur_comment);
-						echo "<span class=\"sk2_fail\">" . __("Too many missed attempts. Your comment's moderation has been confirmed. A log of your comment will be kept and presented to the blog admin upon his next log-on. Please contact him directly via e-mail regarding this problem.", 'spam-karma') . "</span>";
+						echo "<span class=\"sk_fail\">" . __("Too many missed attempts. Your comment's moderation has been confirmed. A log of your comment will be kept and presented to the blog admin upon his next log-on. Please contact him directly via e-mail regarding this problem.", 'spam-karma') . "</span>";
 					}
 					else
 					{
-						echo "<span class=\"sk2_fail\">" . sprintf(__ngettext("Sorry, bad luck on this one, cow-boy, try again. You have %d attempt left.", "Sorry, bad luck on this one, cow-boy, try again. You have %d attempts left.", $rem_attempts, 'spam-karma'), $rem_attempts) . "</span>";
+						echo "<span class=\"sk_fail\">" . sprintf(__ngettext("Sorry, bad luck on this one, cow-boy, try again. You have %d attempt left.", "Sorry, bad luck on this one, cow-boy, try again. You have %d attempts left.", $rem_attempts, 'spam-karma'), $rem_attempts) . "</span>";
 					}
 				}
 				$this->set_comment_sk_info();
@@ -242,7 +242,7 @@ class sk_core
 			}
 			else
 			{
-				echo ("<div class=\"sk2_box\">" . __("Can't use this unlock method.", 'spam-karma') . "</div>");
+				echo ("<div class=\"sk_box\">" . __("Can't use this unlock method.", 'spam-karma') . "</div>");
 				$this->cur_comment->remaining_attempts = 0;
 				$this->set_comment_sk_info();
 				return false;
@@ -258,7 +258,7 @@ class sk_core
 				$msg = "";
 				$msg_level = 0;
 				
-				echo "<div class=\"sk2_box\">";
+				echo "<div class=\"sk_box\">";
 
 				if (! $which_plugin_obj)
 				{
@@ -278,7 +278,7 @@ class sk_core
 				else
 				{
 					$i++;
-					echo "<form name=\"sk2_form_". $unlock_key['class'] . "\" id=\"sk2_form_". $unlock_key['class'] . "\ method=\"post\">";
+					echo "<form name=\"sk_form_". $unlock_key['class'] . "\" id=\"sk_form_". $unlock_key['class'] . "\ method=\"post\">";
 					echo "<input type=\"hidden\" name=\"sk_second_chance\" id=\"sk_second_chance\" value=\"". $unlock_key['class'] . "\">";
 					echo "<input type=\"hidden\" name=\"c_id\" id=\"c_id\" value=\"" . $this->cur_comment->ID . "\">";
 					echo "<input type=\"hidden\" name=\"c_author\" id=\"c_author\" value=\"" . $this->cur_comment->author_email . "\">";
@@ -572,24 +572,24 @@ class sk_core
 		
 		if (isset($form_values["sk_settings_save"]))
 		{
-			if (isset($form_values['sk2_filter_options']))
+			if (isset($form_values['sk_filter_options']))
 			{
-				array_walk($form_values['sk2_filter_options'], "sk_unescape_form_string_callback");
-				$this->log_msg(sprintf(__ngettext("Saving new settings for %d plugin.", "Saving new settings for %d plugins.", count($form_values['sk2_filter_options']), 'spam-karma'), count($form_values['sk2_filter_options'])), 3, 'spam-karma');
+				array_walk($form_values['sk_filter_options'], "sk_unescape_form_string_callback");
+				$this->log_msg(sprintf(__ngettext("Saving new settings for %d plugin.", "Saving new settings for %d plugins.", count($form_values['sk_filter_options']), 'spam-karma'), count($form_values['sk_filter_options'])), 3, 'spam-karma');
 
-				if (isset($form_values['sk2_filter_checkboxes']))
-					foreach($form_values['sk2_filter_checkboxes'] as $check_plugin => $check_name)
-						if (! isset($form_values['sk2_filter_options'][$check_plugin][$check_name]))
-							$form_values['sk2_filter_options'][$check_plugin][$check_name] = false;
+				if (isset($form_values['sk_filter_checkboxes']))
+					foreach($form_values['sk_filter_checkboxes'] as $check_plugin => $check_name)
+						if (! isset($form_values['sk_filter_options'][$check_plugin][$check_name]))
+							$form_values['sk_filter_options'][$check_plugin][$check_name] = false;
 			
-				if (isset($form_values['sk2_filter_options'][get_class($this)]))
+				if (isset($form_values['sk_filter_options'][get_class($this)]))
 				{
-					foreach($form_values['sk2_filter_options'][get_class($this)] as $name => $value)
+					foreach($form_values['sk_filter_options'][get_class($this)] as $name => $value)
 						$sk_settings->set_core_settings($value, $name);
-					unset($form_values['sk2_filter_options'][get_class($this)]);
+					unset($form_values['sk_filter_options'][get_class($this)]);
 				}
 
-				$sk_settings->set_plugins_settings($form_values['sk2_filter_options']);
+				$sk_settings->set_plugins_settings($form_values['sk_filter_options']);
 			}
 		}
 	}
@@ -718,7 +718,7 @@ class sk_core
 	function sanity_check()
 	{
 		global $sk_settings;
-		if (isset($_REQUEST['sk2_section']) || ($_REQUEST['page'] == 'spamkarma'))
+		if (isset($_REQUEST['sk_section']) || ($_REQUEST['page'] == 'spamkarma'))
 			return;
 			
 		$mysql_updates = $sk_settings->get_core_settings("mysql_updates");
@@ -727,18 +727,18 @@ class sk_core
 		//### add l10n:
 		if (empty($mysql_updates['core']) || empty($version_updates['core']))
 		{
-			$message = __("It sounds like SK2 has been recently installed on this blog, but not configured.", 'spam-karma');
+			$message = __("It sounds like SK has been recently installed on this blog, but not configured.", 'spam-karma');
 		}
 		
 		if (($mysql_updates['core'] < $this->version) || ($version_updates['core'] < $this->version))
 		{
-			$message = __("It sounds like SK2 has recently been updated on this blog. But not fully configured.", 'spam-karma');
+			$message = __("It sounds like SK has recently been updated on this blog. But not fully configured.", 'spam-karma');
 		}
 		if (!empty ($message))
 		{
 			$message .= " " . sprintf(__("You MUST visit %sSpam Karma's admin page%s at least once before letting it filter your comments (chaos may ensue otherwise).", 'spam-karma'), "<a href=\"". get_bloginfo('wpurl') . "/wp-admin/edit.php?page=spamkarma" . "\">", "</a>");
 		
-			echo "<div class=\"sk2-fatal-error\" style=\"position:absolute; left:0; top:0; background-color: red; color: white; border: 1px black solid; padding: 5px; \">$message</div>";
+			echo "<div class=\"sk-fatal-error\" style=\"position:absolute; left:0; top:0; background-color: red; color: white; border: 1px black solid; padding: 5px; \">$message</div>";
 		}
 	}
 	
@@ -770,11 +770,11 @@ class sk_core
 		
 		if (isset($run_tools['reset_all_tables']))
 		{
-			$this->log_msg(__("Dropping all SK2 Tables!", 'spam-karma'), 8);
+			$this->log_msg(__("Dropping all SK Tables!", 'spam-karma'), 8);
 			$wpdb->query("DROP TABLE `". SK_KSPAM_TABLE . "`;");
 			$wpdb->query("DROP TABLE `". SK_KLOGTABLE . "`;");
 			$wpdb->query("DROP TABLE `". SK_KBLACKLIST_TABLE . "`;");
-			$this->log_msg(__("Dropped all SK2 Tables!", 'spam-karma'), 7);
+			$this->log_msg(__("Dropped all SK Tables!", 'spam-karma'), 7);
 			$sk_settings->set_core_settings("", "mysql_updates");
 			$this->log_msg(__("Forcing MySQL updates on core and plugins.", 'spam-karma'), 6, 0, "web_UI");
 		}
@@ -796,7 +796,7 @@ class sk_core
 					}
 					else
 					{
-						echo "<div class=\"msg_bad\">" . sprintf(__("File <code>%s</code>: Could not find <code>do_action</code> hook. Some plugins will fail. Please refer to <a href=\"http://wp-plugins.net/wiki/index.php?title=SK2_Theme_Compatibility\">SK2's documentation</a>.", 'spam-karma'), $file_name) . "</div>";
+						echo "<div class=\"msg_bad\">" . sprintf(__("File <code>%s</code>: Could not find <code>do_action</code> hook. Some plugins will fail. Please refer to <a href=\"http://wp-plugins.net/wiki/index.php?title=sk_Theme_Compatibility\">SK's documentation</a>.", 'spam-karma'), $file_name) . "</div>";
 					}
 				}
 				else
@@ -852,7 +852,7 @@ class sk_core
 					if ($curl_error == 22)
 					{
 						### Add l10n
-						echo "<div class=\"msg_bad\">" . __("SK2 was unable to open that page (an HTTP error was returned). This may be due to a bad URL or some form of anti-bot script present on your server.", 'spam-karma') . "</div>";
+						echo "<div class=\"msg_bad\">" . __("SK was unable to open that page (an HTTP error was returned). This may be due to a bad URL or some form of anti-bot script present on your server.", 'spam-karma') . "</div>";
 					}
 					else
 					{
@@ -861,7 +861,7 @@ class sk_core
 				}
 				else
 				{
-					if (strpos($content, "id=\"sk2_payload\"") !== FALSE)
+					if (strpos($content, "id=\"sk_payload\"") !== FALSE)
 					{
 						echo "<div class=\"msg_good\">" . sprintf(__("URL %s contains the Payload. Your theme appears to be OK.", 'spam-karma'), "<i>" . ($run_tools['check_comment_form_2_url']) . "</i>") . "</div>";
 						echo "<div class=\"msg_good\">" . __("Re-enabling form payload check.", 'spam-karma') . "</div>";
@@ -869,7 +869,7 @@ class sk_core
 					}
 					else
 					{
-						echo "<div class=\"msg_bad\">" . sprintf(__("URL %s: Could not find Payload in comment form. Your theme is likely not compatible. Make sure you used a URL that contains your blog's comment form, try again and, if still getting this result, please refer to <a href=\"http://wp-plugins.net/wiki/index.php?title=SK2_Theme_Compatibility\">SK2's documentation</a>.", 'spam-karma'), "<i>" . ($run_tools['check_comment_form_2_url']) . "</i>") . "</div>";
+						echo "<div class=\"msg_bad\">" . sprintf(__("URL %s: Could not find Payload in comment form. Your theme is likely not compatible. Make sure you used a URL that contains your blog's comment form, try again and, if still getting this result, please refer to <a href=\"http://wp-plugins.net/wiki/index.php?title=sk_Theme_Compatibility\">SK's documentation</a>.", 'spam-karma'), "<i>" . ($run_tools['check_comment_form_2_url']) . "</i>") . "</div>";
 						echo "<div class=\"msg_bad\">" . __("Temporarily disabling form payload check.", 'spam-karma') . "</div>";				
 						$payload_plugin->set_option_value("weight", 0.0);				
 					}

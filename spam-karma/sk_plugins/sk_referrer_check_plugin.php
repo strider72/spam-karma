@@ -22,7 +22,7 @@ class sk_referrer_check_plugin extends sk_plugin
 	var $name = "TrackBack Referrer Check";
 	var $description = "Checks the TrackBack source page to ensure it contains a link to the site.";
 	var $author = "";
-	var $plugin_help_url = "http://wp-plugins.net/wiki/?title=SK2_ReferrerCheck_Plugin";
+	var $plugin_help_url = "http://wp-plugins.net/wiki/?title=sk_ReferrerCheck_Plugin";
 	var $filter = true;
 	var $plugin_version = 1;
 	

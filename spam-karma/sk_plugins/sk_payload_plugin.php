@@ -20,7 +20,7 @@ class sk_payload_plugin extends sk_plugin
 {
 	var $name = "Encrypted Payload";
 	var $author = "";
-	var $plugin_help_url = "http://wp-plugins.net/wiki/?title=SK2_Payload_Plugin";
+	var $plugin_help_url = "http://wp-plugins.net/wiki/?title=sk_Payload_Plugin";
 	var $description = "Embed an encrypted payload in comment form. Ensures that the form has been loaded before a comment is submitted (and more).";
 	var $filter = true;
 	
@@ -37,9 +37,9 @@ class sk_payload_plugin extends sk_plugin
 		$ip = $_SERVER['REMOTE_ADDR'];
 		//echo ("<!--#". $time . "#". $seed . "#". $ip ."#". $post_ID . "#-->"); // debug
 		$payload = md5($time . $seed . $ip . $post_ID); 
-		echo "<input type=\"hidden\" id=\"sk2_time\" name=\"sk2_time\" value=\"$time\" />";
-		echo "<input type=\"hidden\" id=\"sk2_ip\" name=\"sk2_ip\" value=\"$ip\" />";
-		echo "<input type=\"hidden\" id=\"sk2_payload\" name=\"sk2_payload\" value=\"$payload\" />";
+		echo "<input type=\"hidden\" id=\"sk_time\" name=\"sk_time\" value=\"$time\" />";
+		echo "<input type=\"hidden\" id=\"sk_ip\" name=\"sk_ip\" value=\"$ip\" />";
+		echo "<input type=\"hidden\" id=\"sk_payload\" name=\"sk_payload\" value=\"$payload\" />";
 	}
 
 	function version_update($cur_version)
@@ -62,7 +62,7 @@ class sk_payload_plugin extends sk_plugin
 		if (! $cmt_object->is_comment())
 			return;
 		
-		if (empty($_REQUEST['sk2_payload']))
+		if (empty($_REQUEST['sk_payload']))
 		{
 			$log = __("Encrypted Payload missing from form.", 'spam-karma');
 			$karma_diff = -20;
@@ -78,13 +78,13 @@ class sk_payload_plugin extends sk_plugin
 		{
 			$seed = $this->get_option_value('secret_seed');
 		
-			if ($_REQUEST['sk2_payload'] != md5($_REQUEST['sk2_time'] . $seed . $_REQUEST['sk2_ip'] . $cmt_object->post_ID))
+			if ($_REQUEST['sk_payload'] != md5($_REQUEST['sk_time'] . $seed . $_REQUEST['sk_ip'] . $cmt_object->post_ID))
 			{
 				$log = __("Fake Payload.", 'spam-karma');
 				$karma_diff = -20;
 				$this->log_msg($log, 2);
 			}
-			elseif ($_REQUEST['sk2_ip'] == $_SERVER['REMOTE_ADDR'])
+			elseif ($_REQUEST['sk_ip'] == $_SERVER['REMOTE_ADDR'])
 			{
 				$log = __("Encrypted payload valid: IP matching.", 'spam-karma');
 				$karma_diff = 0;

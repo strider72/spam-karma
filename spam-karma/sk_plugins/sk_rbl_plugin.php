@@ -11,7 +11,7 @@ class sk_rbl_plugin extends sk_plugin
 	var $author = "James Seward";
 	var $author_email = "james@jamesoff.net";
 	var $plugin_version = 2;
-	var $plugin_help_url = "http://wp-plugins.net/wiki/?title=SK2_RBL_Plugin";
+	var $plugin_help_url = "http://wp-plugins.net/wiki/?title=sk_RBL_Plugin";
 	var $description = "Checks comment IP and URLs with Realtime Blacklist servers (can be added in the Blacklist panel).";
 	var $filter = true;
 	var $treatment = true;

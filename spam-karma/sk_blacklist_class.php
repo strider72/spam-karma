@@ -13,7 +13,7 @@
 
 ************************************************************************************************/
 ?><?php
-define ("SK_KBLACKLIST_TABLE", "sk_blacklist");
+define ("SK_KBLACKLIST_TABLE", "sk2_blacklist");
 
 global $sk_blacklist;
 if (! isset($sk_blacklist))
