@@ -34,7 +34,7 @@ class sk_anubis_plugin extends sk_plugin
 	
 	function treat_this(&$cmt_object)
 	{
-		global $wpdb, $sk2_settings;
+		global $wpdb, $sk_settings;
 		
 		if ($cmt_object->is_post_proc())
 			$hell_purgatory_border = min ($this->get_option_value("purgatory_border") + 4, 0);
@@ -67,8 +67,8 @@ class sk_anubis_plugin extends sk_plugin
 		if ($cmt_object->set_DB_status($new_status, get_class($this)))
 		{
 			$this->log_msg(sprintf(__("%s (ID: %d) sent to: %s (Karma: ).", 'spam-karma'), ucfirst($cmt_object->type), $cmt_object->ID, '<b>' . __($treatment, 'spam-karma') . '</b>', $cmt_object->karma), 3);
-			$sk2_settings->increment_stats($treatment);
-			$sk2_settings->increment_stats($treatment . "_total_karma", $cmt_object->karma);
+			$sk_settings->increment_stats($treatment);
+			$sk_settings->increment_stats($treatment . "_total_karma", $cmt_object->karma);
 		}
 	}
 		

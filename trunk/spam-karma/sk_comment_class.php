@@ -129,11 +129,11 @@ class sk2_comment
 		}
 		else
 		{
-			global $sk2_settings;
+			global $sk_settings;
 			$this->karma = 0.0;
 			$this->karma_cmts = array();
 			$this->unlock_keys = array();
-			$this->remaining_attempts = $sk2_settings->get_core_settings('max_attempts');
+			$this->remaining_attempts = $sk_settings->get_core_settings('max_attempts');
 		}
 
 		return true;
@@ -168,11 +168,11 @@ class sk2_comment
 
 	function log_msg($msg, $level = 0, $mysql = false, $plugin = 'cmt_class')
 	{
-		global $sk2_log;
+		global $sk_log;
 		if ($mysql)
-			$sk2_log->log_msg_mysql($msg, $level, $this->ID, $plugin);
+			$sk_log->log_msg_mysql($msg, $level, $this->ID, $plugin);
 		else
-			$sk2_log->log_msg($msg, $level, $this->ID, $plugin);
+			$sk_log->log_msg($msg, $level, $this->ID, $plugin);
 	}
 
 	function modify_karma($karma_diff, $plugin_name, $reason = "")
@@ -216,11 +216,11 @@ class sk2_comment
 		$wpdb->query("UPDATE `$wpdb->comments` SET `comment_approved` = '$wp_status' WHERE `comment_ID` = $id");
 		if (! mysql_error())
 		{
-			global $sk2_settings;
+			global $sk_settings;
 
 			$this->log_msg(sprintf(__("Successfully updated comment entry ID: %d to status: %s.", 'spam-karma'), $id, $new_status), 4, false, $plugin);
 			$this->approved = $wp_status;
-			if ($sk2_settings->is_wp20())
+			if ($sk_settings->is_wp20())
 			{
 				$c = $wpdb->get_row( "SELECT count(*) as c FROM {$wpdb->comments} WHERE comment_post_ID = '$this->post_ID' AND comment_approved = '1'" );
 				if( is_object( $c ) ) 

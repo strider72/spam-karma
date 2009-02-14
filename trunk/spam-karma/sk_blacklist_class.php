@@ -15,9 +15,9 @@
 ?><?php
 define ("sk2_kBlacklistTable", "sk2_blacklist");
 
-global $sk2_blacklist;
-if (! isset($sk2_blacklist))
-	$sk2_blacklist = new sk2_blacklist;
+global $sk_blacklist;
+if (! isset($sk_blacklist))
+	$sk_blacklist = new sk2_blacklist;
 
 class sk2_blacklist
 {
@@ -296,11 +296,11 @@ class sk2_blacklist
 
 	function log_msg($msg, $level = 0, $mysql = false)
 	{
-		global $sk2_log;
+		global $sk_log;
 		if ($mysql)
-			$sk2_log->log_msg_mysql($msg, $level, 0, "blacklist");
+			$sk_log->log_msg_mysql($msg, $level, 0, "blacklist");
 		else
-			$sk2_log->log_msg($msg, $level, 0, "blacklist");
+			$sk_log->log_msg($msg, $level, 0, "blacklist");
 	}
 
 }

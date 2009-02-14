@@ -20,15 +20,15 @@ if (isset($table_prefix))
 else
 	define ("sk2_kLogTable", sk2_table_prefix . "sk2_logs");
 
-global $sk2_log;
-if (! isset($sk2_log))
-	$sk2_log = new sk2_log;
+global $sk_log;
+if (! isset($sk_log))
+	$sk_log = new sk2_log;
 
-global $sk2_settings;
-if (! isset($sk2_settings))
-	$sk2_settings = new sk2_settings;
+global $sk_settings;
+if (! isset($sk_settings))
+	$sk_settings = new sk2_settings;
 
-$sk2_log->db_threshold = $sk2_settings->get_core_settings("log_threshold");
+$sk_log->db_threshold = $sk_settings->get_core_settings("log_threshold");
 
 class sk2_settings
 {
@@ -174,8 +174,8 @@ class sk2_settings
 
 	function log_msg($msg, $level = 0)
 	{
-		global $sk2_log;
-		$sk2_log->log_msg($msg, $level, 0, 'sk2_settings');
+		global $sk_log;
+		$sk_log->log_msg($msg, $level, 0, 'sk2_settings');
 	}
 
 	function is_wp20 () 

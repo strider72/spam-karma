@@ -95,10 +95,10 @@ class sk2_core
 		if ($comment_ID && ($comment_ID != @$this->cur_comment->ID))
 			$this->cur_comment = new sk2_comment($comment_ID, $this->post_proc); // ? does PHP garbage collect? sure hope so...
 
-		global $sk2_settings;
+		global $sk_settings;
 		$this->filter_comment();
 		
-		if ($bias = $sk2_settings->get_core_settings("general_bias"))
+		if ($bias = $sk_settings->get_core_settings("general_bias"))
 			$this->cur_comment->modify_karma($bias, "core", "Severity settings adjustment.");
 		
 		$this->treat_comment();
@@ -327,8 +327,8 @@ class sk2_core
 <?php
 		echo sk_nonce_field();
 
-		global $sk2_settings;
-		foreach($sk2_settings->core_defaults as $name => $format)
+		global $sk_settings;
+		foreach($sk_settings->core_defaults as $name => $format)
 		{
 			if (@$format['auto_draw'] != true)
 				continue; // no UI
@@ -339,7 +339,7 @@ class sk2_core
 			echo ">\n";
 			if ($format['type'] == "check" || $format['type'] == "checkbox")
 			{
-				sk_plugin::output_UI_input($name, "checkbox", $sk2_settings->get_core_settings($name));
+				sk_plugin::output_UI_input($name, "checkbox", $sk_settings->get_core_settings($name));
 				if (!empty($format['caption']))
 					echo " " . __($format['caption'], 'spam-karma');
 				if (!empty($format['after']))
@@ -350,9 +350,9 @@ class sk2_core
 				if (! empty($format['caption']))
 					echo __($format['caption'], 'spam-karma') . " ";
 				if ($format['type'] == "menu" || $format['type'] == "select")
-					sk_plugin::output_UI_menu($name, $format['options'], $sk2_settings->get_core_settings($name));
+					sk_plugin::output_UI_menu($name, $format['options'], $sk_settings->get_core_settings($name));
 				else 
-					sk_plugin::output_UI_input($name, "text", $sk2_settings->get_core_settings($name), @$format['size']);
+					sk_plugin::output_UI_input($name, "text", $sk_settings->get_core_settings($name), @$format['size']);
 				
 				if (! empty($format['after']))
 					echo " " . __($format['after'], 'spam-karma');
@@ -389,9 +389,9 @@ class sk2_core
 	
 	function update_SQL_schema()
 	{
-		global $sk2_settings;
+		global $sk_settings;
 		
-		$mysql_updates = $sk2_settings->get_core_settings("mysql_updates");
+		$mysql_updates = $sk_settings->get_core_settings("mysql_updates");
 		
 		if (@$mysql_updates['core'] < $this->version)
 		{
@@ -419,14 +419,14 @@ class sk2_core
 			}
 		}
 		
-		$sk2_settings->set_core_settings($mysql_updates, "mysql_updates");
+		$sk_settings->set_core_settings($mysql_updates, "mysql_updates");
 	}
 	
 	function update_components()
 	{
-		global $sk2_settings;
+		global $sk_settings;
 		
-		$version_updates = $sk2_settings->get_core_settings("version_updates");
+		$version_updates = $sk_settings->get_core_settings("version_updates");
 		
 		if (@$version_updates['core'] < $this->version)
 		{
@@ -455,7 +455,7 @@ class sk2_core
 			}
 		}
 		
-		$sk2_settings->set_core_settings($version_updates, "version_updates");
+		$sk_settings->set_core_settings($version_updates, "version_updates");
 	}
 	
 	function update_core ($cur_version)
@@ -567,7 +567,7 @@ class sk2_core
 	
 	function save_UI_settings($form_values)
 	{
-		global $sk2_settings;
+		global $sk_settings;
 		//print_r($form_values);
 		
 		if (isset($form_values["sk2_settings_save"]))
@@ -585,11 +585,11 @@ class sk2_core
 				if (isset($form_values['sk2_filter_options'][get_class($this)]))
 				{
 					foreach($form_values['sk2_filter_options'][get_class($this)] as $name => $value)
-						$sk2_settings->set_core_settings($value, $name);
+						$sk_settings->set_core_settings($value, $name);
 					unset($form_values['sk2_filter_options'][get_class($this)]);
 				}
 
-				$sk2_settings->set_plugins_settings($form_values['sk2_filter_options']);
+				$sk_settings->set_plugins_settings($form_values['sk2_filter_options']);
 			}
 		}
 	}
@@ -606,7 +606,7 @@ class sk2_core
 	
 	function set_comment_sk_info($comment_ID = 0, $comment_sk_info = 0, $append = false)
 	{ // if $comment_ID != 0: must provide $comment_sk_info
-		global $sk2_settings, $wpdb;
+		global $sk_settings, $wpdb;
 		
 		if (! $comment_ID)
 		{
@@ -717,12 +717,12 @@ class sk2_core
 	// sanity_check() makes sure we've at least been ran *once*
 	function sanity_check()
 	{
-		global $sk2_settings;
+		global $sk_settings;
 		if (isset($_REQUEST['sk2_section']) || ($_REQUEST['page'] == 'spamkarma2'))
 			return;
 			
-		$mysql_updates = $sk2_settings->get_core_settings("mysql_updates");
-		$version_updates = $sk2_settings->get_core_settings("version_updates");
+		$mysql_updates = $sk_settings->get_core_settings("mysql_updates");
+		$version_updates = $sk_settings->get_core_settings("version_updates");
 		
 		//### add l10n:
 		if (empty($mysql_updates['core']) || empty($version_updates['core']))
@@ -747,24 +747,24 @@ class sk2_core
 		if (! is_array($run_tools))
 			$run_tools = array($run_tools => true);
 		
-		global $sk2_settings, $wpdb;
+		global $sk_settings, $wpdb;
 		
 		if (isset($run_tools['force_sql_update']))
 		{
-			$sk2_settings->set_core_settings("", "mysql_updates");
+			$sk_settings->set_core_settings("", "mysql_updates");
 			$this->log_msg(__("Forcing MySQL updates on core and plugins.", 'spam-karma'), 3);
 		}
 		
 		if (isset($run_tools['reinit_plugins']))
 		{
-			$sk2_settings->set_core_settings("", "version_updates");
-			$sk2_settings->reset_plugin_settings();
+			$sk_settings->set_core_settings("", "version_updates");
+			$sk_settings->reset_plugin_settings();
 			$this->log_msg(__("Reinitialize all plugins.", 'spam-karma'), 3);
 		}
 		
 		if (isset($run_tools['reinit_all']))
 		{
-			$sk2_settings->reset_all_settings();
+			$sk_settings->reset_all_settings();
 			$this->log_msg(__("Reinitialize everything to factory settings.", 'spam-karma'), 3);
 		}
 		
@@ -775,7 +775,7 @@ class sk2_core
 			$wpdb->query("DROP TABLE `". sk2_kLogTable . "`;");
 			$wpdb->query("DROP TABLE `". sk2_kBlacklistTable . "`;");
 			$this->log_msg(__("Dropped all SK2 Tables!", 'spam-karma'), 7);
-			$sk2_settings->set_core_settings("", "mysql_updates");
+			$sk_settings->set_core_settings("", "mysql_updates");
 			$this->log_msg(__("Forcing MySQL updates on core and plugins.", 'spam-karma'), 6, 0, "web_UI");
 		}
 	
@@ -829,12 +829,12 @@ class sk2_core
 			}
 			else
 			{
-				global $sk2_settings;
+				global $sk_settings;
 				if ($payload_plugin = $this->get_plugin("sk_payload_plugin"))
 				{
 					$save_weight = $payload_plugin->get_option_value("weight");
 					$payload_plugin->set_option_value("weight", "1.0");
-					$sk2_settings->save_settings();
+					$sk_settings->save_settings();
 				}
 				else
 				{
@@ -845,7 +845,7 @@ class sk2_core
  				global $curl_error;
 				$content = sk2_get_url_content($run_tools['check_comment_form_2_url']);
 				$payload_plugin->set_option_value("weight", $save_weight);				
-				$sk2_settings->save_settings();
+				$sk_settings->save_settings();
 				
 				if (empty ($content))
 				{
@@ -881,11 +881,11 @@ class sk2_core
 	
 	function log_msg($msg, $level = 0, $mysql = false)
 	{
-		global $sk2_log;
+		global $sk_log;
 		if ($mysql)
-			$sk2_log->log_msg_mysql($msg, $level, 0, "core");
+			$sk_log->log_msg_mysql($msg, $level, 0, "core");
 		else
-			$sk2_log->log_msg($msg, $level, 0, "core");
+			$sk_log->log_msg($msg, $level, 0, "core");
 	}
 }
 
