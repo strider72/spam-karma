@@ -52,7 +52,7 @@ class sk_referrer_check_plugin extends sk_plugin
 		// first check that the domain even replies
 		if (!empty($cmt_object->author_url['full_domain']) && (gethostbyname($cmt_object->author_url['full_domain'] . ".") != $cmt_object->author_url['full_domain'] . "."))
 		{
-			$source_content = sk2_get_url_content($cmt_object->author_url['href'], 0, true);
+			$source_content = sk_get_url_content($cmt_object->author_url['href'], 0, true);
 			$this_server = str_replace(array("www.", "http://"), "", $_SERVER["HTTP_HOST"]);
 		}
 		else

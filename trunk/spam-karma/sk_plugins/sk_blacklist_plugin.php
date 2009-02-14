@@ -20,7 +20,7 @@ class sk_blacklist_plugin extends sk_plugin
 {
 	var $name = "Blacklist";
 	var $author = "";
-	var $plugin_help_url = "http://wp-plugins.net/wiki/?title=SK2_Blacklist_Plugin";
+	var $plugin_help_url = "http://wp-plugins.net/wiki/?title=sk_blacklist_Plugin";
 	var $filter = true;
 	var $treatment = true;
 	var $description = "";
@@ -57,7 +57,7 @@ class sk_blacklist_plugin extends sk_plugin
 		$this->black_ids = array();
 		$this->white_ids = array();
 		
-		$this->log_msg(__("Running sk2_blacklist plugin on comment ID: ", 'spam-karma') . $cmt_object->ID, 0);
+		$this->log_msg(__("Running sk_blacklist plugin on comment ID: ", 'spam-karma') . $cmt_object->ID, 0);
 		
 		// matching IP
 		if (! empty($cmt_object->author_ip))

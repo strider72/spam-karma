@@ -14,7 +14,7 @@
 ************************************************************************************************/
 ?><?php
 
-class sk2_comment
+class sk_comment
 {
 	var $ID;
 	var $type;
@@ -58,7 +58,7 @@ class sk2_comment
 	}
 
 	
-	function sk2_comment($comment_id, $post_proc = false, $comment_sk_info = 0)
+	function sk_comment($comment_id, $post_proc = false, $comment_sk_info = 0)
 	{
 		global $wpdb;
 		// SAFE WAY:
@@ -67,7 +67,7 @@ class sk2_comment
 		// LAZY WAY:
 		if (! $cmt_array = $wpdb->get_row ("SELECT `comment_table`.*, `posts_table`.*, `users_table`.*, `spam_table`.*, `spam_table`.`id` AS `spam_table_id`, NOW() AS `now_sql` FROM `". $wpdb->comments . "` AS `comment_table` LEFT JOIN `". $wpdb->posts . "` AS `posts_table` ON `posts_table`.`ID` = `comment_table`.`comment_post_ID` LEFT JOIN `". $wpdb->users . "` AS `users_table` ON `users_table`.`ID` = `comment_table`.`user_id` LEFT JOIN `". SK_KSPAM_TABLE ."` AS `spam_table` ON `spam_table`.`comment_ID` = `comment_table`.`comment_ID` WHERE `comment_table`.`comment_ID` = '" . mysql_escape_string($comment_id) . "'"))
 		{
-			$this->log_msg(__("sk2_comment: Cannot fetch comment record from table.", 'spam-karma'), 9, true);
+			$this->log_msg(__("sk_comment: Cannot fetch comment record from table.", 'spam-karma'), 9, true);
 			return false;
 		}	
 		$this->ID = $comment_id;

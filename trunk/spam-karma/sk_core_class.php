@@ -35,14 +35,14 @@ require_once(dirname(__FILE__) . "/sk_functions.php");
 global $sk_plugin_array;
 $sk_plugin_array = 0;
 
-class sk2_core
+class sk_core
 {
 	var $cur_comment = 0;
 	var $post_proc = false;
 	var $plugins = array();
 	var $version = SK_KCORE_VERSION;
 	
-	function sk2_core($comment_ID = 0, $post_proc = false, $load_plugins = true)
+	function sk_core($comment_ID = 0, $post_proc = false, $load_plugins = true)
 	{
 		$this->sanity_check();
 
@@ -62,7 +62,7 @@ class sk2_core
 			$this->plugins = $sk_plugin_array;
 			return;
 		}
-		$plugin_files = sk2_get_file_list(SK_KPLUGIN_FOLDER);
+		$plugin_files = sk_get_file_list(SK_KPLUGIN_FOLDER);
 		foreach($plugin_files as $plugin)
 		{
 			include_once(SK_KPLUGIN_FOLDER . $plugin);	
@@ -74,7 +74,7 @@ class sk2_core
 	{
 		if (! $comment_ID)
 			return false;
-		$this->cur_comment = new sk2_comment($comment_ID, $this->post_proc, $comment_sk_info);
+		$this->cur_comment = new sk_comment($comment_ID, $this->post_proc, $comment_sk_info);
 		if ($this->post_proc)
 			$comment_sk_info = $this->get_comment_sk_info();
 		
@@ -93,7 +93,7 @@ class sk2_core
 	function process_comment($comment_ID = 0)
 	{
 		if ($comment_ID && ($comment_ID != @$this->cur_comment->ID))
-			$this->cur_comment = new sk2_comment($comment_ID, $this->post_proc); // ? does PHP garbage collect? sure hope so...
+			$this->cur_comment = new sk_comment($comment_ID, $this->post_proc); // ? does PHP garbage collect? sure hope so...
 
 		global $sk_settings;
 		$this->filter_comment();
@@ -110,7 +110,7 @@ class sk2_core
 	{
 		$start = time();
 		if ($comment_ID && ($comment_ID != @$this->cur_comment->ID))
-			$this->cur_comment = new sk2_comment($comment_ID, $this->post_proc); // ? does PHP garbage collect? sure hope so...
+			$this->cur_comment = new sk_comment($comment_ID, $this->post_proc); // ? does PHP garbage collect? sure hope so...
 
 		if (! $this->cur_comment)
 		{
@@ -139,7 +139,7 @@ class sk2_core
 	{
 		$start = time();
 		if ($comment_ID && ($comment_ID != @$this->cur_comment->ID))
-			$this->cur_comment = new sk2_comment($comment_ID, $this->post_proc);
+			$this->cur_comment = new sk_comment($comment_ID, $this->post_proc);
 
 		if (! $this->cur_comment)
 		{
@@ -319,8 +319,8 @@ class sk2_core
 	function output_UI()
 	{
 ?>
-	  <div class="wrap hide" id="sk2_settings_pane"><h2><?php _e("Spam Karma Settings", 'spam-karma'); ?></h2>
-	  <form name="sk2_settings_form" id="sk2_settings_form" method="post">
+	  <div class="wrap hide" id="sk_settings_pane"><h2><?php _e("Spam Karma Settings", 'spam-karma'); ?></h2>
+	  <form name="sk_settings_form" id="sk_settings_form" method="post">
 		<fieldset class="options">
 			<legend><?php _e("General Settings", 'spam-karma'); ?></legend>
 		<ul>
@@ -363,7 +363,7 @@ class sk2_core
 			
 ?>	
 		</ul></fieldset>
-		  <p class="submit"><input type="submit" id="sk2_settings_save" name="sk2_settings_save" value="<?php _e("Save new settings", 'spam-karma'); ?>"></p>
+		  <p class="submit"><input type="submit" id="sk_settings_save" name="sk_settings_save" value="<?php _e("Save new settings", 'spam-karma'); ?>"></p>
 		<fieldset class="options">
 			<legend><?php _e("Filter Plugins Settings", 'spam-karma'); ?></legend>
 <?php
@@ -381,7 +381,7 @@ class sk2_core
 ?>
 		</fieldset>
 						
-		  <p class="submit"><input type="submit" id="sk2_settings_save" name="sk2_settings_save" value="<?php _e("Save new settings", 'spam-karma'); ?>"></p>
+		  <p class="submit"><input type="submit" id="sk_settings_save" name="sk_settings_save" value="<?php _e("Save new settings", 'spam-karma'); ?>"></p>
 		</form></div>
 <?php		
 	
@@ -570,11 +570,11 @@ class sk2_core
 		global $sk_settings;
 		//print_r($form_values);
 		
-		if (isset($form_values["sk2_settings_save"]))
+		if (isset($form_values["sk_settings_save"]))
 		{
 			if (isset($form_values['sk2_filter_options']))
 			{
-				array_walk($form_values['sk2_filter_options'], "sk2_unescape_form_string_callback");
+				array_walk($form_values['sk2_filter_options'], "sk_unescape_form_string_callback");
 				$this->log_msg(sprintf(__ngettext("Saving new settings for %d plugin.", "Saving new settings for %d plugins.", count($form_values['sk2_filter_options']), 'spam-karma'), count($form_values['sk2_filter_options'])), 3, 'spam-karma');
 
 				if (isset($form_values['sk2_filter_checkboxes']))
@@ -666,7 +666,7 @@ class sk2_core
 			if (is_int($val) || is_float($val))
 				$query .= "`$key` = " . $val . ",";
 			else
-				$query .= "`$key` = '" . sk2_escape_string($val) . "', ";
+				$query .= "`$key` = '" . sk_escape_string($val) . "', ";
 		}
 		$query .= $query_end;
 		//echo $query;
@@ -843,7 +843,7 @@ class sk2_core
 				}
 				
  				global $curl_error;
-				$content = sk2_get_url_content($run_tools['check_comment_form_2_url']);
+				$content = sk_get_url_content($run_tools['check_comment_form_2_url']);
 				$payload_plugin->set_option_value("weight", $save_weight);				
 				$sk_settings->save_settings();
 				

@@ -29,7 +29,7 @@ class sk_payload_plugin extends sk_plugin
 		$seed = $this->get_option_value('secret_seed');
 		if (empty ($seed))
 		{
-			$seed = sk2_rand_str(10);
+			$seed = sk_rand_str(10);
 			$this->set_option_value('secret_seed', $seed);
 			$this->log_msg(__("Resetting secret seed to: $seed.", 'spam-karma'), 5);
 		}
@@ -44,7 +44,7 @@ class sk_payload_plugin extends sk_plugin
 
 	function version_update($cur_version)
 	{
-		$seed = sk2_rand_str(10);
+		$seed = sk_rand_str(10);
 		$this->set_option_value('secret_seed', $seed);
 		$this->log_msg(__("Resetting secret seed to: ", 'spam-karma') . $seed, 5);
 		return true;

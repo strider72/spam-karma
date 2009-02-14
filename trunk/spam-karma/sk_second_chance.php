@@ -25,7 +25,7 @@ $author_email = @$_REQUEST['c_author'];
 $sk_log->live_output = false;
 
 $sk_log->log_msg(__("Second Chance. Comment ID:", 'spam-karma') . $comment_ID, 4, $comment_ID, "2nd_chance");
-$sk_core = new sk2_core(0, true, false);
+$sk_core = new sk_core(0, true, false);
 
 if ($sk_core->load_comment($comment_ID))
 {

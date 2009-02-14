@@ -52,7 +52,7 @@ background: #69c;
 color: #fff; 
 }
 
-#sk2_settings_pane dl
+#sk_settings_pane dl
 {
 	background-color: #eee;
 	margin: 2px 10px 4px 10px;
@@ -60,32 +60,32 @@ color: #fff;
 	border: 1px solid #aaa;
 }
 
-#sk2_settings_pane dl:hover
+#sk_settings_pane dl:hover
 {
 	background-color: #ddd;
 	border: 1px solid #333;
 }
 
-#sk2_settings_pane dl dl
+#sk_settings_pane dl dl
 {
 	border: none;
 	margin: 0px 0px 2px 5px;
 	background-color: inherit;
 }
 
-#sk2_settings_pane dl dl:hover
+#sk_settings_pane dl dl:hover
 {
 	border: none;
 }
 
 
-#sk2_settings_pane dl dd
+#sk_settings_pane dl dd
 {
 	font-style: italic;
 	margin: 5px 0px 0px 3px;
 }
 
-#sk2_settings_pane dl dd.sk2_filter_option 
+#sk_settings_pane dl dd.sk2_filter_option 
 {
 	font-style: normal;
 	margin-top: 0px;
@@ -141,7 +141,7 @@ color: #fff;
 	background-color: red;
 }
 
-.sk2_log 
+.sk_log 
 {
 	margin:3px 20px 2px 20px;
 	padding: 3px;
