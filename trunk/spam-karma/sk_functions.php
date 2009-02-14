@@ -20,12 +20,12 @@ function sk2_time_since($original, $today = 0)
 {
     // array of time period chunks
     $chunks = array(
-        array(60 * 60 * 24 * 365 , __('year', 'sk2'), __('years', 'sk2')),
-        array(60 * 60 * 24 * 30 , __('month', 'sk2'), __('months', 'sk2')),
-        array(60 * 60 * 24 * 7, __('week', 'sk2'), __('weeks', 'sk2')),
-        array(60 * 60 * 24 , __('day', 'sk2'), __('days', 'sk2')),
-        array(60 * 60 , __('hour', 'sk2'), __('hours', 'sk2')),
-        array(60 , __('minute', 'sk2'), __('minutes', 'sk2')),
+        array(60 * 60 * 24 * 365 , __('year', 'spam-karma'), __('years', 'spam-karma')),
+        array(60 * 60 * 24 * 30 , __('month', 'spam-karma'), __('months', 'spam-karma')),
+        array(60 * 60 * 24 * 7, __('week', 'spam-karma'), __('weeks', 'spam-karma')),
+        array(60 * 60 * 24 , __('day', 'spam-karma'), __('days', 'spam-karma')),
+        array(60 * 60 , __('hour', 'spam-karma'), __('hours', 'spam-karma')),
+        array(60 , __('minute', 'spam-karma'), __('minutes', 'spam-karma')),
     );
     
      if (! $today)
@@ -70,12 +70,12 @@ function sk2_get_file_list($path, $ext = ".php")
 	$files = array();
 	if (! is_dir($path))
 	{
-		$sk2_log->log_msg(sprintf(__("Cannot get file list: '%s' is not a valid folder path", 'sk2'), $path), 9, 'sk2_get_file_list');
+		$sk2_log->log_msg(sprintf(__("Cannot get file list: '%s' is not a valid folder path", 'spam-karma'), $path), 9, 'sk2_get_file_list');
 		return $files;
 	}
 	elseif (! is_readable($path))
 	{
-		$sk2_log->log_msg(sprintf(__("Cannot get folder content: '%s'. Please make sure it is readable by everybody (chmod 755).", 'sk2'), $path), 9, 'sk2_get_file_list');
+		$sk2_log->log_msg(sprintf(__("Cannot get folder content: '%s'. Please make sure it is readable by everybody (chmod 755).", 'spam-karma'), $path), 9, 'sk2_get_file_list');
 	}
 	
 	$file_ptr = dir($path);

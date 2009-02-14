@@ -41,7 +41,7 @@ class sk2_user_level_plugin extends sk_plugin
 				$bonus = $cmt_object->user_level + 1; // should give a little bonus no matter what
 			else
 				$bonus = 25;
-			$log = sprintf(__("Commenter logged in. ID: %d, Level: %d", 'sk2'), $cmt_object->user_id, $cmt_object->user_level);
+			$log = sprintf(__("Commenter logged in. ID: %d, Level: %d", 'spam-karma'), $cmt_object->user_id, $cmt_object->user_level);
 			$this->log_msg($log , 2);
 			$this->raise_karma($cmt_object, $bonus, $log);
 		}
@@ -73,12 +73,12 @@ class sk2_entities_plugin extends sk_plugin
 
 		if ($double_entities = preg_match_all('|&amp;#[0-9]{1,2};|', $cmt_object->$part, $matches))
 		{
-			$log = sprintf(__ngettext("Comment %s contains %d <em>double</em> entity", "Comment %s contains %d <em>double</em> entities ", $double_entities, 'sk2'), $part, $double_entities) . " " . sprintf(__ngettext("and one regular entity coding for a letter (%d total).", " and %d regular entities coding for a letter (%d total).", $letter_entities, 'sk2'), $letter_entities, $total);
+			$log = sprintf(__ngettext("Comment %s contains %d <em>double</em> entity", "Comment %s contains %d <em>double</em> entities ", $double_entities, 'spam-karma'), $part, $double_entities) . " " . sprintf(__ngettext("and one regular entity coding for a letter (%d total).", " and %d regular entities coding for a letter (%d total).", $letter_entities, 'spam-karma'), $letter_entities, $total);
 			$hit = $double_entities * 5 + $letter_entities *2;
 		}
 		elseif($letter_entities)
 		{
-			$log = sprintf(__ngettext("Comment %s contains %d entity coding for a letter (%d total).", "Comment one contains %d entities coding for a letter (%d total).", $letter_entities), $part, $letter_entities, $total, 'sk2');
+			$log = sprintf(__ngettext("Comment %s contains %d entity coding for a letter (%d total).", "Comment one contains %d entities coding for a letter (%d total).", $letter_entities), $part, $letter_entities, $total, 'spam-karma');
 			$hit = 1+ $letter_entities * 2;
 		}
 
@@ -126,11 +126,11 @@ class sk2_link_count_plugin extends sk_plugin
 		}
 		
 		$threshold = max($this->get_option_value('too_many_links'), 1);
-		$log = sprintf(__("Comment contains: %d linked URLs and %d unlinked URLs: total link coef: %d", 'sk2'), count($cmt_object->content_links), count($cmt_object->content_url_no_links), $url_count);
+		$log = sprintf(__("Comment contains: %d linked URLs and %d unlinked URLs: total link coef: %d", 'spam-karma'), count($cmt_object->content_links), count($cmt_object->content_url_no_links), $url_count);
 
 		if ($url_count < $threshold)
 		{
-			$log .= __(" < threshold", 'sk2') . " ($threshold).";
+			$log .= __(" < threshold", 'spam-karma') . " ($threshold).";
 			$this->log_msg($log , 1);
 		}
 		else
@@ -138,11 +138,11 @@ class sk2_link_count_plugin extends sk_plugin
 			$len = strlen($cmt_object->content_filtered);
 			$chars_per_url = 150;
 			$hit = pow($url_count / $threshold, 2) * max(0.20, ($url_count * $chars_per_url / ($len + $chars_per_url)));
-			$log .= __(" >= threshold", 'sk2') . " ($threshold). " . sprintf(__("Non-URL text size: %d chars.", 'sk2'), $len);
+			$log .= __(" >= threshold", 'spam-karma') . " ($threshold). " . sprintf(__("Non-URL text size: %d chars.", 'spam-karma'), $len);
 			$this->hit_karma($cmt_object, 
 							$hit, 
 							$log);
-			$this->log_msg($log . " " . sprintf(__("Hitting for: %d karma points.", 'sk2'), round($hit, 2)), 2);
+			$this->log_msg($log . " " . sprintf(__("Hitting for: %d karma points.", 'spam-karma'), round($hit, 2)), 2);
 		}
 	}
 
@@ -171,7 +171,7 @@ class sk2_old_post_plugin extends sk_plugin
 		
 		$count_cmts = $wpdb->get_var("SELECT COUNT(*) AS `cmt_count` FROM `$wpdb->comments` AS `comments` WHERE `comments`.`comment_ID` != $cmt_object->ID AND `comment_post_ID` = $cmt_object->post_ID AND `comment_approved` = '1' AND `comment_date_gmt` > DATE_SUB(NOW() , INTERVAL ". $this->get_option_value("old_when") . " DAY) ");
 
-		$log = sprintf(__("Entry posted %s ago. %d comments in the past %d days. Current Karma: %d.", 'sk2'), $post_timesince, $count_cmts, $old_when, $cmt_object->karma);
+		$log = sprintf(__("Entry posted %s ago. %d comments in the past %d days. Current Karma: %d.", 'spam-karma'), $post_timesince, $count_cmts, $old_when, $cmt_object->karma);
 		
 		if ($post_ts + ($old_when * 86400) < time())
 		{
@@ -189,7 +189,7 @@ class sk2_old_post_plugin extends sk_plugin
 						$hit = min (($still_active / $tot_cmts) * min((time() - $post_ts) / ($old_when * 86400), 10) * (0.25 / $cmt_object->karma), 5); // trying to stay within captcha threshold...
 					}
 					$this->hit_karma($cmt_object, $hit, $log);
-					$this->log_msg($log . " " . sprintf(__("Hitting for: %d karma points.", 'sk2'), round($hit, 2)), 2);
+					$this->log_msg($log . " " . sprintf(__("Hitting for: %d karma points.", 'spam-karma'), round($hit, 2)), 2);
 				}
 			}
 		}
@@ -198,7 +198,7 @@ class sk2_old_post_plugin extends sk_plugin
 		{
 			$bonus = min (3, ($cmt_object->karma * $count_cmts / (10 * $still_active)));
 			$this->raise_karma($cmt_object, $bonus, $log);
-			$this->log_msg($log . " " . sprintf(__("Rewarding with: %d karma points.", 'sk2'), round($bonus, 2)), 2);
+			$this->log_msg($log . " " . sprintf(__("Rewarding with: %d karma points.", 'spam-karma'), round($bonus, 2)), 2);
 		}
 	}
 
@@ -228,7 +228,7 @@ class sk2_stopwatch_plugin extends sk_plugin
 		
 			if ($delta_ts <= $too_fast)
 			{
-				$log = sprintf(__("Flash Gordon was here (comment posted %d seconds after page load).", 'sk2'), $delta_ts);
+				$log = sprintf(__("Flash Gordon was here (comment posted %d seconds after page load).", 'spam-karma'), $delta_ts);
 				if($delta_ts <= $too_too_fast)
 					$this->hit_karma($cmt_object, 6, $log); 
 				else

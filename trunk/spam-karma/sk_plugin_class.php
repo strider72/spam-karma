@@ -47,7 +47,7 @@ class sk_plugin
 			$this->name = get_class($this);
 			
 		if (!$this->is_filter() && !$this->is_treatment())
-			$this->log_msg (sprintf(__("Plugin %s is registered with both <code>filter</code> and <code>treatment</code> set to false. It probably won't do anything: please contact plugin author.", 'sk2'), "<i>" . $this->name . "</i>" . (empty($this->author_email) ? "." : (": <a href=\"mailto:" . $this->author_email . "\">" . $this->author_email ."</a>."))) , 5);
+			$this->log_msg (sprintf(__("Plugin %s is registered with both <code>filter</code> and <code>treatment</code> set to false. It probably won't do anything: please contact plugin author.", 'spam-karma'), "<i>" . $this->name . "</i>" . (empty($this->author_email) ? "." : (": <a href=\"mailto:" . $this->author_email . "\">" . $this->author_email ."</a>."))) , 5);
 
 		if (! isset($this->settings_format["weight"]))
 			$this->settings_format["weight"] = array("value" => "1.0");
@@ -66,12 +66,12 @@ class sk_plugin
 	
 	function filter_this(&$cmt_object)
 	{ // override this to do your own filtering
-		log_msg (__("Default filter (no action) called for plugin: ", 'sk2') . $name, 3, $cmt_object->ID);
+		log_msg (__("Default filter (no action) called for plugin: ", 'spam-karma') . $name, 3, $cmt_object->ID);
 	}
 	
 	function treat_this(&$cmt_object)
 	{ // override this to do your own treatment
-		log_msg (__("Default treatment (no action) called for plugin: ", 'sk2') . $name, 3, $cmt_object->ID);
+		log_msg (__("Default treatment (no action) called for plugin: ", 'spam-karma') . $name, 3, $cmt_object->ID);
 	}
 
 // public
@@ -124,19 +124,19 @@ class sk_plugin
 		if ($output_dls)
 			echo "<dl>";
 		if (! isset($this->weight_levels["0.0"]) && ! isset($this->weight_levels["0"]))
-			$this->weight_levels["0"] = __("Disabled", 'sk2');
+			$this->weight_levels["0"] = __("Disabled", 'spam-karma');
 		ksort($this->weight_levels);	
 
-		echo " <strong>" . __($this->name, 'sk2') . "</strong> - " . __("Strength: ", 'sk2');
+		echo " <strong>" . __($this->name, 'spam-karma') . "</strong> - " . __("Strength: ", 'spam-karma');
 		$this->output_UI_menu("weight", $this->weight_levels, $this->get_option_value('weight'));
 
 		if (! empty($this->author))
 		{
-			echo " - " . __("Author: ", 'sk2');
+			echo " - " . __("Author: ", 'spam-karma');
 			if (empty($this->author_url))
 				echo $this->author;
 			else
-				echo "<a href=\"$this->author_url\" title=\"". __("Visit author's webpage", 'sk2') . "\">" . $this->author . "</a>";
+				echo "<a href=\"$this->author_url\" title=\"". __("Visit author's webpage", 'spam-karma') . "\">" . $this->author . "</a>";
 		}
 
 		if ($this->show_version && !empty($this->plugin_version))
@@ -149,7 +149,7 @@ class sk_plugin
 			echo " <a href=\"$this->plugin_help_url\" target=\"sk2_help\">[?]</a>";
 
 		if (! empty($this->description))
-			echo "<dd>" . __($this->description, 'sk2') . "</dd>\n";
+			echo "<dd>" . __($this->description, 'spam-karma') . "</dd>\n";
 			
 		if (count($this->settings_format) > 1) // not counting weight in there
 		{
@@ -168,21 +168,21 @@ class sk_plugin
 					$this->output_UI_input($name, "checkbox", $this->get_option_value($name));
 					{
 						echo "<label for=\"sk2_filter_options[". get_class($this) . "][$name]\">";
-						echo " " . __($format['caption'], 'sk2');
+						echo " " . __($format['caption'], 'spam-karma');
 						echo "</label>";
 					}
 				}
 				else
 				{
 					if (! empty($format['caption']))
-						echo __($format['caption'], 'sk2') . " ";
+						echo __($format['caption'], 'spam-karma') . " ";
 					if ($format['type'] == "menu" || $format['type'] == "select")
 						$this->output_UI_menu($name, $format['options'], $this->get_option_value($name));
 					else 
 						$this->output_UI_input($name, "text", $this->get_option_value($name), @$format['size']);
 					
 					if (! empty($format['after']))
-						echo " " . __($format['after'], 'sk2');
+						echo " " . __($format['after'], 'spam-karma');
 				}
 				
 				echo "</dt>\n";
@@ -207,7 +207,7 @@ class sk_plugin
 				echo "<option value=\"$value\" selected>";
 			else
 				echo "<option value=\"$value\">";
-			 echo __($label, 'sk2') . "</option>";
+			 echo __($label, 'spam-karma') . "</option>";
 		}
 		echo "</select>\n";
 	}
@@ -269,9 +269,9 @@ class sk_plugin
 	
 	function display_second_chance(&$cmt_object, $unlock_key)
 	{
-		log_msg (__("Default Second Chance function (empty) called for plugin: ", 'sk2') . $this->name, 7, $comment_ID);
+		log_msg (__("Default Second Chance function (empty) called for plugin: ", 'spam-karma') . $this->name, 7, $comment_ID);
 		
-		echo __("This is an empty placeholder...", 'sk2');
+		echo __("This is an empty placeholder...", 'spam-karma');
 	}
 	
 	function treat_second_chance(&$cmt_object, $unlock_key)

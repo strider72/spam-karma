@@ -45,14 +45,14 @@ class sk_captcha_plugin extends sk_plugin
 		
 		$expiration = max(500, 3600 * $this->get_option_value("expiration"));
 		$cmt_object->add_unlock_key(sk2_rand_str(ceil(4 * $this->get_option_value("weight")), true), get_class($this), time() + $expiration);
-		$this->log_msg(sprintf(__("Set Captcha unlock key, will expire in %d seconds.", 'sk2'), $expiration) , 3);
+		$this->log_msg(sprintf(__("Set Captcha unlock key, will expire in %d seconds.", 'spam-karma'), $expiration) , 3);
 	
 	}
 
 	function display_second_chance(&$cmt_object, $unlock_key)
 	{
-		echo "<p><h2>" . __("Kind-a-Captcha", 'sk2') . "</h2></p>";
-		echo "<p>" . __("Please type the code below in the input field and click on Submit (characters can only be letters from A to F and digits from 0 to 9).", 'sk2') . "</p>";
+		echo "<p><h2>" . __("Kind-a-Captcha", 'spam-karma') . "</h2></p>";
+		echo "<p>" . __("Please type the code below in the input field and click on Submit (characters can only be letters from A to F and digits from 0 to 9).", 'spam-karma') . "</p>";
 		echo "<img src=\"sk_captcha_graphic.php?c_id=". $cmt_object->ID . "&c_author=". urlencode($cmt_object->author_email) . "\" alt=\"captcha_img\"/>";
 				?>
 		<p><input type="text" name="captcha_code" id="captcha_code" size="6"></p>
@@ -76,7 +76,7 @@ class sk_captcha_plugin extends sk_plugin
 		echo "<dl>";
 		parent::output_plugin_UI(false); // call default constructor
 		if(! function_exists("imagecreate") || ! function_exists('imagepng') )
-			echo "<dt><strong><p style=\"color:red;\">". __("Your install of PHP seems to be missing the GD library (or a more recent version is needed). You should ask your host to update the GD module for PHP and disable the Captcha module until then.", 'sk2') . "</p></strong></dt>";
+			echo "<dt><strong><p style=\"color:red;\">". __("Your install of PHP seems to be missing the GD library (or a more recent version is needed). You should ask your host to update the GD module for PHP and disable the Captcha module until then.", 'spam-karma') . "</p></strong></dt>";
 		echo "</dl>";
 	}
 

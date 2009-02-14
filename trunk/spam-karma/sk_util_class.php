@@ -88,7 +88,7 @@ class sk2_settings
 		if (! $this->need_to_save)
 			return;
 		$this->need_to_save = false;
-		$this->log_msg(__("Saved all settings to DB.", 'sk2'), 1);
+		$this->log_msg(__("Saved all settings to DB.", 'spam-karma'), 1);
 
 		update_option("sk2_core_settings", $this->core_settings);
 		update_option("sk_plugins_settings", $this->plugins_settings);
@@ -236,7 +236,7 @@ class sk2_log
 
 	function log_msg_mysql($msg, $level = 0, $comment_id = 0, $component = "")
 	{
-		$msg .= "<br/>\n" . __("SQL error: ", 'sk2') . "<code>". mysql_error() . "</code>";
+		$msg .= "<br/>\n" . __("SQL error: ", 'spam-karma') . "<code>". mysql_error() . "</code>";
 		$this->log_msg($msg, $level, $comment_id, $component);
 	}
 		
@@ -244,7 +244,7 @@ class sk2_log
 	{
 		foreach ($this->logs as $log)
 			if ($log[1] >= $threshold)
-				echo "<div class=\"sk2_log sk_level_$log[1]\">" . __($log[3], 'sk2') . " - " . $log[0] . "</div>\n";
+				echo "<div class=\"sk2_log sk_level_$log[1]\">" . __($log[3], 'spam-karma') . " - " . $log[0] . "</div>\n";
 	}
 	
 	function echo_logs($threshold = 0)
@@ -252,7 +252,7 @@ class sk2_log
 		$output = "";
 		foreach ($this->logs as $log)
 			if (! $log[4] && ($log[1] >= $threshold))
-					$output .= "<div class=\"sk2_log sk_level_$log[1]\">" . __($log[3], 'sk2') . " - " . $log[0] . "</div>\n";
+					$output .= "<div class=\"sk2_log sk_level_$log[1]\">" . __($log[3], 'spam-karma') . " - " . $log[0] . "</div>\n";
 		if ($output)
 			echo "<div class=\"wrap sk_first\">\n$output<div>";
 	}

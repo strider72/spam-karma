@@ -84,7 +84,7 @@ class sk_snowball_plugin extends sk_plugin
 						{
 							// Unleash all minions of Hell on that bad boy's company...
 
-							$log = sprintf(__ngettext("Retro-spanked one comment. ID: ", "Retro-spanked %d comments. IDs: ", count($retro_cmts), 'sk2'), count($retro_cmts));
+							$log = sprintf(__ngettext("Retro-spanked one comment. ID: ", "Retro-spanked %d comments. IDs: ", count($retro_cmts), 'spam-karma'), count($retro_cmts));
 							$this->retro_spanked = true;
 							$retro_spanking_core = new sk2_core(0, true, true);
 							//$retro_spanking_core->load_plugin_files($);
@@ -92,16 +92,16 @@ class sk_snowball_plugin extends sk_plugin
 							foreach($retro_cmts as $retro_cmt)
 							{
 								$retro_spanking_core->load_comment($retro_cmt->comment_ID);
-								$retro_spanking_core->cur_comment->modify_karma($karma_diff, get_class($this), __("Retro-spanking triggered by comment ID: ", 'sk2') . $this->ID);
+								$retro_spanking_core->cur_comment->modify_karma($karma_diff, get_class($this), __("Retro-spanking triggered by comment ID: ", 'spam-karma') . $this->ID);
 								$retro_spanking_core->treat_comment();
 								$retro_spanking_core->set_comment_sk_info();
 								$log .= $retro_cmt->comment_ID . ", ";
 							}
-							$log = substr($log, 0, -2) . ". " . __("Karma hit: ", 'sk2') . $karma_diff;
+							$log = substr($log, 0, -2) . ". " . __("Karma hit: ", 'spam-karma') . $karma_diff;
 							$this->log_msg($log, 5);
 						}
 						if (mysql_error())
-							$this->log_msg_mysql(__("Retro-spanking sql query failed.", 'sk2'), 7, $this->ID);
+							$this->log_msg_mysql(__("Retro-spanking sql query failed.", 'spam-karma'), 7, $this->ID);
 
 					}
 					elseif ($recent->karma_avg < $recent->cmt_count) // decent average: small penalty
@@ -137,7 +137,7 @@ class sk_snowball_plugin extends sk_plugin
 
 		if ($karma_diff)
 		{
-			$log = sprintf(__("Commenter granularity (based on %s): %d old comment(s) (karma avg: %f), %d recent comment(s) (karma avg: %f).", 'sk2'), $criterion, $old->cmt_count, round($old->karma_avg, 2), $recent->cmt_count, round($recent->karma_avg, 2));
+			$log = sprintf(__("Commenter granularity (based on %s): %d old comment(s) (karma avg: %f), %d recent comment(s) (karma avg: %f).", 'spam-karma'), $criterion, $old->cmt_count, round($old->karma_avg, 2), $recent->cmt_count, round($recent->karma_avg, 2));
 			$this->modify_karma($cmt_object, $karma_diff, $log);
 			$this->log_msg($log, 3);		
 		}
@@ -155,7 +155,7 @@ class sk_snowball_plugin extends sk_plugin
 
 		if (! $counts = $wpdb->get_row($query))
 		{
-			$this->log_msg_mysql(__("get_granularity: query failed.", 'sk2') . "<br/> " . __("Query: ", 'sk2') . $query, 7, $this->ID);
+			$this->log_msg_mysql(__("get_granularity: query failed.", 'spam-karma') . "<br/> " . __("Query: ", 'spam-karma') . $query, 7, $this->ID);
 			return false;
 		}		
 		
