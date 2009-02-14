@@ -16,7 +16,7 @@
 // Blacklist Filter
 // Runs URLs and IPs through each blacklist
 
-class sk2_anubis_plugin extends sk2_plugin
+class sk_anubis_plugin extends sk_plugin
 {
 	var $name = "Anubis";
 	var $description = "This plugin is the ultimate judge of a comment's fate: the comment's karma is weighted and it is either discarded as spam, moderated or displayed. <strong>Do not</strong> disable, unless you really know what you are doing.";
@@ -74,7 +74,7 @@ class sk2_anubis_plugin extends sk2_plugin
 		
 }
 
-$this->register_plugin("sk2_anubis_plugin", 11); // should be loaded last...
+$this->register_plugin("sk_anubis_plugin", 11); // should be loaded last...
 
 
 ?>

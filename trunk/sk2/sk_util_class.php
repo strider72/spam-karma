@@ -13,7 +13,7 @@
 
 ************************************************************************************************/
 ?><?php
-include_once("sk2_functions.php");
+include_once("sk_functions.php");
 
 if (isset($table_prefix))
 	define ("sk2_kLogTable", $table_prefix . "sk2_logs");
@@ -91,7 +91,7 @@ class sk2_settings
 		$this->log_msg(__("Saved all settings to DB.", 'sk2'), 1);
 
 		update_option("sk2_core_settings", $this->core_settings);
-		update_option("sk2_plugins_settings", $this->plugins_settings);
+		update_option("sk_plugins_settings", $this->plugins_settings);
 		update_option("sk2_stats", $this->stats);
 	}
 

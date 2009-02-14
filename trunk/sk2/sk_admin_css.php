@@ -268,38 +268,38 @@ border: 2px solid red;
 	text-align: right;
 }
 
-.sk2_about
+.sk_about
 {
 	padding: 25px;
 }
 
-.sk2_about p
+.sk_about p
 {
 	text-indent: 3em;
 }
 
-.sk2_about h2
+.sk_about h2
 {
 	margin-top: 25px;
 }
 
-.sk2_about .sk_first
+.sk_about .sk_first
 {
 	margin-top: 0px;
 }
 
-.sk2_about fieldset.sk2_cast p
+.sk_about fieldset.sk2_cast p
 {
 	text-indent: 0px;
 }
 
-.sk2_about fieldset.sk2_cast
+.sk_about fieldset.sk2_cast
 {
 	margin-top: 10px;
 	padding: 2px 13px 5px 13px;
 }
 
-.sk2_about blockquote
+.sk_about blockquote
 {
 	border: 1px solid #33a;
 	background-color:#ccf;
@@ -310,7 +310,7 @@ border: 2px solid red;
 	width: 80%;
 }
 
-.sk2_about blockquote .source
+.sk_about blockquote .source
 {
 	font-size: 10px;
 	font-decoration: italic;
@@ -318,7 +318,7 @@ border: 2px solid red;
 	margin-bottom: 5px;
 }
 
-.sk2_about blockquote p
+.sk_about blockquote p
 {
 	line-height: 10px;
 	padding:0;

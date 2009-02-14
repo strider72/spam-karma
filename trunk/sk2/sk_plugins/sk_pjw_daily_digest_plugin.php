@@ -20,7 +20,7 @@
 	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-class sk2_pjw_simpledigest extends sk2_plugin
+class sk2_pjw_simpledigest extends sk_plugin
 {
 	var $name = "Simple Digest";
 	var $plugin_version = 1.30;

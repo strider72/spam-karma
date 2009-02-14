@@ -14,7 +14,7 @@
 ************************************************************************************************/
 ?><?php
 
-class sk2_plugin
+class sk_plugin
 {
 // public:
 	var $name;
@@ -40,7 +40,7 @@ class sk2_plugin
 	
 // abstract (override as needed):
 
-	function sk2_plugin()
+	function sk_plugin()
 	{
 		
 		if (empty($this->name))
@@ -59,7 +59,7 @@ class sk2_plugin
 	function __construct()
 	{
 		if (! defined("__CLASS__"))
-			$this->sk2_plugin();
+			$this->sk_plugin();
 		else
 			$this->{__CLASS__}();
 	}

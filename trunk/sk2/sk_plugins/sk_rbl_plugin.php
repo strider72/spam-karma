@@ -5,7 +5,7 @@
 	(c) 2005 James Seward and DrDave
 */
 
-class sk2_rbl_plugin extends sk2_plugin
+class sk_rbl_plugin extends sk_plugin
 {
 	var $name = "RBL Check";
 	var $author = "James Seward";
@@ -243,7 +243,7 @@ class sk2_rbl_plugin extends sk2_plugin
 				
 				//new submit logic
 				// build a postlist of <ip|url>: <data>
-				// submit using curl (needs updated sk2_functions.php)
+				// submit using curl (needs updated sk_functions.php)
 				$postinfo = array();
 				$entries = 0;
 				
@@ -341,6 +341,6 @@ class sk2_rbl_plugin extends sk2_plugin
 
 }
 
-$this->register_plugin("sk2_rbl_plugin", 8);
+$this->register_plugin("sk_rbl_plugin", 8);
 
 ?>

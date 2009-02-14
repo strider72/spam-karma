@@ -16,7 +16,7 @@
 // Basic plugins
 // A bunch of simple plugin classes, all lumped into one single file
 
-class sk2_user_level_plugin extends sk2_plugin
+class sk2_user_level_plugin extends sk_plugin
 {
 	var $name = "User Level";
 	var $description = "";
@@ -48,7 +48,7 @@ class sk2_user_level_plugin extends sk2_plugin
 	}
 }
 
-class sk2_entities_plugin extends sk2_plugin
+class sk2_entities_plugin extends sk_plugin
 {
 	var $name = "Entities Detector";
 	var $description = "Detect improper use of HTML entities (used by spammers to foil keyword detection).";
@@ -92,7 +92,7 @@ class sk2_entities_plugin extends sk2_plugin
 }
 
 
-class sk2_link_count_plugin extends sk2_plugin
+class sk2_link_count_plugin extends sk_plugin
 {
 	var $name = "Link Counter";
 	var $description = "";
@@ -148,7 +148,7 @@ class sk2_link_count_plugin extends sk2_plugin
 
 }
 
-class sk2_old_post_plugin extends sk2_plugin
+class sk2_old_post_plugin extends sk_plugin
 {
 	var $name = "Post Age and Activity";
 	var $description = "Stricter on old posts showing no recent activity.";
@@ -204,7 +204,7 @@ class sk2_old_post_plugin extends sk2_plugin
 
 }
 
-class sk2_stopwatch_plugin extends sk2_plugin
+class sk2_stopwatch_plugin extends sk_plugin
 {
 	var $name = "Stopwatch";
 	var $description = "Makes sure commenter has been on page for a certain number of seconds before commenting.";

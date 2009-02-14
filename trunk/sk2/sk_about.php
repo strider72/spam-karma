@@ -12,7 +12,7 @@
   GNU General Public License for more details.
 
 ************************************************************************************************/
-?><div class="sk_first wrap sk2_about">
+?><div class="sk_first wrap sk_about">
 <blockquote><p><i>Lasciate ogni speranza, voi ch'entrate</i></p>
 <p class="source"><?php _e("Some dead Italian dude", 'sk2'); ?></p></blockquote>
 <blockquote><p><i><?php _e("Hey... Wanna play some poker?", 'sk2'); ?></i></p>

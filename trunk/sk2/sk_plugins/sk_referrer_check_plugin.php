@@ -17,7 +17,7 @@
 // Checks TB to ensure they do point to the site
 
 
-class sk2_referrer_check_plugin extends sk2_plugin
+class sk_referrer_check_plugin extends sk_plugin
 {
 	var $name = "TrackBack Referrer Check";
 	var $description = "Checks the TrackBack source page to ensure it contains a link to the site.";
@@ -40,7 +40,7 @@ class sk2_referrer_check_plugin extends sk2_plugin
 			return;
 		//if( ! ini_get('allow_url_fopen'))
 		//{
-		//	$this->log_msg("<code>allow_url_fopen</code> is disabled on this PHP install: sk2_referrer_check_plugin cannot run." , 5);
+		//	$this->log_msg("<code>allow_url_fopen</code> is disabled on this PHP install: sk_referrer_check_plugin cannot run." , 5);
 		//	return;			
 		//}
 		
@@ -91,6 +91,6 @@ class sk2_referrer_check_plugin extends sk2_plugin
 	}
 }
 
-$this->register_plugin("sk2_referrer_check_plugin", 6); // should be loaded rather late (if at all)...
+$this->register_plugin("sk_referrer_check_plugin", 6); // should be loaded rather late (if at all)...
 
 ?>

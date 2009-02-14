@@ -16,7 +16,7 @@
 // Javascript Plugin
 // Uses JS to test browser
 
-class sk2_javascript_plugin extends sk2_plugin
+class sk_javascript_plugin extends sk_plugin
 {
 	var $name = "Javascript Payload";
 	var $author = "";
@@ -157,6 +157,6 @@ class sk2_javascript_plugin extends sk2_plugin
 	}
 }
 
-$this->register_plugin("sk2_javascript_plugin", 2);
+$this->register_plugin("sk_javascript_plugin", 2);
 
 ?>
