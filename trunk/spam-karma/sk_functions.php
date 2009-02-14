@@ -1,6 +1,6 @@
 <?php
 /**********************************************************************************************
- Spam Karma 2 (c) 2008 - Dave A. duVerle - http://unknowngenius.com
+ Spam Karma (c) 2008 - Dave A. duVerle - http://unknowngenius.com
 
  This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -181,7 +181,7 @@ function sk2_rand_str($size, $unambiguous = false)
 		curl_setopt($curl_handle,CURLOPT_CONNECTTIMEOUT,2);
 		curl_setopt($curl_handle,CURLOPT_RETURNTRANSFER,1);
 		curl_setopt($curl_handle,CURLOPT_FAILONERROR,1);
-  		curl_setopt($curl_handle,CURLOPT_USERAGENT, "PHP Spam Karma 2 Check ");
+  		curl_setopt($curl_handle,CURLOPT_USERAGENT, "PHP Spam Karma Check ");
 	  	if (!empty($postinfo))
  	 	{
  	 		curl_setopt($curl_handle, CURLOPT_POST, true);

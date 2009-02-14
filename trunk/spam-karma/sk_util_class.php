@@ -1,6 +1,6 @@
 <?php
 /**********************************************************************************************
- Spam Karma 2 (c) 2008 - Dave A. duVerle - http://unknowngenius.com
+ Spam Karma (c) 2008 - Dave A. duVerle - http://unknowngenius.com
 
  This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -46,7 +46,7 @@ class sk2_settings
 											"display_sk2_footer" => array("auto_draw" => true, "advanced" => false, "type" => "checkbox", "value" => true, "caption" => "Automatically insert SK2's 'X spam eaten' message in your blog's footer (enable Advanced Options to customize it)."),
 											
 											"sk2_footer_msg_0" => array("auto_draw" => true, "advanced" => true, "type" => "text", "value" => "<div id=\"sk2-footer\" style=\"color:#FFF; background-color:#444; padding: 3px 2px 3px 2px; border-top: #888 solid 1px;\">Spammers: Beware of the <a href=\"http://unknowngenius.com/blog/wordpress/spam-karma/\" title=\"SK2\">Dog</a>.</div>", "caption" => "SK2 footer message (until there is at least two spams in the DB): ", "size" => 50),
-											"sk2_footer_msg_n" => array("auto_draw" => true, "advanced" => true, "type" => "text", "value" => "<div id=\"sk2-footer\" style=\"color:#FFF; background-color:#444; padding: 3px 2px 3px 2px; border-top: #888 solid 1px;\">This blog is protected by <a href=\"http://unknowngenius.com/blog/\" title=\"Dave\">Dave</a>'s <strong><a href=\"http://unknowngenius.com/blog/wordpress/spam-karma/\" title=\"SK2\">Spam Karma 2</a></strong>: <strong>{hell}</strong>  Spams eaten and counting...</div>", "caption" => "Standard SK2 footer message: ", "after" => "<em>The following variables will be replaced by their numeric values: {hell} {purgatory} {paradise} {hell_total_karma} and {paradise_total_karma}</em>", "size" => 50),
+											"sk2_footer_msg_n" => array("auto_draw" => true, "advanced" => true, "type" => "text", "value" => "<div id=\"sk2-footer\" style=\"color:#FFF; background-color:#444; padding: 3px 2px 3px 2px; border-top: #888 solid 1px;\">This blog is protected by <a href=\"http://unknowngenius.com/blog/\" title=\"Dave\">Dave</a>'s <strong><a href=\"http://unknowngenius.com/blog/wordpress/spam-karma/\" title=\"SK2\">Spam Karma</a></strong>: <strong>{hell}</strong>  Spams eaten and counting...</div>", "caption" => "Standard SK2 footer message: ", "after" => "<em>The following variables will be replaced by their numeric values: {hell} {purgatory} {paradise} {hell_total_karma} and {paradise_total_karma}</em>", "size" => 50),
 											
 											// no default UI:
 											

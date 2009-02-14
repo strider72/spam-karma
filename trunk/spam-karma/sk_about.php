@@ -1,6 +1,6 @@
 <?php
 /**********************************************************************************************
- Spam Karma 2 (c) 2008 - Dave A. duVerle - http://unknowngenius.com
+ Spam Karma (c) 2008 - Dave A. duVerle - http://unknowngenius.com
 
  This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 <p class="source"><?php _e("Some Internet jackass", 'sk2'); ?></p></blockquote>
 <br/>
 <h2 class="sk_first"><?php _e("The Machine", 'sk2'); ?></h2>
-<p><strong><?php _e('<a href="http://unknowngenius.com/blog/wordpress/spam-karma" target="_blank">Spam Karma 2</a></strong> is the proud successor to Spam Karma, with whom it shares most of the development ideas, but absolutely none of the code. It is meant to stop all forms of automated Blog spam effortlessly, while remaining as unobtrusive as possible to regular commenters.', 'sk2');?></p>
+<p><strong><?php _e('<a href="http://unknowngenius.com/blog/wordpress/spam-karma" target="_blank">Spam Karma</a></strong> is the proud successor to Spam Karma, with whom it shares most of the development ideas, but absolutely none of the code. It is meant to stop all forms of automated Blog spam effortlessly, while remaining as unobtrusive as possible to regular commenters.', 'sk2');?></p>
 
 <h2><?php _e("The Man", 'sk2'); ?></h2>
 <p><strong><?php _e('<a href="http://unknowngenius.com/blog/me/" target="_blank">Dr Dave</a></strong> is a card-carrying Evil Genius still busy plotting world domination from his secret hideout in the Parisian catacombs (having recently relocated from his volcanic lair in Tokyo, Japan).
