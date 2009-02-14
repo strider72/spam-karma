@@ -20,7 +20,7 @@ class sk_javascript_plugin extends sk_plugin
 {
 	var $name = "Javascript Payload";
 	var $author = "";
-	var $plugin_help_url = "http://wp-plugins.net/wiki/?title=SK2_Javascript_Plugin";
+	var $plugin_help_url = "http://wp-plugins.net/wiki/?title=sk_Javascript_Plugin";
 	var $description = "Embed a few Javascript commands in comment form (most browsers without Javascript abilities are usually spambots). If the browser does not support Javascript, it only receives a small penalty.";
 	var $filter = true;
 	var $skip_under = -20;
@@ -90,11 +90,11 @@ class sk_javascript_plugin extends sk_plugin
 		$check2 = md5($tot . $check1 . $seed);
 
 ?>
-<input type="hidden" id="sk2_my_js_check1" name="sk2_my_js_check1" value="<?php echo $check1; ?>" />
-<input type="hidden" id="sk2_my_js_check2" name="sk2_my_js_check2" value="<?php echo $check2; ?>" />
+<input type="hidden" id="sk_my_js_check1" name="sk_my_js_check1" value="<?php echo $check1; ?>" />
+<input type="hidden" id="sk_my_js_check2" name="sk_my_js_check2" value="<?php echo $check2; ?>" />
 <script type="text/javascript">
 <!--
-	document.write('<input type="hidden" id="sk2_my_js_payload" name="sk2_my_js_payload" value="');
+	document.write('<input type="hidden" id="sk_my_js_payload" name="sk_my_js_payload" value="');
 	document.write(<?php echo $js_command; ?>);
 	document.write('" />');
 -->
@@ -124,7 +124,7 @@ class sk_javascript_plugin extends sk_plugin
 		if (! $cmt_object->is_comment())
 			return;
 			
-		if (empty($_REQUEST['sk2_my_js_payload']) || empty($_REQUEST['sk2_my_js_check1']))
+		if (empty($_REQUEST['sk_my_js_payload']) || empty($_REQUEST['sk_my_js_check1']))
 		{
 			if ($this->get_option_value("no-penalty"))
 			{
@@ -140,7 +140,7 @@ class sk_javascript_plugin extends sk_plugin
 		{
 			$seed = $this->get_option_value('secret_seed');
 		
-			if ($_REQUEST['sk2_my_js_check2'] != md5($_REQUEST['sk2_my_js_payload'] . $_REQUEST['sk2_my_js_check1'] . $seed))
+			if ($_REQUEST['sk_my_js_check2'] != md5($_REQUEST['sk_my_js_payload'] . $_REQUEST['sk_my_js_check1'] . $seed))
 			{
 				$log = __("Fake Javascript Payload.", 'spam-karma');
 				$karma_diff = -10;

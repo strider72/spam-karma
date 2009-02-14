@@ -21,7 +21,7 @@ class sk_anubis_plugin extends sk_plugin
 	var $name = "Anubis";
 	var $description = "This plugin is the ultimate judge of a comment's fate: the comment's karma is weighted and it is either discarded as spam, moderated or displayed. <strong>Do not</strong> disable, unless you really know what you are doing.";
 	var $author = "";
-	var $plugin_help_url = "http://wp-plugins.net/wiki/?title=SK2_Anubis_Plugin";
+	var $plugin_help_url = "http://wp-plugins.net/wiki/?title=sk_Anubis_Plugin";
 	var $treatment = true;
 	var $weight_levels = array("0" => "Disabled", "1.0" => "Enabled");
 

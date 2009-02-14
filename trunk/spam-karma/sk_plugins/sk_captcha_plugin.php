@@ -22,7 +22,7 @@ class sk_captcha_plugin extends sk_plugin
 	var $name = "Captcha Check";
 	var $description = "If (and only if) the comment's karma is within a certain error margin, provide the commenter with a chance to clear himself by solving a Captcha.";
 	var $author = "";
-	var $plugin_help_url = "http://wp-plugins.net/wiki/index.php/?title=SK2_Captcha_Plugin";
+	var $plugin_help_url = "http://wp-plugins.net/wiki/index.php/?title=sk_Captcha_Plugin";
 	var $treatment = true;
 
 	var $weight_levels = array("0" => "Disabled", "0.5" => "Easy", "1.0" => "Enabled", "2.0" => "Difficult");

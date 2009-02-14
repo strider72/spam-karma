@@ -21,7 +21,7 @@ class SK_User_Level_Plugin extends sk_plugin
 	var $name = "User Level";
 	var $description = "";
 	var $author = "";
-	var $plugin_help_url = "http://wp-plugins.net/wiki/?title=SK2_BasicChecks_Plugin";
+	var $plugin_help_url = "http://wp-plugins.net/wiki/?title=sk_BasicChecks_Plugin";
 	var $filter = true;
 	var $settings_format = array ("min_level" => array("type" => "text", "value"=> 1, "caption" => "Automatically approve logged-in users above or equal to level:", "size" => 3));
 	var $skip_under = -50;
@@ -53,7 +53,7 @@ class SK_Entities_Plugin extends sk_plugin
 	var $name = "Entities Detector";
 	var $description = "Detect improper use of HTML entities (used by spammers to foil keyword detection).";
 	var $author = "";
-	var $plugin_help_url = "http://wp-plugins.net/wiki/?title=SK2_BasicChecks_Plugin";
+	var $plugin_help_url = "http://wp-plugins.net/wiki/?title=sk_BasicChecks_Plugin";
 	var $filter = true;	
 	
 	function filter_this(&$cmt_object)
@@ -97,7 +97,7 @@ class SK_Link_Count_Plugin extends sk_plugin
 	var $name = "Link Counter";
 	var $description = "";
 	var $author = "";
-	var $plugin_help_url = "http://wp-plugins.net/wiki/?title=SK2_BasicChecks_Plugin";
+	var $plugin_help_url = "http://wp-plugins.net/wiki/?title=sk_BasicChecks_Plugin";
 	var $filter = true;
 	var $settings_format = array ("too_many_links" => array("type" => "text", "value"=>2, "caption" => "Penalize if there are more than ", "size" => 3, "after" => "links in the comment content."));
 	var $skip_under = -30;
@@ -153,7 +153,7 @@ class SK_Old_Post_Plugin extends sk_plugin
 	var $name = "Post Age and Activity";
 	var $description = "Stricter on old posts showing no recent activity.";
 	var $author = "";
-	var $plugin_help_url = "http://wp-plugins.net/wiki/?title=SK2_BasicChecks_Plugin";
+	var $plugin_help_url = "http://wp-plugins.net/wiki/?title=sk_BasicChecks_Plugin";
 	var $filter = true;
 	var $settings_format = array ("old_when" => array("type" => "text", "value"=>15, "caption" => "Consider a post old after ", "size" => 3, "after" => "days."), "still_active" => array("type" => "text", "value"=>2, "caption" => "Still active if more than ", "size" => 3, "after" => "comments recently."));
 	var $skip_under = -30;
@@ -209,7 +209,7 @@ class SK_Stopwatch_Plugin extends sk_plugin
 	var $name = "Stopwatch";
 	var $description = "Makes sure commenter has been on page for a certain number of seconds before commenting.";
 	var $author = "";
-	var $plugin_help_url = "http://wp-plugins.net/wiki/?title=SK2_BasicChecks_Plugin";
+	var $plugin_help_url = "http://wp-plugins.net/wiki/?title=sk_BasicChecks_Plugin";
 	var $filter = true;
 	var $settings_format = array ("too_too_fast" => array("type" => "text", "caption" => "Hit hard if posted less than ", "size" => 3, "value" => 3, "after" => "seconds after first load.", "advanced" => true), "too_fast" => array("type" => "text", "caption" => "Hit light if posted less than ", "size" => 3, "value" => 13, "after" => "seconds after first load.", "advanced" => true));
 	var $skip_under = -15;
@@ -218,7 +218,7 @@ class SK_Stopwatch_Plugin extends sk_plugin
 	
 	function filter_this(&$cmt_object)
 	{
-		$ts = @$_REQUEST['sk2_time'];
+		$ts = @$_REQUEST['sk_time'];
 		if ($ts <= 0)
 			return;
 		if (($delta_ts = time() - $ts) < 0)
