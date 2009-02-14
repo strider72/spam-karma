@@ -185,7 +185,7 @@ class SK_PJW_SimpleDigest extends sk_plugin
 						 	."Content-Type: text/plain; "
 					   		."charset=\"".get_option('blog_charset')."\"\r\n";
 
-				wp_mail(get_option("admin_email"), $mail_subj, $mail_content, $headers);
+				wp_mail(get_option('admin_email'), $mail_subj, $mail_content, $headers);
 			}
 			else
 			{
