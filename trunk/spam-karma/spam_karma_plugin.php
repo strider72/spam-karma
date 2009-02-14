@@ -15,24 +15,11 @@
 ?><?php
 /*
 Plugin Name: Spam Karma
-Plugin URI: http://unknowngenius.com/blog/wordpress/spam-karma/
+Plugin URI: http://code.google.com/p/spam-karma/
 Description: Ultimate Spam Killer for WordPress.<br/> Activate the plugin and go to <a href="edit.php?page=spamkarma2">Manage >> Spam Karma</a> to configure.<br/> See <a href="edit.php?page=spamkarma2&sk2_section=about">Spam Karma >> About</a> for details.
 Author: dr Dave
 Version: 2.3
 Author URI: http://unknowngenius.com/blog/
- Copyright 2007 - drDave
- 
- All rights reserved. You are free to use this software and redistribute it for free but may not include it in any commercial distribution without prior written permission.
- 
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
-KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
-WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
-PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS
-OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
-OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
 */
 
 define("sk2_table_prefix", $table_prefix);
