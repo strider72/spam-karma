@@ -76,7 +76,7 @@ class sk_settings
 	{
 		foreach (array("plugins_settings", "core_settings", "stats") as $this_group)
 		{
-			$this->$this_group = get_option("sk2_" . $this_group);
+			$this->$this_group = get_option('sk2_' . $this_group);
 			if (! is_array($this->$this_group))
 				$this->$this_group = array();
 			

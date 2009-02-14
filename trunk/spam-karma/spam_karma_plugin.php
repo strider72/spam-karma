@@ -1106,7 +1106,7 @@ if ( !function_exists('wp_notify_moderator') )
 	{
 			global $wpdb;
 	
-			if( get_option( "moderation_notify" ) == 0 )
+			if( get_option('moderation_notify') == 0 )
 					return true; 
 		
 			$comment = $wpdb->get_row("SELECT * FROM $wpdb->comments WHERE comment_ID='$comment_id' LIMIT 1");
@@ -1135,7 +1135,7 @@ if ( !function_exists('wp_notify_moderator') )
 //### end DdV Mods
 	
 			$subject = sprintf( __('[%1$s] Please moderate: "%2$s"', 'spam-karma'), get_option('blogname'), $post->post_title );
-			$admin_email = get_option("admin_email");
+			$admin_email = get_option('admin_email');
 	
 			$notify_message = apply_filters('comment_moderation_text', $notify_message);
 			$subject = apply_filters('comment_moderation_subject', $subject);
