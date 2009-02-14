@@ -23,7 +23,7 @@ $comment_ID = (int) @$_REQUEST['c_id'];
 $author_email = @$_REQUEST['c_author'];
 
 $sk_log->live_output = false;
-$this_cmt = new sk2_comment ($comment_ID);
+$this_cmt = new sk_comment ($comment_ID);
 
 if (@$this_cmt->ID && ($author_email == $this_cmt->author_email))
 {

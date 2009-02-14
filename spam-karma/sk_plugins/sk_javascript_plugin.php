@@ -32,7 +32,7 @@ class sk_javascript_plugin extends sk_plugin
 		$seed = $this->get_option_value('secret_seed');
 		if (empty ($seed))
 		{
-			$seed = sk2_rand_str(10);
+			$seed = sk_rand_str(10);
 			$this->set_option_value('secret_seed', $seed);
 			$this->log_msg(__("Resetting secret seed to: ", 'spam-karma') . $seed, 5);
 		}
@@ -86,7 +86,7 @@ class sk_javascript_plugin extends sk_plugin
 		$js_command = "Math.round ( Math.abs(" . $str . "))" ;
 		$tot = round(abs($tot));
 		
-		$check1 = sk2_rand_str(10);
+		$check1 = sk_rand_str(10);
 		$check2 = md5($tot . $check1 . $seed);
 
 ?>
@@ -105,7 +105,7 @@ class sk_javascript_plugin extends sk_plugin
 
 	function version_update($cur_version)
 	{
-		$seed = sk2_rand_str(10);
+		$seed = sk_rand_str(10);
 		$this->set_option_value('secret_seed', $seed);
 		$this->log_msg(__("Resetting secret Javascript seed to: ", 'spam-karma') . $seed, 5);
 		return true;

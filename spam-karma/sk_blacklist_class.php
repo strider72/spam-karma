@@ -13,15 +13,15 @@
 
 ************************************************************************************************/
 ?><?php
-define ("SK_KBLACKLIST_TABLE", "sk2_blacklist");
+define ("SK_KBLACKLIST_TABLE", "sk_blacklist");
 
 global $sk_blacklist;
 if (! isset($sk_blacklist))
-	$sk_blacklist = new sk2_blacklist;
+	$sk_blacklist = new sk_blacklist;
 
-class sk2_blacklist
+class sk_blacklist
 {
-	function sk2_blacklist()
+	function sk_blacklist()
 	{
 	
 	}
@@ -45,13 +45,13 @@ class sk2_blacklist
 			$this->log_msg(__("Cannot add blacklist entry. Please fill in a value.", 'spam-karma'), 7);
 			return false;
 		}
-		elseif ($wpdb->get_var("SELECT COUNT(*) FROM `". SK_KBLACKLIST_TABLE . "` WHERE `type`='$type' AND `value`='" . sk2_escape_string($value) . "' LIMIT 1"))
+		elseif ($wpdb->get_var("SELECT COUNT(*) FROM `". SK_KBLACKLIST_TABLE . "` WHERE `type`='$type' AND `value`='" . sk_escape_string($value) . "' LIMIT 1"))
 		{
 			$this->log_msg(__("Skipping duplicate blacklist entry: ", 'spam-karma') . "<em>$type</em> - <em> $value</em>.", 7);
 		}
 		else
 		{
-			if ($wpdb->query("INSERT INTO `". SK_KBLACKLIST_TABLE . "` SET `type`='$type', `value`='" . sk2_escape_string($value) . "', `added` = NOW(), `last_used` = NOW(), `score` = $score, `trust` = $trust, `user_reviewed` = '$user_reviewed', `added_by` = '$added_by', `comments` = ''"))
+			if ($wpdb->query("INSERT INTO `". SK_KBLACKLIST_TABLE . "` SET `type`='$type', `value`='" . sk_escape_string($value) . "', `added` = NOW(), `last_used` = NOW(), `score` = $score, `trust` = $trust, `user_reviewed` = '$user_reviewed', `added_by` = '$added_by', `comments` = ''"))
 					$this->log_msg(__("Successfully inserted blacklist entry: ", 'spam-karma') . "<em>$type</em> - <em>$value</em>.", 3);
 			else
 					$this->log_msg(__("Failed to insert blacklist entry: ", 'spam-karma') . "<em>$type</em> - <em>$value</em>.", 8, true);
@@ -74,7 +74,7 @@ class sk2_blacklist
 			$this->log_msg(__("Greylist match. Skipping blacklist entry insertion: ", 'spam-karma') . "<em>$type</em> - <em> $value</em>.", 6);
 			return;
 		}
-		elseif ($row = $wpdb->get_row("SELECT `id`, `score` FROM `". SK_KBLACKLIST_TABLE . "` WHERE `type`='$type' AND `value`='" . sk2_escape_string($value) . "' LIMIT 1"))
+		elseif ($row = $wpdb->get_row("SELECT `id`, `score` FROM `". SK_KBLACKLIST_TABLE . "` WHERE `type`='$type' AND `value`='" . sk_escape_string($value) . "' LIMIT 1"))
 		{
 			if (($old_score = $row->score) >= 100)
 				return true;
@@ -83,7 +83,7 @@ class sk2_blacklist
 		}
 		else
 		{
-			$query = "INSERT INTO `". SK_KBLACKLIST_TABLE . "` SET `type`='$type', `value`='" . sk2_escape_string($value) . "', `added` = NOW(), `last_used` = NOW(), `trust` = $trust, `user_reviewed` = '$user_reviewed', `added_by` = '$added_by', `comments` = '',";
+			$query = "INSERT INTO `". SK_KBLACKLIST_TABLE . "` SET `type`='$type', `value`='" . sk_escape_string($value) . "', `added` = NOW(), `last_used` = NOW(), `trust` = $trust, `user_reviewed` = '$user_reviewed', `added_by` = '$added_by', `comments` = '',";
 			$query_where = "";
 			$old_score = 0;
 		}
@@ -108,9 +108,9 @@ class sk2_blacklist
 		global $wpdb;
 		
 		if ($strict)
-			$sql_match = "= '" . sk2_escape_string($match_value) . "'";
+			$sql_match = "= '" . sk_escape_string($match_value) . "'";
 		else
-			$sql_match = "LIKE '%". sk2_escape_string($match_value) . "%'";
+			$sql_match = "LIKE '%". sk_escape_string($match_value) . "%'";
 
 		 switch ($match_type)
 		 {

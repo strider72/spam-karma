@@ -64,18 +64,18 @@ function sk_time_since($original, $today = 0)
     return $print;
 }
 
-function sk2_get_file_list($path, $ext = ".php")
+function sk_get_file_list($path, $ext = ".php")
 {
 	global $sk_log;
 	$files = array();
 	if (! is_dir($path))
 	{
-		$sk_log->log_msg(sprintf(__("Cannot get file list: '%s' is not a valid folder path", 'spam-karma'), $path), 9, 'sk2_get_file_list');
+		$sk_log->log_msg(sprintf(__("Cannot get file list: '%s' is not a valid folder path", 'spam-karma'), $path), 9, 'sk_get_file_list');
 		return $files;
 	}
 	elseif (! is_readable($path))
 	{
-		$sk_log->log_msg(sprintf(__("Cannot get folder content: '%s'. Please make sure it is readable by everybody (chmod 755).", 'spam-karma'), $path), 9, 'sk2_get_file_list');
+		$sk_log->log_msg(sprintf(__("Cannot get folder content: '%s'. Please make sure it is readable by everybody (chmod 755).", 'spam-karma'), $path), 9, 'sk_get_file_list');
 	}
 	
 	$file_ptr = dir($path);
@@ -88,20 +88,20 @@ function sk2_get_file_list($path, $ext = ".php")
 	return $files;
 }
 
-function sk2_clean_up_sql_callback(&$val, $key)
+function sk_clean_up_sql_callback(&$val, $key)
 {
 	if (is_array($val))
-		array_walk($val, 'sk2_clean_up_sql_callback', $new);
+		array_walk($val, 'sk_clean_up_sql_callback', $new);
 	elseif (is_string($val))
 		$val = stripslashes($val);
 }
 
-function sk2_clean_up_sql(&$my_array)
+function sk_clean_up_sql(&$my_array)
 {
-	array_walk($my_array, 'sk2_clean_up_sql_callback');
+	array_walk($my_array, 'sk_clean_up_sql_callback');
 }
 
-function sk2_escape_string ($string)
+function sk_escape_string ($string)
 {
 	if(function_exists('mysql_real_escape_string'))
 		return mysql_real_escape_string($string);
@@ -109,7 +109,7 @@ function sk2_escape_string ($string)
 		return mysql_escape_string($string);
  }
 
-function sk2_escape_form_string ($string)
+function sk_escape_form_string ($string)
 {
 	if (get_magic_quotes_gpc())
 		$string = stripslashes($string);
@@ -119,18 +119,18 @@ function sk2_escape_form_string ($string)
 		return mysql_escape_string($string);
  }
   
- function sk2_unescape_form_string_callback (&$val, $key)
+ function sk_unescape_form_string_callback (&$val, $key)
 {
 	if (get_magic_quotes_gpc())
 	{
 		if (is_array($val))
-			array_walk($val, 'sk2_unescape_form_string_callback', $new);
+			array_walk($val, 'sk_unescape_form_string_callback', $new);
 		elseif (is_string($val))
 			$val = stripslashes($val);	
 	}
 }
  
- function sk2_soft_hyphen($text, $max = 32, $char = "&#8203;") 
+ function sk_soft_hyphen($text, $max = 32, $char = "&#8203;") 
  { 
 	$words = explode(' ', $text); 
 	  foreach($words as $key => $word) 
@@ -143,7 +143,7 @@ function sk2_escape_form_string ($string)
 	  return implode(' ', $words); 
  } 
  
-function sk2_rand_str($size, $unambiguous = false)
+function sk_rand_str($size, $unambiguous = false)
  {
 	 if ($unambiguous)
 	   $feed = "123456789ABCDE";
@@ -156,7 +156,7 @@ function sk2_rand_str($size, $unambiguous = false)
 	  return $sk_rand_str;
  } 
  
- function sk2_url_fopen($url, $convert_case = false, $postinfo = array())
+ function sk_url_fopen($url, $convert_case = false, $postinfo = array())
  {
  	global $curl_error;
  	$curl_error = 0;
@@ -201,12 +201,12 @@ function sk2_rand_str($size, $unambiguous = false)
 	return $file_content;
  }
   
-function sk2_get_url_content($url, $level = 0, $convert_case = false)
+function sk_get_url_content($url, $level = 0, $convert_case = false)
 {
 	if ($level > 8)
 		return "";
 		
-	$file_content = sk2_url_fopen($url, $convert_case);
+	$file_content = sk_url_fopen($url, $convert_case);
 
 	if ($level >= 0)
 		if (preg_match_all("/<(?:script|iframe) [^>]*src=\\\"([^\\\"]*)\\\"[^>]*>/", $file_content, $matches))
@@ -219,13 +219,13 @@ function sk2_get_url_content($url, $level = 0, $convert_case = false)
 					$new_url = $url . "/" . $new_url;
 				//echo "level: $level - match: $match - url: $new_url<br/>";
 					
-				$file_content .= "***\n" . sk2_get_url_content($new_url, $level+1);
+				$file_content .= "***\n" . sk_get_url_content($new_url, $level+1);
 			}	
 		}
 	return $file_content;
 }
 
-function sk2_html_entity_decode ($str, $compat, $encoding)
+function sk_html_entity_decode ($str, $compat, $encoding)
 {
 	if (! $str)
 		return $str;

@@ -44,7 +44,7 @@ class sk_captcha_plugin extends sk_plugin
 			return;
 		
 		$expiration = max(500, 3600 * $this->get_option_value("expiration"));
-		$cmt_object->add_unlock_key(sk2_rand_str(ceil(4 * $this->get_option_value("weight")), true), get_class($this), time() + $expiration);
+		$cmt_object->add_unlock_key(sk_rand_str(ceil(4 * $this->get_option_value("weight")), true), get_class($this), time() + $expiration);
 		$this->log_msg(sprintf(__("Set Captcha unlock key, will expire in %d seconds.", 'spam-karma'), $expiration) , 3);
 	
 	}

@@ -279,7 +279,7 @@ class sk_rbl_plugin extends sk_plugin
 				if (!empty($postinfo))
 				{
 					//fetch result
-					$result = sk2_url_fopen($this->get_option_value('submit_target'), false, $postinfo);
+					$result = sk_url_fopen($this->get_option_value('submit_target'), false, $postinfo);
 					$this->log_msg(sprintf(__("Submitted %s total entries to RBL using POST; got result %s", 'spam-karma'), sizeof($postinfo), $result), 4);
 				}
 				
@@ -298,7 +298,7 @@ class sk_rbl_plugin extends sk_plugin
  	{
  		$url = sprintf($this->get_option_value('submit_ip_target'), $ip);
 			$this->log_msg(__("Opening URL: ", 'spam-karma') . $url, 0);
-			$result = sk2_url_fopen($url);
+			$result = sk_url_fopen($url);
  		$this->log_msg(sprintf(__("Adding IP %s to RBL returned %s", 'spam-karma'), $ip, $result), 2);
  		$ipcount++;
  	}
@@ -308,7 +308,7 @@ class sk_rbl_plugin extends sk_plugin
 		{
 			$url = sprintf($this->get_option_value('submit_uri_target'), $cmt_object->author_url['url']);
 			$this->log_msg(__("Opening URL: ", 'spam-karma') . $url, 0);
-			$result = sk2_url_fopen($url);
+			$result = sk_url_fopen($url);
 			$this->log_msg(sprintf(__("Adding author URI %s to RBL returned %s", 'spam-karma'), $cmt_object->author_url['url'], $result), 2);
 			$uricount++;
 		}
@@ -323,7 +323,7 @@ class sk_rbl_plugin extends sk_plugin
  			$done_uris[] = $url_info['url'];
 				$url = sprintf($this->get_option_value('submit_uri_target'), trim($url_info['url']));
 				$this->log_msg(__("Opening URL: ", 'spam-karma') . $url, 0);
-				$result = sk2_url_fopen($url);	
+				$result = sk_url_fopen($url);	
   		$this->log_msg(sprintf(__("Adding URI %s to RBL returned %s", 'spam-karma'), $url_info['url'], $result), 2);
   		$uricount++;
   	}

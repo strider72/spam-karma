@@ -128,7 +128,7 @@ class sk2_pjw_simpledigest extends sk_plugin
 					foreach ($spam_rows as $row)
 					{
 						$comment_count += 1;
-						sk2_clean_up_sql($row);
+						sk_clean_up_sql($row);
 					
 						if (!$row->spam_id)
 						{
@@ -235,7 +235,7 @@ class sk2_pjw_simpledigest extends sk_plugin
 			{
 				$karma_report .= sprintf("%+8.2f", $cmt['hit']) ." - ";
 				$karma_report .= $cmt['plugin'] . ": ";
-				$karma_report .= sk2_soft_hyphen(strip_tags($cmt['reason']));
+				$karma_report .= sk_soft_hyphen(strip_tags($cmt['reason']));
 				$karma_report .= "\r\n";	
 			}
 		}

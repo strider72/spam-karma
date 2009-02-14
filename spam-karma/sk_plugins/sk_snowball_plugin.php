@@ -51,13 +51,13 @@ class sk_snowball_plugin extends sk_plugin
 				$my_url = $cmt_object->author_url['url'];
 
 			if (count($cmt_object->content_links))
-				$this->snowball_by($cmt_object, "URL", "AND `comments`.`comment_author_url` LIKE '%". sk2_escape_string($my_url) ."%'", 1, 0.02);
+				$this->snowball_by($cmt_object, "URL", "AND `comments`.`comment_author_url` LIKE '%". sk_escape_string($my_url) ."%'", 1, 0.02);
 			else
-				$this->snowball_by($cmt_object, "URL", "AND `comments`.`comment_author_url` LIKE '%". sk2_escape_string($my_url) ."%'", 1.5, 1);			
+				$this->snowball_by($cmt_object, "URL", "AND `comments`.`comment_author_url` LIKE '%". sk_escape_string($my_url) ."%'", 1.5, 1);			
 		}
 
 		if (! empty($cmt_object->author_email))
-			$this->snowball_by($cmt_object, "email", "AND `comments`.`comment_author_email` = '". sk2_escape_string($cmt_object->author_email) ."'", 0.5, 2);
+			$this->snowball_by($cmt_object, "email", "AND `comments`.`comment_author_email` = '". sk_escape_string($cmt_object->author_email) ."'", 0.5, 2);
 	}
 	
 	function snowball_by(&$cmt_object, $criterion, $query_where, $coef_hit, $coef_raise)
@@ -86,7 +86,7 @@ class sk_snowball_plugin extends sk_plugin
 
 							$log = sprintf(__ngettext("Retro-spanked one comment. ID: ", "Retro-spanked %d comments. IDs: ", count($retro_cmts), 'spam-karma'), count($retro_cmts));
 							$this->retro_spanked = true;
-							$retro_spanking_core = new sk2_core(0, true, true);
+							$retro_spanking_core = new sk_core(0, true, true);
 							//$retro_spanking_core->load_plugin_files($);
 							
 							foreach($retro_cmts as $retro_cmt)
