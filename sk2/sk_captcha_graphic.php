@@ -12,33 +12,33 @@
   GNU General Public License for more details.
 
 ************************************************************************************************/
-?><html><head /><body>
-<?php
+?><?php
+header("Content-type: image/png");
+
+global $sk2_log, $wpdb;
 require_once('../../../wp-config.php');
-global $sk2_log;
-include_once(dirname(__FILE__) . "/sk2_core_class.php");
+include_once(dirname(__FILE__) . "/sk_core_class.php");
 
 $comment_ID = (int) @$_REQUEST['c_id'];
 $author_email = @$_REQUEST['c_author'];
 
-//DEBUG:
 $sk2_log->live_output = false;
+$this_cmt = new sk2_comment ($comment_ID);
 
-$sk2_log->log_msg(__("Second Chance. Comment ID:", 'sk2') . $comment_ID, 4, $comment_ID, "2nd_chance");
-$sk2_core = new sk2_core(0, true, false);
-
-if ($sk2_core->load_comment($comment_ID))
+if (@$this_cmt->ID && ($author_email == $this_cmt->author_email))
 {
-	//echo "<pre>"; 	print_r($sk2_core->cur_comment);
-	if ($sk2_core->cur_comment->author_email != $author_email)
-		die(__("Email not matching comment ID", 'sk2'));
-		
-	$sk2_core->load_plugin_files();	
-	$sk2_core->second_chance();
+	foreach($this_cmt->unlock_keys as $key)
+		if ($key['class'] == "sk_captcha_plugin")
+			$string = strtoupper($key['key']);
 }
 else
-{
-	die(__("Invalid comment", 'sk2'));
-}
+	$string = __("Invalid ID", 'sk2');
+
+$im  = imagecreate(150, 50);
+$bg = imagecolorallocate($im, 0, 0, 0);
+$red = imagecolorallocate($im, 255, 0, 0);
+$px  = (imagesx($im) - 7.5 * strlen($string)) / 2;
+imagestring($im, 6, 10, 10, $string, $red);
+imagepng($im);
+imagedestroy($im);
 ?>
-</body></html>

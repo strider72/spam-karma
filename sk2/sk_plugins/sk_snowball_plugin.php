@@ -17,7 +17,7 @@
 // use comment's granularity...
 
 
-class sk2_snowball_plugin extends sk2_plugin
+class sk_snowball_plugin extends sk_plugin
 {
 	var $name = "Snowball Effect";
 	var $author = "";
@@ -166,6 +166,6 @@ class sk2_snowball_plugin extends sk2_plugin
 	
 }
 
-$this->register_plugin("sk2_snowball_plugin", 6);
+$this->register_plugin("sk_snowball_plugin", 6);
 
 ?>

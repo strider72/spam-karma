@@ -36,14 +36,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 define("sk2_table_prefix", $table_prefix);
-define("sk2_second_chance_file", "sk2_second_chance.php");
-define("sk2_news_update_check_url", "http://wp-plugins.net/sk2/sk2_news.php");
-define("sk2_news_update_interval",  86400); 
+define("sk_second_chance_file", "sk_second_chance.php");
+define("sk_news_update_check_url", "http://wp-plugins.net/sk2/sk2_news.php");
+define("sk_news_update_interval",  86400); 
 define("sk2_auto_purge_interval",  600);
 
 if (! isset($_SERVER['PHP_SELF']))
 	$_SERVER['PHP_SELF'] = @$PHP_SELF;
-
+		
 function sk2_add_options() 
 {
     add_management_page(__('Spam Karma 2 Options', 'sk2'), 'Spam Karma 2', 7, "spamkarma2", 'sk2_option_page');
@@ -61,7 +61,7 @@ function sk2_init ()
 function sk2_option_page()
 {
 	global $wpdb, $sk2_settings;
-	include_once(dirname(__FILE__) . "/sk2_core_class.php");
+	include_once(dirname(__FILE__) . "/sk_core_class.php");
 	$sk2_core = new sk2_core(0, true);
 
 	$sk_sections = array ("general" => __("General Settings", 'sk2'), "spam" => __("Recent Spam Harvest", 'sk2') . $new_spams, "approved" => __("Approved Comments", 'sk2') . $new_approved, "blacklist" => __("Blacklist", 'sk2'), "logs" => __("SK2 Logs", 'sk2'), "about" => __("About", 'sk2'));
@@ -751,7 +751,7 @@ if (isset($_REQUEST['sk2_section']))
 			// GET NEWS
 			if ($sk2_settings->get_core_settings('next_news_update') < time())
 			{
-				$url = sk2_news_update_check_url . "?sk2_version=" . urlencode(sk2_kVersion) . "&sk2_release=" . urlencode(sk2_kRelease) . "&sk2_lang=" . urlencode(WPLANG);
+				$url = sk_news_update_check_url . "?sk2_version=" . urlencode(sk2_kVersion) . "&sk2_release=" . urlencode(sk2_kRelease) . "&sk2_lang=" . urlencode(WPLANG);
 				if ($update_file = sk2_get_url_content($url))
 				{
 					if (is_array($news_array = unserialize($update_file)))
@@ -795,7 +795,7 @@ if (isset($_REQUEST['sk2_section']))
 				else
 					$sk2_log->log_msg(__("Cannot load news from URL: ", 'sk2') . "<em>$url</em>", 7, 0, "web_UI");
 
-				$sk2_settings->set_core_settings(time() + sk2_news_update_interval, 'next_news_update');
+				$sk2_settings->set_core_settings(time() + sk_news_update_interval, 'next_news_update');
 			}
 			
 			if ($sk2_settings->get_core_settings('init_install') < 1)
@@ -892,7 +892,7 @@ function toggleAdvanced(mybutton, myid)
 		break;
 	
 		case "about":
-			include_once(dirname(__FILE__) ."/sk2_about.php");
+			include_once(dirname(__FILE__) ."/sk_about.php");
 			return;
 		break;
 	}
@@ -924,7 +924,7 @@ function sk2_table_show_hide($show, $hide)
 function sk2_output_admin_css ()
 {
 	if ($_REQUEST['page'] == 'spamkarma2')
-		include_once(dirname(__FILE__) . "/sk2_admin_css.php");
+		include_once(dirname(__FILE__) . "/sk_admin_css.php");
 }
 
 function sk2_settings_ui($name, $type = false, $options_size = false)
@@ -1012,7 +1012,7 @@ function sk2_form_insert($id = 0)
 		global $post;
 		$id = $post->ID;
 	}
-	require_once(dirname(__FILE__) ."/sk2_core_class.php");
+	require_once(dirname(__FILE__) ."/sk_core_class.php");
 	$sk2_core = new sk2_core(0, false);
 	$sk2_core->form_insert($id);
 	$sk2_settings->save_settings();	
@@ -1027,7 +1027,7 @@ function sk2_fix_approved($approved)
 
 function sk2_filter_comment($comment_ID)
 {
-	include_once(dirname(__FILE__) ."/sk2_core_class.php");
+	include_once(dirname(__FILE__) ."/sk_core_class.php");
 
 	if (! $comment_ID)
 	{
@@ -1066,9 +1066,9 @@ function sk2_filter_comment($comment_ID)
                 header('Cache-Control: no-cache, must-revalidate');
                 header('Pragma: no-cache');
 
-				$location = get_bloginfo('wpurl') .  "/" . strstr(str_replace("\\", "/", dirname(__FILE__)), "wp-content/") . "/" . sk2_second_chance_file ."?c_id=$comment_ID&c_author=" . urlencode($sk2_core->cur_comment->author_email);
+				$location = get_bloginfo('wpurl') .  "/" . strstr(str_replace("\\", "/", dirname(__FILE__)), "wp-content/") . "/" . sk_second_chance_file ."?c_id=$comment_ID&c_author=" . urlencode($sk2_core->cur_comment->author_email);
 
-                //$location = str_replace($_SERVER['DOCUMENT_ROOT'], "/", dirname(__FILE__)) . "/" . sk2_second_chance_file ."?c_id=$comment_ID&c_author=" . urlencode($sk2_core->cur_comment->author_email);
+                //$location = str_replace($_SERVER['DOCUMENT_ROOT'], "/", dirname(__FILE__)) . "/" . sk_second_chance_file ."?c_id=$comment_ID&c_author=" . urlencode($sk2_core->cur_comment->author_email);
 
 				 $can_use_location = ( @preg_match('/Microsoft|WebSTAR|Xitami/', getenv('SERVER_SOFTWARE')) ) ? false : true;
 				 if (!$can_use_location && ($phpver >= '4.0.1') && @preg_match('/Microsoft/', getenv('SERVER_SOFTWARE')) && (php_sapi_name() == 'isapi'))
@@ -1094,7 +1094,7 @@ function sk2_filter_comment($comment_ID)
 function sk2_insert_footer()
 {
 	global $sk2_settings;
-	require_once(dirname(__FILE__) . "/sk2_util_class.php");
+	require_once(dirname(__FILE__) . "/sk_util_class.php");
 
 	if ($sk2_settings->get_core_settings("display_sk2_footer"))
 	{

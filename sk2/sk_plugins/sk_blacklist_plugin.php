@@ -16,7 +16,7 @@
 // Blacklist Filter
 // Runs URLs and IPs through each blacklist
 
-class sk2_blacklist_plugin extends sk2_plugin
+class sk_blacklist_plugin extends sk_plugin
 {
 	var $name = "Blacklist";
 	var $author = "";
@@ -37,7 +37,7 @@ class sk2_blacklist_plugin extends sk2_plugin
 
 	var $version = 2;
 
-	function sk2_blacklist_plugin()
+	function sk_blacklist_plugin()
 	{
 		parent::__construct();
 		$this->description = "<a href=\"options-general.php?page=" . $_REQUEST['page'] . "&sk2_section=blacklist\">Click here</a> to manage your blacklist.";
@@ -263,7 +263,7 @@ class sk2_blacklist_plugin extends sk2_plugin
 	}	
 }
 
-$this->register_plugin("sk2_blacklist_plugin", 2);
+$this->register_plugin("sk_blacklist_plugin", 2);
 
 
 ?>

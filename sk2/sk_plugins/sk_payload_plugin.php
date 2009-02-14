@@ -16,7 +16,7 @@
 // Blacklist Filter
 // Runs URLs and IPs through each blacklist
 
-class sk2_payload_plugin extends sk2_plugin
+class sk_payload_plugin extends sk_plugin
 {
 	var $name = "Encrypted Payload";
 	var $author = "";
@@ -99,6 +99,6 @@ class sk2_payload_plugin extends sk2_plugin
 	}
 }
 
-$this->register_plugin("sk2_payload_plugin", 2);
+$this->register_plugin("sk_payload_plugin", 2);
 
 ?>

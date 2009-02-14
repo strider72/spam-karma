@@ -17,7 +17,7 @@
 Spam Karma 2.3rc4
 */
 
-define ("sk2_kPluginFolder", dirname(__FILE__) . "/sk2_plugins/");
+define ("sk2_kPluginFolder", dirname(__FILE__) . "/sk_plugins/");
 define ("sk2_kCoreVersion", 5);
 define ("sk2_kVersion", 3); // => 2.3
 define ("sk2_kRelease", "rc4");
@@ -26,14 +26,14 @@ if (isset($table_prefix))
 else
 	define ("sk2_kSpamTable", sk2_table_prefix . "sk2_spams");
 
-require_once(dirname(__FILE__) . "/sk2_util_class.php");
-require_once(dirname(__FILE__) . "/sk2_plugin_class.php");
-require_once(dirname(__FILE__) . "/sk2_comment_class.php");
-require_once(dirname(__FILE__) . "/sk2_blacklist_class.php");
-require_once(dirname(__FILE__) . "/sk2_functions.php");
+require_once(dirname(__FILE__) . "/sk_util_class.php");
+require_once(dirname(__FILE__) . "/sk_plugin_class.php");
+require_once(dirname(__FILE__) . "/sk_comment_class.php");
+require_once(dirname(__FILE__) . "/sk_blacklist_class.php");
+require_once(dirname(__FILE__) . "/sk_functions.php");
 
-global $sk2_plugin_array;
-$sk2_plugin_array = 0;
+global $sk_plugin_array;
+$sk_plugin_array = 0;
 
 class sk2_core
 {
@@ -56,10 +56,10 @@ class sk2_core
 	
 	function load_plugin_files()
 	{
-		global $sk2_plugin_array;
-		if ($sk2_plugin_array)
+		global $sk_plugin_array;
+		if ($sk_plugin_array)
 		{
-			$this->plugins = $sk2_plugin_array;
+			$this->plugins = $sk_plugin_array;
 			return;
 		}
 		$plugin_files = sk2_get_file_list(sk2_kPluginFolder);
@@ -67,7 +67,7 @@ class sk2_core
 		{
 			include_once(sk2_kPluginFolder . $plugin);	
 		}	
-		$sk2_plugin_array = $this->plugins;
+		$sk_plugin_array = $this->plugins;
 	}
 	
 	function load_comment($comment_ID)
@@ -187,9 +187,9 @@ class sk2_core
 			return false;
 		}
 		
-		if (!empty ($_REQUEST['sk2_second_chance']))
+		if (!empty ($_REQUEST['sk_second_chance']))
 		{
-			$class = $_REQUEST['sk2_second_chance'];
+			$class = $_REQUEST['sk_second_chance'];
 			$this_key = 0;
 			foreach ($this->cur_comment->unlock_keys as $id => $unlock_key)
 				$this_key = $unlock_key;
@@ -204,7 +204,7 @@ class sk2_core
 				if ($my_plugin->treat_second_chance($this->cur_comment, $this_key['key']))
 				{
 					$this->cur_comment->post_proc = true; // just making sure we don't run into loops here
-				//	if ($anubis = $this->get_plugin('sk2_anubis_plugin'))
+				//	if ($anubis = $this->get_plugin('sk_anubis_plugin'))
 				//		$anubis->treat_this($this->cur_comment);
 					$this->treat_comment();
 					$this->cur_comment->remaining_attempts = 0; // no more attempts
@@ -227,7 +227,7 @@ class sk2_core
 					$this->cur_comment->remaining_attempts = --$rem_attempts;
 					if ($rem_attempts <= 0)
 					{
-						//if ($anubis = $this->get_plugin('sk2_anubis_plugin'))
+						//if ($anubis = $this->get_plugin('sk_anubis_plugin'))
 						//	$anubis->treat_this($this->cur_comment);
 						$this->treat_comment($this->cur_comment);
 						echo "<span class=\"sk2_fail\">" . __("Too many missed attempts. Your comment's moderation has been confirmed. A log of your comment will be kept and presented to the blog admin upon his next log-on. Please contact him directly via e-mail regarding this problem.", 'sk2') . "</span>";
@@ -279,7 +279,7 @@ class sk2_core
 				{
 					$i++;
 					echo "<form name=\"sk2_form_". $unlock_key['class'] . "\" id=\"sk2_form_". $unlock_key['class'] . "\ method=\"post\">";
-					echo "<input type=\"hidden\" name=\"sk2_second_chance\" id=\"sk2_second_chance\" value=\"". $unlock_key['class'] . "\">";
+					echo "<input type=\"hidden\" name=\"sk_second_chance\" id=\"sk_second_chance\" value=\"". $unlock_key['class'] . "\">";
 					echo "<input type=\"hidden\" name=\"c_id\" id=\"c_id\" value=\"" . $this->cur_comment->ID . "\">";
 					echo "<input type=\"hidden\" name=\"c_author\" id=\"c_author\" value=\"" . $this->cur_comment->author_email . "\">";
 
@@ -339,7 +339,7 @@ class sk2_core
 			echo ">\n";
 			if ($format['type'] == "check" || $format['type'] == "checkbox")
 			{
-				sk2_plugin::output_UI_input($name, "checkbox", $sk2_settings->get_core_settings($name));
+				sk_plugin::output_UI_input($name, "checkbox", $sk2_settings->get_core_settings($name));
 				if (!empty($format['caption']))
 					echo " " . __($format['caption'], 'sk2');
 				if (!empty($format['after']))
@@ -350,9 +350,9 @@ class sk2_core
 				if (! empty($format['caption']))
 					echo __($format['caption'], 'sk2') . " ";
 				if ($format['type'] == "menu" || $format['type'] == "select")
-					sk2_plugin::output_UI_menu($name, $format['options'], $sk2_settings->get_core_settings($name));
+					sk_plugin::output_UI_menu($name, $format['options'], $sk2_settings->get_core_settings($name));
 				else 
-					sk2_plugin::output_UI_input($name, "text", $sk2_settings->get_core_settings($name), @$format['size']);
+					sk_plugin::output_UI_input($name, "text", $sk2_settings->get_core_settings($name), @$format['size']);
 				
 				if (! empty($format['after']))
 					echo " " . __($format['after'], 'sk2');
@@ -809,7 +809,7 @@ class sk2_core
 			
 			if ($found < 2)
 			{
-				if ($payload_plugin = $this->get_plugin("sk2_payload_plugin"))
+				if ($payload_plugin = $this->get_plugin("sk_payload_plugin"))
 				{
 					$payload_plugin->set_option_value("weight", "0.0");
 					echo "<div class=\"msg_bad\">" . __("Temporarily disabling form payload check.", 'sk2') . "</div>";				
@@ -830,7 +830,7 @@ class sk2_core
 			else
 			{
 				global $sk2_settings;
-				if ($payload_plugin = $this->get_plugin("sk2_payload_plugin"))
+				if ($payload_plugin = $this->get_plugin("sk_payload_plugin"))
 				{
 					$save_weight = $payload_plugin->get_option_value("weight");
 					$payload_plugin->set_option_value("weight", "1.0");

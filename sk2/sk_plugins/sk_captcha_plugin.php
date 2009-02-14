@@ -17,7 +17,7 @@
 // Displays a captcha as a backup solution for borderline karma
 
 
-class sk2_captcha_plugin extends sk2_plugin
+class sk_captcha_plugin extends sk_plugin
 {
 	var $name = "Captcha Check";
 	var $description = "If (and only if) the comment's karma is within a certain error margin, provide the commenter with a chance to clear himself by solving a Captcha.";
@@ -53,7 +53,7 @@ class sk2_captcha_plugin extends sk2_plugin
 	{
 		echo "<p><h2>" . __("Kind-a-Captcha", 'sk2') . "</h2></p>";
 		echo "<p>" . __("Please type the code below in the input field and click on Submit (characters can only be letters from A to F and digits from 0 to 9).", 'sk2') . "</p>";
-		echo "<img src=\"sk2_captcha_graphic.php?c_id=". $cmt_object->ID . "&c_author=". urlencode($cmt_object->author_email) . "\" alt=\"captcha_img\"/>";
+		echo "<img src=\"sk_captcha_graphic.php?c_id=". $cmt_object->ID . "&c_author=". urlencode($cmt_object->author_email) . "\" alt=\"captcha_img\"/>";
 				?>
 		<p><input type="text" name="captcha_code" id="captcha_code" size="6"></p>
 		<input type="submit" name="submit_captcha" id="submit_captcha" value="Submit">
@@ -83,6 +83,6 @@ class sk2_captcha_plugin extends sk2_plugin
 		
 }
 
-$this->register_plugin("sk2_captcha_plugin", 2); 
+$this->register_plugin("sk_captcha_plugin", 2); 
 
 ?>
