@@ -83,7 +83,7 @@ class sk2_pjw_simpledigest extends sk_plugin
 
 			$post = get_post($cmt_object->post_ID);
 
-			$mail_content .= sk_nonce_email_url($post->post_author, get_option('siteurl') . '/wp-admin/edit.php?page=spamkarma2&sk2_section=spam') ."\r\n\r\n";
+			$mail_content .= sk_nonce_email_url($post->post_author, get_option('siteurl') . '/wp-admin/edit.php?page=spamkarma&sk2_section=spam') ."\r\n\r\n";
 			//### l10n Add
 			$mail_content .= sprintf(__ngettext("There has been one comment spam caught since the last digest report %s ago.", "There have been %s comment spams caught since the last digest report %s ago.", $new_spams, 'spam-karma'), $new_spams, sk_time_since($last_run)) ."\r\n";
 			$mail_content .= "\r\n";
@@ -108,7 +108,7 @@ class sk2_pjw_simpledigest extends sk_plugin
 								.$wpdb->comments ."` AS `comments_table` LEFT JOIN `" 
 								.$wpdb->posts ."` AS `posts_table` ON "
 								."`posts_table`.`ID` = `comments_table`.`comment_post_ID` LEFT JOIN `"
-								. sk2_kSpamTable . "` AS `spam_table` ON "
+								. SK_KSPAM_TABLE . "` AS `spam_table` ON "
 								."`spam_table`.`comment_ID` = `comments_table`.`comment_ID` WHERE "
 								."(`comment_approved`= '0' OR (`comment_approved` = 'spam' AND `spam_table`.`karma` >= $threshold)) AND "
 								."`comment_date_gmt` > " 
@@ -251,7 +251,7 @@ class sk2_pjw_simpledigest extends sk_plugin
 			$links .= __("Rescue comment from spam: ", 'spam-karma');
 
 			$link = get_option('siteurl') . "/wp-admin/edit.php";
-			$link .= "?page=spamkarma2&sk2_section=spam";
+			$link .= "?page=spamkarma&sk2_section=spam";
 			$link .= "&recover_selection=Recover%20Selected";
 			$link .= "&comment_grp_check%5B" . $cmt_row->comment_ID ."%5D";
 			$link .= "=" . $cmt_row->spam_id;
@@ -262,7 +262,7 @@ class sk2_pjw_simpledigest extends sk_plugin
 			$links .= __("Spank comment in moderation: ", 'spam-karma');
 			
 			$link = get_option('siteurl') . "/wp-admin/edit.php";
-			$link .= "?page=spamkarma2&sk2_section=approved";
+			$link .= "?page=spamkarma&sk2_section=approved";
 			$link .= "&recover_selection=Spank%20Selected";
 			$link .= "&comment_grp_check%5B" . $cmt_row->comment_ID ."%5D";
 			$link .= "=" . $cmt_row->spam_id;

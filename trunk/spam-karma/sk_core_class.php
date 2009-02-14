@@ -17,14 +17,14 @@
 Spam Karma.3rc4
 */
 
-define ("sk2_kPluginFolder", dirname(__FILE__) . "/sk_plugins/");
-define ("sk2_kCoreVersion", 5);
-define ("sk2_kVersion", 3); // => 2.3
-define ("sk2_kRelease", "rc4");
+define ("SK_KPLUGIN_FOLDER", dirname(__FILE__) . "/sk_plugins/");
+define ("SK_KCORE_VERSION", 5);
+define ("SK_KVERSION", 3); // => 2.3
+define ("SK_KRELEASE", "rc4");
 if (isset($table_prefix))
-	define ("sk2_kSpamTable", $table_prefix . "sk2_spams");
+	define ("SK_KSPAM_TABLE", $table_prefix . "sk2_spams");
 else
-	define ("sk2_kSpamTable", sk2_table_prefix . "sk2_spams");
+	define ("SK_KSPAM_TABLE", SK_TABLE_PREFIX . "sk2_spams");
 
 require_once(dirname(__FILE__) . "/sk_util_class.php");
 require_once(dirname(__FILE__) . "/sk_plugin_class.php");
@@ -40,7 +40,7 @@ class sk2_core
 	var $cur_comment = 0;
 	var $post_proc = false;
 	var $plugins = array();
-	var $version = sk2_kCoreVersion;
+	var $version = SK_KCORE_VERSION;
 	
 	function sk2_core($comment_ID = 0, $post_proc = false, $load_plugins = true)
 	{
@@ -62,10 +62,10 @@ class sk2_core
 			$this->plugins = $sk_plugin_array;
 			return;
 		}
-		$plugin_files = sk2_get_file_list(sk2_kPluginFolder);
+		$plugin_files = sk2_get_file_list(SK_KPLUGIN_FOLDER);
 		foreach($plugin_files as $plugin)
 		{
-			include_once(sk2_kPluginFolder . $plugin);	
+			include_once(SK_KPLUGIN_FOLDER . $plugin);	
 		}	
 		$sk_plugin_array = $this->plugins;
 	}
@@ -471,7 +471,7 @@ class sk2_core
 		
 		if ($cur_version == 0)
 		{
-			$query = "CREATE TABLE IF NOT EXISTS `" . sk2_kSpamTable . "` (
+			$query = "CREATE TABLE IF NOT EXISTS `" . SK_KSPAM_TABLE . "` (
 	 `id` int(11) NOT NULL auto_increment,
 	 `comment_ID` int(11) NOT NULL default '0',
 	 `karma` float(2) NOT NULL default '0',
@@ -486,11 +486,11 @@ class sk2_core
 			$wpdb->query($query);
 			if (mysql_error())
 			{
-				$this->log_msg(__("Could not create SQL table: ", 'spam-karma') . sk2_kSpamTable . ".", 10, true);
+				$this->log_msg(__("Could not create SQL table: ", 'spam-karma') . SK_KSPAM_TABLE . ".", 10, true);
 				$success = false;
 			}	
 	
-			$query = "CREATE TABLE IF NOT EXISTS `" . sk2_kLogTable . "` (
+			$query = "CREATE TABLE IF NOT EXISTS `" . SK_KLOGTABLE . "` (
 	`id` INT NOT NULL AUTO_INCREMENT ,
 	`msg` TEXT NOT NULL ,
 	`component` TINYTEXT NOT NULL ,
@@ -502,11 +502,11 @@ class sk2_core
 			 $wpdb->query($query);
 			if (mysql_error())
 			{
-				$this->log_msg(__("Could not create SQL table: ", 'spam-karma') . sk2_kLogTable . ".", 10, true);
+				$this->log_msg(__("Could not create SQL table: ", 'spam-karma') . SK_KLOGTABLE . ".", 10, true);
 				$success = false;
 			}	
 			
-			$query = "CREATE TABLE IF NOT EXISTS `". sk2_kBlacklistTable ."` (
+			$query = "CREATE TABLE IF NOT EXISTS `". SK_KBLACKLIST_TABLE ."` (
 	 `id` int(11) NOT NULL auto_increment,
 	 `type` tinytext NOT NULL,
 	 `value` text NOT NULL,
@@ -524,22 +524,22 @@ class sk2_core
 			$wpdb->query($query);
 			if (mysql_error())
 			{
-				$this->log_msg(__("Could not create SQL table: ", 'spam-karma') . sk2_kBlacklistTable . ".", 10, true);
+				$this->log_msg(__("Could not create SQL table: ", 'spam-karma') . SK_KBLACKLIST_TABLE . ".", 10, true);
 				$success = false;
 			}	
 		}
 		elseif ($cur_version == 1)
 		{
-			$query = "ALTER TABLE `" . sk2_kSpamTable . "` ADD INDEX ( `comment_ID` )";
+			$query = "ALTER TABLE `" . SK_KSPAM_TABLE . "` ADD INDEX ( `comment_ID` )";
 
 			$wpdb->query($query);
 			if (mysql_error())
 			{
-				$this->log_msg(__("Could not alter SQL table: ", 'spam-karma') . sk2_kSpamTable . ".", 10, true);
+				$this->log_msg(__("Could not alter SQL table: ", 'spam-karma') . SK_KSPAM_TABLE . ".", 10, true);
 				$success = false;
 			}
 			else
-				$this->log_msg(__("Successfully created index for SQL table: ", 'spam-karma') . sk2_kSpamTable . ".", 5, false);
+				$this->log_msg(__("Successfully created index for SQL table: ", 'spam-karma') . SK_KSPAM_TABLE . ".", 5, false);
 		}
 	
 		// modifying WP's tables to work correctly...
@@ -612,7 +612,7 @@ class sk2_core
 		{
 			if (! $this->cur_comment->ID)
 			{
-				$this->log_msg(__("Cannot update sk2_kSpamTable info (no comment ID provided).", 'spam-karma'), 8);
+				$this->log_msg(__("Cannot update SK_KSPAM_TABLE info (no comment ID provided).", 'spam-karma'), 8);
 				return false;
 			}
 
@@ -648,12 +648,12 @@ class sk2_core
 		//	print_r($comment_sk_info);
 			}
 			
-			$query = "UPDATE `". sk2_kSpamTable ."` SET ";
+			$query = "UPDATE `". SK_KSPAM_TABLE ."` SET ";
 			$query_end = "`last_mod` = NOW() WHERE `id` = " . $comment_sk_info_orig->id;
 		}
 		else
 		{
-			$query = "INSERT INTO `". sk2_kSpamTable ."` SET ";
+			$query = "INSERT INTO `". SK_KSPAM_TABLE ."` SET ";
 			$query_end = "`last_mod` = NOW(), `comment_ID` = $comment_ID";
 		}
 
@@ -672,9 +672,9 @@ class sk2_core
 		//echo $query;
 		$wpdb->query($query);
 		if (! mysql_error())
-			$this->log_msg(__("Inserted/Updated sk2_kSpamTable record for comment ID: ", 'spam-karma') . $comment_ID . " (". ($append ? __("mode: append", 'spam-karma') : __("mode: overwrite", 'spam-karma')) . ").", 0);
+			$this->log_msg(__("Inserted/Updated SK_KSPAM_TABLE record for comment ID: ", 'spam-karma') . $comment_ID . " (". ($append ? __("mode: append", 'spam-karma') : __("mode: overwrite", 'spam-karma')) . ").", 0);
 		else
-			$this->log_msg(__("Failed inserting/updating sk2_kSpamTable record for comment ID:", 'spam-karma') . $comment_ID . " (". ($append ? __("mode: append", 'spam-karma') : __("mode: overwrite", 'spam-karma')) . "). <br/>" . __("Query: ", 'spam-karma') . "<code>$query</code>", 8, true);
+			$this->log_msg(__("Failed inserting/updating SK_KSPAM_TABLE record for comment ID:", 'spam-karma') . $comment_ID . " (". ($append ? __("mode: append", 'spam-karma') : __("mode: overwrite", 'spam-karma')) . "). <br/>" . __("Query: ", 'spam-karma') . "<code>$query</code>", 8, true);
 
 	}
 	
@@ -688,11 +688,11 @@ class sk2_core
 		if (! $comment_ID)
 		{
 		echo 
-			$this->log_msg(__("get_comment_sk_info: Cannot get sk2_kSpamTable info (no comment ID provided).", 'spam-karma'), 8);
+			$this->log_msg(__("get_comment_sk_info: Cannot get SK_KSPAM_TABLE info (no comment ID provided).", 'spam-karma'), 8);
 			return false;
 		}
 
-		if ($comment_sk_info = $wpdb->get_row("SELECT * FROM `". sk2_kSpamTable ."` WHERE `comment_ID` = $comment_ID"))
+		if ($comment_sk_info = $wpdb->get_row("SELECT * FROM `". SK_KSPAM_TABLE ."` WHERE `comment_ID` = $comment_ID"))
 		{
 
 			if (! empty($comment_sk_info->karma_cmts))
@@ -718,7 +718,7 @@ class sk2_core
 	function sanity_check()
 	{
 		global $sk_settings;
-		if (isset($_REQUEST['sk2_section']) || ($_REQUEST['page'] == 'spamkarma2'))
+		if (isset($_REQUEST['sk2_section']) || ($_REQUEST['page'] == 'spamkarma'))
 			return;
 			
 		$mysql_updates = $sk_settings->get_core_settings("mysql_updates");
@@ -736,7 +736,7 @@ class sk2_core
 		}
 		if (!empty ($message))
 		{
-			$message .= " " . sprintf(__("You MUST visit %sSpam Karma's admin page%s at least once before letting it filter your comments (chaos may ensue otherwise).", 'spam-karma'), "<a href=\"". get_bloginfo('wpurl') . "/wp-admin/edit.php?page=spamkarma2" . "\">", "</a>");
+			$message .= " " . sprintf(__("You MUST visit %sSpam Karma's admin page%s at least once before letting it filter your comments (chaos may ensue otherwise).", 'spam-karma'), "<a href=\"". get_bloginfo('wpurl') . "/wp-admin/edit.php?page=spamkarma" . "\">", "</a>");
 		
 			echo "<div class=\"sk2-fatal-error\" style=\"position:absolute; left:0; top:0; background-color: red; color: white; border: 1px black solid; padding: 5px; \">$message</div>";
 		}
@@ -771,9 +771,9 @@ class sk2_core
 		if (isset($run_tools['reset_all_tables']))
 		{
 			$this->log_msg(__("Dropping all SK2 Tables!", 'spam-karma'), 8);
-			$wpdb->query("DROP TABLE `". sk2_kSpamTable . "`;");
-			$wpdb->query("DROP TABLE `". sk2_kLogTable . "`;");
-			$wpdb->query("DROP TABLE `". sk2_kBlacklistTable . "`;");
+			$wpdb->query("DROP TABLE `". SK_KSPAM_TABLE . "`;");
+			$wpdb->query("DROP TABLE `". SK_KLOGTABLE . "`;");
+			$wpdb->query("DROP TABLE `". SK_KBLACKLIST_TABLE . "`;");
 			$this->log_msg(__("Dropped all SK2 Tables!", 'spam-karma'), 7);
 			$sk_settings->set_core_settings("", "mysql_updates");
 			$this->log_msg(__("Forcing MySQL updates on core and plugins.", 'spam-karma'), 6, 0, "web_UI");
