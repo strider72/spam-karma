@@ -325,7 +325,7 @@ class sk2_core
 			<legend><?php _e("General Settings", 'spam-karma'); ?></legend>
 		<ul>
 <?php
-		echo sk2_nonce_field();
+		echo sk_nonce_field();
 
 		global $sk2_settings;
 		foreach($sk2_settings->core_defaults as $name => $format)

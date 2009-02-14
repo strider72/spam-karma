@@ -14,9 +14,9 @@
 ************************************************************************************************/
 ?><?php
 
-// This function courtesy of: http://blog.natbat.co.uk/archive/2003/Jun/14/sk2_time_since
+// This function courtesy of: http://blog.natbat.co.uk/archive/2003/Jun/14/sk_time_since
 /* Works out the time since the entry post, takes a an argument in unix time (seconds) */
-function sk2_time_since($original, $today = 0) 
+function sk_time_since($original, $today = 0) 
 {
     // array of time period chunks
     $chunks = array(

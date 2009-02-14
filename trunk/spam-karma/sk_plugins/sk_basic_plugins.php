@@ -163,7 +163,7 @@ class sk2_old_post_plugin extends sk_plugin
 	function filter_this(&$cmt_object)
 	{
 		$post_ts = strtotime($cmt_object->post_date . " GMT");
-		$post_timesince = sk2_time_since($post_ts);
+		$post_timesince = sk_time_since($post_ts);
 		$old_when = max($this->get_option_value('old_when'), 1);
 		$still_active = max($this->get_option_value('still_active'), 1);
 
