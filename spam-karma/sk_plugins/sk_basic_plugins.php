@@ -16,7 +16,7 @@
 // Basic plugins
 // A bunch of simple plugin classes, all lumped into one single file
 
-class sk2_user_level_plugin extends sk_plugin
+class SK_User_Level_Plugin extends sk_plugin
 {
 	var $name = "User Level";
 	var $description = "";
@@ -48,7 +48,7 @@ class sk2_user_level_plugin extends sk_plugin
 	}
 }
 
-class sk2_entities_plugin extends sk_plugin
+class SK_Entities_Plugin extends sk_plugin
 {
 	var $name = "Entities Detector";
 	var $description = "Detect improper use of HTML entities (used by spammers to foil keyword detection).";
@@ -92,7 +92,7 @@ class sk2_entities_plugin extends sk_plugin
 }
 
 
-class sk2_link_count_plugin extends sk_plugin
+class SK_Link_Count_Plugin extends sk_plugin
 {
 	var $name = "Link Counter";
 	var $description = "";
@@ -148,7 +148,7 @@ class sk2_link_count_plugin extends sk_plugin
 
 }
 
-class sk2_old_post_plugin extends sk_plugin
+class SK_Old_Post_Plugin extends sk_plugin
 {
 	var $name = "Post Age and Activity";
 	var $description = "Stricter on old posts showing no recent activity.";
@@ -204,7 +204,7 @@ class sk2_old_post_plugin extends sk_plugin
 
 }
 
-class sk2_stopwatch_plugin extends sk_plugin
+class SK_Stopwatch_Plugin extends sk_plugin
 {
 	var $name = "Stopwatch";
 	var $description = "Makes sure commenter has been on page for a certain number of seconds before commenting.";
@@ -242,11 +242,11 @@ class sk2_stopwatch_plugin extends sk_plugin
 }
 
 
-$this->register_plugin("sk2_user_level_plugin", 1); // so basic we should go there first
-$this->register_plugin("sk2_link_count_plugin", 2); // idem
-$this->register_plugin("sk2_stopwatch_plugin", 2); // idem
-$this->register_plugin("sk2_entities_plugin", 3); 
-$this->register_plugin("sk2_old_post_plugin", 7); 
+$this->register_plugin("SK_User_Level_Plugin", 1); // so basic we should go there first
+$this->register_plugin("SK_Link_Count_Plugin", 2); // idem
+$this->register_plugin("SK_Stopwatch_Plugin", 2); // idem
+$this->register_plugin("SK_Entities_Plugin", 3); 
+$this->register_plugin("SK_Old_Post_Plugin", 7); 
 
 
 ?>
