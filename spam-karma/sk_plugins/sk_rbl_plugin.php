@@ -1,6 +1,6 @@
 <?php
 /*
-	RBL Filter for Spam Karma 2
+	RBL Filter for Spam Karma
 	Runs URLs and IPs through each RBL
 	(c) 2005 James Seward and DrDave
 */

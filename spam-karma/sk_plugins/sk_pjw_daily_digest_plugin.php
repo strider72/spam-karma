@@ -1,7 +1,7 @@
 <?php
 /*	
 	Simple Digest Plugin
-	For Spam Karma 2
+	For Spam Karma
 	Version 1.20 
 	Copyright 2005 Peter Westood 
 
@@ -78,7 +78,7 @@ class sk2_pjw_simpledigest extends sk_plugin
 
 			$cur_moderated = $wpdb->get_var("SELECT COUNT(*) FROM `$wpdb->comments` WHERE `comment_approved`= '0'");	
 			
-			$mail_subj = "[". get_option('blogname') ."] Spam Karma 2: " . __("Simple Digest Report", 'sk2');
+			$mail_subj = "[". get_option('blogname') ."] Spam Karma: " . __("Simple Digest Report", 'sk2');
 			$mail_content = sprintf(__ngettext("There is currently one comment in moderation", "There are currently %d comments in moderation", $cur_moderated, 'sk2'), $cur_moderated)."\r\n";
 
 			$post = get_post($cmt_object->post_ID);
@@ -168,7 +168,7 @@ class sk2_pjw_simpledigest extends sk_plugin
 								$karma_cmts .= "========\r\n";
 							}
 						}
-						$mail_content .= "\r\n" . __("Spam Karma 2 Report: ", 'sk2') . "\r\n" . $karma_cmts ."\r\n";
+						$mail_content .= "\r\n" . __("Spam Karma Report: ", 'sk2') . "\r\n" . $karma_cmts ."\r\n";
 						$mail_content .= $this->generate_links($post->post_author, $row) . "\r\n\r\n";
 					}
 				}

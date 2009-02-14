@@ -1,6 +1,6 @@
 <?php
 /**********************************************************************************************
- Spam Karma 2 (c) 2008 - Dave A. duVerle - http://unknowngenius.com
+ Spam Karma (c) 2008 - Dave A. duVerle - http://unknowngenius.com
 
  This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 ************************************************************************************************/
 ?><?php
 /*
-Spam Karma 2.3rc4
+Spam Karma.3rc4
 */
 
 define ("sk2_kPluginFolder", dirname(__FILE__) . "/sk_plugins/");
@@ -319,7 +319,7 @@ class sk2_core
 	function output_UI()
 	{
 ?>
-	  <div class="wrap hide" id="sk2_settings_pane"><h2><?php _e("Spam Karma 2 Settings", 'sk2'); ?></h2>
+	  <div class="wrap hide" id="sk2_settings_pane"><h2><?php _e("Spam Karma Settings", 'sk2'); ?></h2>
 	  <form name="sk2_settings_form" id="sk2_settings_form" method="post">
 		<fieldset class="options">
 			<legend><?php _e("General Settings", 'sk2'); ?></legend>

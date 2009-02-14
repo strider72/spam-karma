@@ -1,6 +1,6 @@
 <?php
 /**********************************************************************************************
- Spam Karma 2 (c) 2008 - Dave A. duVerle - http://unknowngenius.com
+ Spam Karma (c) 2008 - Dave A. duVerle - http://unknowngenius.com
 
  This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 /*
 Plugin Name: Spam Karma
 Plugin URI: http://unknowngenius.com/blog/wordpress/spam-karma/
-Description: Ultimate Spam Killer for WordPress.<br/> Activate the plugin and go to <a href="edit.php?page=spamkarma2">Manage >> Spam Karma 2</a> to configure.<br/> See <a href="edit.php?page=spamkarma2&sk2_section=about">Spam Karma 2 >> About</a> for details.
+Description: Ultimate Spam Killer for WordPress.<br/> Activate the plugin and go to <a href="edit.php?page=spamkarma2">Manage >> Spam Karma</a> to configure.<br/> See <a href="edit.php?page=spamkarma2&sk2_section=about">Spam Karma >> About</a> for details.
 Author: dr Dave
 Version: 2.3
 Author URI: http://unknowngenius.com/blog/
@@ -46,8 +46,8 @@ if (! isset($_SERVER['PHP_SELF']))
 		
 function sk2_add_options() 
 {
-    add_management_page(__('Spam Karma 2 Options', 'sk2'), 'Spam Karma 2', 7, "spamkarma2", 'sk2_option_page');
-	add_options_page(__('Spam Karma 2 Options', 'sk2'), 'Spam Karma 2', 7, "spamkarma2", 'sk2_option_page');
+    add_management_page(__('Spam Karma Options', 'sk2'), 'Spam Karma', 7, "spamkarma2", 'sk2_option_page');
+	add_options_page(__('Spam Karma Options', 'sk2'), 'Spam Karma', 7, "spamkarma2", 'sk2_option_page');
 }
 
 function sk2_init ()
