@@ -14,20 +14,20 @@
 ************************************************************************************************/
 ?><div class="sk_first wrap sk_about">
 <blockquote><p><i>Lasciate ogni speranza, voi ch'entrate</i></p>
-<p class="source"><?php _e("Some dead Italian dude", 'sk2'); ?></p></blockquote>
-<blockquote><p><i><?php _e("Hey... Wanna play some poker?", 'sk2'); ?></i></p>
-<p class="source"><?php _e("Some Internet jackass", 'sk2'); ?></p></blockquote>
+<p class="source"><?php _e("Some dead Italian dude", 'spam-karma'); ?></p></blockquote>
+<blockquote><p><i><?php _e("Hey... Wanna play some poker?", 'spam-karma'); ?></i></p>
+<p class="source"><?php _e("Some Internet jackass", 'spam-karma'); ?></p></blockquote>
 <br/>
-<h2 class="sk_first"><?php _e("The Machine", 'sk2'); ?></h2>
-<p><strong><?php _e('<a href="http://unknowngenius.com/blog/wordpress/spam-karma" target="_blank">Spam Karma</a></strong> is the proud successor to Spam Karma, with whom it shares most of the development ideas, but absolutely none of the code. It is meant to stop all forms of automated Blog spam effortlessly, while remaining as unobtrusive as possible to regular commenters.', 'sk2');?></p>
+<h2 class="sk_first"><?php _e("The Machine", 'spam-karma'); ?></h2>
+<p><strong><?php _e('<a href="http://unknowngenius.com/blog/wordpress/spam-karma" target="_blank">Spam Karma</a></strong> is the proud successor to Spam Karma, with whom it shares most of the development ideas, but absolutely none of the code. It is meant to stop all forms of automated Blog spam effortlessly, while remaining as unobtrusive as possible to regular commenters.', 'spam-karma');?></p>
 
-<h2><?php _e("The Man", 'sk2'); ?></h2>
+<h2><?php _e("The Man", 'spam-karma'); ?></h2>
 <p><strong><?php _e('<a href="http://unknowngenius.com/blog/me/" target="_blank">Dr Dave</a></strong> is a card-carrying Evil Genius still busy plotting world domination from his secret hideout in the Parisian catacombs (having recently relocated from his volcanic lair in Tokyo, Japan).
-When he is not wasting his time coding ridiculously elaborate anti-spam plugins, he also writes somewhat offensive entries on miscellaneous pointless matters in <a href="http://unknowngenius.com/blog/" target="_blank">his blog</a>.', 'sk2'); ?></p>
+When he is not wasting his time coding ridiculously elaborate anti-spam plugins, he also writes somewhat offensive entries on miscellaneous pointless matters in <a href="http://unknowngenius.com/blog/" target="_blank">his blog</a>.', 'spam-karma'); ?></p>
 
-<h2><?php _e("The Bribes", 'sk2'); ?></h2>
-<p><?php _e('Donations are in <em>no way</em> mandatory.', 'sk2'); ?></p>
-<p><?php _e('Yet, I have been spending considerable amounts of time writing, supporting and debugging both SK1 and SK2. Therefore, if you like what you see, and want to see more of it in the future, feel free to help me finance my many costly addictions by droping a buck or two in the tip jar (<a href="http://unknowngenius.com/blog/archives/2006/01/30/the-state-of-spam-karma/#donations">more reasons why you should</a>)...', 'sk2'); ?></p>
+<h2><?php _e("The Bribes", 'spam-karma'); ?></h2>
+<p><?php _e('Donations are in <em>no way</em> mandatory.', 'spam-karma'); ?></p>
+<p><?php _e('Yet, I have been spending considerable amounts of time writing, supporting and debugging both SK1 and SK2. Therefore, if you like what you see, and want to see more of it in the future, feel free to help me finance my many costly addictions by droping a buck or two in the tip jar (<a href="http://unknowngenius.com/blog/archives/2006/01/30/the-state-of-spam-karma/#donations">more reasons why you should</a>)...', 'spam-karma'); ?></p>
 <p><form action="https://www.paypal.com/cgi-bin/webscr" method="post" style="text-align:center;">
 <input type="radio" name="amount" value="2.00" checked="checked"/>$2.00<br />
 <input type="radio" name="amount" value="5.00"/>$5.00<br />
@@ -38,11 +38,11 @@ When he is not wasting his time coding ridiculously elaborate anti-spam plugins,
 <input type="radio" name="amount" value="666.00"/>$666.00<br />
 <input type="hidden" name="cmd" value="_xclick"/><input type="hidden" name="business" value="paypal@unknowngenius.com"><input type="hidden" name="item_name" value="Buy Dr Dave a Lifetime supply of Bombay Sapphire Fund"/><input type="hidden" name="no_shipping" value="1"/><input type="hidden" name="return" value="http://unknowngenius.com/blog/" /><input type="hidden" name="cancel_return" value="http://unknowngenius.com/blog/"/><input type="hidden" name="currency_code" value="USD"/><input type="hidden" name="tax" value="0"/><input type="hidden" name="bn" value="PP-DonationsBF"/><input type="image" src="https://www.paypal.com/en_US/i/btn/x-click-but21.gif" border="0" name="submit" alt="Make payments with PayPal - it's fast, free and secure!" style="border: none;"/></form>
 </p>
-<p><?php _e('On behalf of Dr Dave Inc., I present you with our guarantee that no less than 25% of all proceedings will go directly toward the purchase of the finest <a href="http://www.physics.uq.edu.au/people/nieminen/bombay_sapphire.html" target="_blank">Bombay Sapphire</a> this city has to offer.', 'sk2'); ?></p>
-<p><?php _e('Kind words of support or constructive comments are always welcome as well. Please use this <a href="http://unknowngenius.com/blog/wordpress/spam-karma/sk2-contact-form/">online form</a> to contact me.', 'sk2'); ?></p>
-<h2><?php _e("The Cast", 'sk2'); ?></h2>
-<p><?php _e("Many, many people have, one way or another, contributed to Spam Karma... Including, in alphabetical order:", 'sk2'); ?></p>
-<fieldset class="sk2_cast"><legend><b><?php _e("Mad Coding Skillz", 'sk2'); ?></b></legend>
+<p><?php _e('On behalf of Dr Dave Inc., I present you with our guarantee that no less than 25% of all proceedings will go directly toward the purchase of the finest <a href="http://www.physics.uq.edu.au/people/nieminen/bombay_sapphire.html" target="_blank">Bombay Sapphire</a> this city has to offer.', 'spam-karma'); ?></p>
+<p><?php _e('Kind words of support or constructive comments are always welcome as well. Please use this <a href="http://unknowngenius.com/blog/wordpress/spam-karma/sk2-contact-form/">online form</a> to contact me.', 'spam-karma'); ?></p>
+<h2><?php _e("The Cast", 'spam-karma'); ?></h2>
+<p><?php _e("Many, many people have, one way or another, contributed to Spam Karma... Including, in alphabetical order:", 'spam-karma'); ?></p>
+<fieldset class="sk2_cast"><legend><b><?php _e("Mad Coding Skillz", 'spam-karma'); ?></b></legend>
 <p><?php
 	$coders = array("James Seward" => "http://www.grooblehonk.co.uk/",
 "Matt Read" => "http://mattread.com/",
@@ -114,7 +114,7 @@ When he is not wasting his time coding ridiculously elaborate anti-spam plugins,
 ?>
 </p></fieldset>
 
-<fieldset class="sk2_cast"><legend><b><?php _e("Fearless Guinea Pigs, Generous Souls and All Around Cool People", 'sk2'); ?></b></legend>
+<fieldset class="sk2_cast"><legend><b><?php _e("Fearless Guinea Pigs, Generous Souls and All Around Cool People", 'spam-karma'); ?></b></legend>
 <p><?php
 	$testers = array('Adam Harvey'=>'http://www.organicmechanic.org/',
 'Admiral Justin'=>'http://s89631316.onlinehome.us/',
@@ -455,5 +455,5 @@ When he is not wasting his time coding ridiculously elaborate anti-spam plugins,
 ?>
 </p></fieldset>
 
-<p style="text-indent:0;"><em><small><?php _e('Did I leave you out? please do let me know... I\'ve done my best to ensure I had the whole team covered, but I might have missed a few, so don\'t hesitate to <a href="http://unknowngenius.com/blog/wordpress/spam-karma/sk2-contact-form/">contact me</a>.', 'sk2'); ?></small></em></p>
+<p style="text-indent:0;"><em><small><?php _e('Did I leave you out? please do let me know... I\'ve done my best to ensure I had the whole team covered, but I might have missed a few, so don\'t hesitate to <a href="http://unknowngenius.com/blog/wordpress/spam-karma/sk2-contact-form/">contact me</a>.', 'spam-karma'); ?></small></em></p>
 </div>

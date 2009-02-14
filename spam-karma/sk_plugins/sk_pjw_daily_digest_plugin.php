@@ -69,7 +69,7 @@ class sk2_pjw_simpledigest extends sk_plugin
 		{
 			//Record a new last run time now to stop multiple concurrent spam digests maybe?
 			$this->set_option_value('last_run', time());
-			$this->log_msg(sprintf(__("Generating mail digest (Last digest was %s).", 'sk2'), sk2_time_since($last_run)));
+			$this->log_msg(sprintf(__("Generating mail digest (Last digest was %s).", 'spam-karma'), sk2_time_since($last_run)));
 			$new_spams = $wpdb->get_var(
 							"SELECT COUNT(*) FROM `$wpdb->comments` WHERE "
 							."(`comment_approved`= '0' OR `comment_approved` = 'spam') AND "
@@ -78,21 +78,21 @@ class sk2_pjw_simpledigest extends sk_plugin
 
 			$cur_moderated = $wpdb->get_var("SELECT COUNT(*) FROM `$wpdb->comments` WHERE `comment_approved`= '0'");	
 			
-			$mail_subj = "[". get_option('blogname') ."] Spam Karma: " . __("Simple Digest Report", 'sk2');
-			$mail_content = sprintf(__ngettext("There is currently one comment in moderation", "There are currently %d comments in moderation", $cur_moderated, 'sk2'), $cur_moderated)."\r\n";
+			$mail_subj = "[". get_option('blogname') ."] Spam Karma: " . __("Simple Digest Report", 'spam-karma');
+			$mail_content = sprintf(__ngettext("There is currently one comment in moderation", "There are currently %d comments in moderation", $cur_moderated, 'spam-karma'), $cur_moderated)."\r\n";
 
 			$post = get_post($cmt_object->post_ID);
 
 			$mail_content .= sk2_nonce_email_url($post->post_author, get_option('siteurl') . '/wp-admin/edit.php?page=spamkarma2&sk2_section=spam') ."\r\n\r\n";
 			//### l10n Add
-			$mail_content .= sprintf(__ngettext("There has been one comment spam caught since the last digest report %s ago.", "There have been %s comment spams caught since the last digest report %s ago.", $new_spams, 'sk2'), $new_spams, sk2_time_since($last_run)) ."\r\n";
+			$mail_content .= sprintf(__ngettext("There has been one comment spam caught since the last digest report %s ago.", "There have been %s comment spams caught since the last digest report %s ago.", $new_spams, 'spam-karma'), $new_spams, sk2_time_since($last_run)) ."\r\n";
 			$mail_content .= "\r\n";
-			$mail_content .= sprintf(__("Spam summary report (skipping karma under %d): ", 'sk2'), $threshold) . "\r\n";
+			$mail_content .= sprintf(__("Spam summary report (skipping karma under %d): ", 'spam-karma'), $threshold) . "\r\n";
 			if (true == $order_by_karma)
 			{
-				$mail_content .= __("Summary is ordered by karma.", 'sk2');
+				$mail_content .= __("Summary is ordered by karma.", 'spam-karma');
 			} else {
-				$mail_content .= __("Summary is ordered by date.", 'sk2');
+				$mail_content .= __("Summary is ordered by date.", 'spam-karma');
 			}		
 			$mail_content .= "\r\n\r\n";
 
@@ -138,15 +138,15 @@ class sk2_pjw_simpledigest extends sk_plugin
 						
 			
 						if(empty($row->comment_type))
-							$type = __("Comment", 'sk2');
+							$type = __("Comment", 'spam-karma');
 						else 
 							$type = $row->comment_type;
 					
 						$mail_content .= "=======================================================\r\n";
 						$mail_content .= "Report on ".$type." number " . $comment_count 
 										 ." (id=".$row->comment_ID.")" ."\r\n";
-						$mail_content .= $type . __(" Author: ", 'sk2') . $row->comment_author ."\r\n";
-						$mail_content .= $type . __(" Content: ", 'sk2') . "\r\n"
+						$mail_content .= $type . __(" Author: ", 'spam-karma') . $row->comment_author ."\r\n";
+						$mail_content .= $type . __(" Content: ", 'spam-karma') . "\r\n"
 										 ."-----------------------------------------\r\n"
 										 .strip_tags($row->comment_content) ."\r\n";
 
@@ -154,7 +154,7 @@ class sk2_pjw_simpledigest extends sk_plugin
 						{
 							$karma_cmts = $this->generate_karma_report(unserialize($row->karma_cmts));
 							$karma_cmts .= "========\r\n";
-							$karma_cmts .= sprintf("%8.2f",$row->karma) . __(" - Overall Karma", 'sk2') . "\r\n";
+							$karma_cmts .= sprintf("%8.2f",$row->karma) . __(" - Overall Karma", 'spam-karma') . "\r\n";
 							$karma_cmts .= "========\r\n";
 						}
 						else
@@ -164,11 +164,11 @@ class sk2_pjw_simpledigest extends sk_plugin
 							{
 								$karma_cmts .= $this->generate_karma_report($cmt_object->karma_cmts);
 								$karma_cmts .= "========\r\n";
-								$karma_cmts .= sprintf("%8.2f",$cmt_object->karma) . __(" - Overall Karma", 'sk2') . "\r\n";
+								$karma_cmts .= sprintf("%8.2f",$cmt_object->karma) . __(" - Overall Karma", 'spam-karma') . "\r\n";
 								$karma_cmts .= "========\r\n";
 							}
 						}
-						$mail_content .= "\r\n" . __("Spam Karma Report: ", 'sk2') . "\r\n" . $karma_cmts ."\r\n";
+						$mail_content .= "\r\n" . __("Spam Karma Report: ", 'spam-karma') . "\r\n" . $karma_cmts ."\r\n";
 						$mail_content .= $this->generate_links($post->post_author, $row) . "\r\n\r\n";
 					}
 				}
@@ -189,7 +189,7 @@ class sk2_pjw_simpledigest extends sk_plugin
 			}
 			else
 			{
-				$this->log_msg(__("Comment would have caused digest but no new spam recieved since last digest.", 'sk2'), 4);
+				$this->log_msg(__("Comment would have caused digest but no new spam recieved since last digest.", 'spam-karma'), 4);
 				// Reset the last run time so that the next comment will trigger a digest as we overwrote it at the first possible moment
 				// so as to ensure the least possiblity of multiple digest emails
 				$this->set_option_value('last_run', $last_run);
@@ -200,7 +200,7 @@ class sk2_pjw_simpledigest extends sk_plugin
 			// Check to see if last_run is in the future - being really paranoid!
 			if ($last_run > time())
 			{
-				$this->log_msg(__("Last run time in the future - resetting to now", 'sk2'), 5);
+				$this->log_msg(__("Last run time in the future - resetting to now", 'spam-karma'), 5);
 				$this->set_option_value('last_run', time());
 			}
 		}
@@ -212,7 +212,7 @@ class sk2_pjw_simpledigest extends sk_plugin
 		echo "<dl>";
 		parent::output_plugin_UI(false);
 		echo "<dd>";
-		echo sprintf(__("Last run was %s ago", 'sk2'), sk2_time_since($this->get_option_value('last_run')));
+		echo sprintf(__("Last run was %s ago", 'spam-karma'), sk2_time_since($this->get_option_value('last_run')));
 		echo "</dd>";
 		echo "</dl>";
 	}
@@ -220,7 +220,7 @@ class sk2_pjw_simpledigest extends sk_plugin
 	function version_update($cur_version)
 	{
 		$this->set_option_value('last_run', time());
-		$this->log_msg(__("Stored initial last run time stamp", 'sk2'), 4);
+		$this->log_msg(__("Stored initial last run time stamp", 'spam-karma'), 4);
 		return true;
 	}
 
@@ -248,7 +248,7 @@ class sk2_pjw_simpledigest extends sk_plugin
 		if ($cmt_row->comment_approved == 'spam')
 		{
 			//Spam
-			$links .= __("Rescue comment from spam: ", 'sk2');
+			$links .= __("Rescue comment from spam: ", 'spam-karma');
 
 			$link = get_option('siteurl') . "/wp-admin/edit.php";
 			$link .= "?page=spamkarma2&sk2_section=spam";
@@ -259,7 +259,7 @@ class sk2_pjw_simpledigest extends sk_plugin
 			$links .= sk2_nonce_email_url($uid, $link);
 		} else {
 			//Moderation
-			$links .= __("Spank comment in moderation: ", 'sk2');
+			$links .= __("Spank comment in moderation: ", 'spam-karma');
 			
 			$link = get_option('siteurl') . "/wp-admin/edit.php";
 			$link .= "?page=spamkarma2&sk2_section=approved";

@@ -57,7 +57,7 @@ class sk_blacklist_plugin extends sk_plugin
 		$this->black_ids = array();
 		$this->white_ids = array();
 		
-		$this->log_msg(__("Running sk2_blacklist plugin on comment ID: ", 'sk2') . $cmt_object->ID, 0);
+		$this->log_msg(__("Running sk2_blacklist plugin on comment ID: ", 'spam-karma') . $cmt_object->ID, 0);
 		
 		// matching IP
 		if (! empty($cmt_object->author_ip))
@@ -171,9 +171,9 @@ class sk_blacklist_plugin extends sk_plugin
 				if ($this->{$opposite . 'match_count'})
 				{
 					if ($opposite == "black")
-						$this->log_msg(__("Downgrading blacklist entries.", 'sk2'), 5)	;	
+						$this->log_msg(__("Downgrading blacklist entries.", 'spam-karma'), 5)	;	
 					else
-						$this->log_msg(__("Downgrading whitelist entries.", 'sk2'), 5);	
+						$this->log_msg(__("Downgrading whitelist entries.", 'spam-karma'), 5);	
 					$sk2_blacklist->downgrade_entries($this->{$opposite . '_ids'});
 				}
 			}
@@ -256,7 +256,7 @@ class sk_blacklist_plugin extends sk_plugin
 		foreach(array("typepad.com", "blogspot.com", "livejournal.com", "xanga.com") as $grey_domain)
 		{
 			$sk2_blacklist->add_entry("domain_grey", $grey_domain, 100, "yes", "default", 100);
-			$this->log_msg(__("Added default domain_grey entry: ", 'sk2') . $grey_domain, 6);
+			$this->log_msg(__("Added default domain_grey entry: ", 'spam-karma') . $grey_domain, 6);
 		}
 
 		return true;

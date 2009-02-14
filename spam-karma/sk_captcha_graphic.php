@@ -32,7 +32,7 @@ if (@$this_cmt->ID && ($author_email == $this_cmt->author_email))
 			$string = strtoupper($key['key']);
 }
 else
-	$string = __("Invalid ID", 'sk2');
+	$string = __("Invalid ID", 'spam-karma');
 
 $im  = imagecreate(150, 50);
 $bg = imagecolorallocate($im, 0, 0, 0);

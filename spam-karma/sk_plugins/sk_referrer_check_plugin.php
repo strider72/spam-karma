@@ -60,21 +60,21 @@ class sk_referrer_check_plugin extends sk_plugin
 			
 		if(empty($source_content))
 		{
-			$log = sprintf(__("Trackback Source Site (%s) unreachable.", 'sk2'), "<em>". $cmt_object->author_url['href'] ."</em>");
+			$log = sprintf(__("Trackback Source Site (%s) unreachable.", 'spam-karma'), "<em>". $cmt_object->author_url['href'] ."</em>");
 
 			$this->hit_karma($cmt_object, 5, $log);
 			$this->log_msg($log , 2);
 		}
 		elseif (strpos(strtolower($source_content), strtolower($this_server)) !== FALSE)
 		{
-			$log = sprintf(__("Trackback Source Site (%s) <strong>does</strong> contain Blog URL domain (%s).", 'sk2'), "<em>". $cmt_object->author_url['href'] ."</em>", "<em>$this_server</em>");
+			$log = sprintf(__("Trackback Source Site (%s) <strong>does</strong> contain Blog URL domain (%s).", 'spam-karma'), "<em>". $cmt_object->author_url['href'] ."</em>", "<em>$this_server</em>");
 			
 			$this->raise_karma($cmt_object, 2, $log); // not impossible to spoof, only give a minor bonus
 			$this->log_msg($log , 1);
 		}
 		else
 		{
-			$log = sprintf(__("Trackback Source Site (%s) does <strong>not</strong> contain Blog URL domain (%s).", 'sk2'), "<em>". $cmt_object->author_url['href'] ."</em>", "<em>$this_server</em>");
+			$log = sprintf(__("Trackback Source Site (%s) does <strong>not</strong> contain Blog URL domain (%s).", 'spam-karma'), "<em>". $cmt_object->author_url['href'] ."</em>", "<em>$this_server</em>");
 
 			$this->hit_karma($cmt_object, 7, $log);
 			$this->log_msg($log , 1);
@@ -86,7 +86,7 @@ class sk_referrer_check_plugin extends sk_plugin
 		echo "<dl>";
 		parent::output_plugin_UI(false); // call default constructor
 		if(! function_exists("curl_init") && ! ini_get('allow_url_fopen') )
-			echo "<dt><strong><p style=\"color:red;\">". __("Both <code>allow_url_fopen</code> and <code>CURL</code> are disabled on this PHP install: TB Referrer Check plugin cannot run. You should disable it.", 'sk2') . "</p></strong></dt>";
+			echo "<dt><strong><p style=\"color:red;\">". __("Both <code>allow_url_fopen</code> and <code>CURL</code> are disabled on this PHP install: TB Referrer Check plugin cannot run. You should disable it.", 'spam-karma') . "</p></strong></dt>";
 		echo "</dl>";
 	}
 }

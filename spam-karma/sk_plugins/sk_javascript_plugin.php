@@ -34,7 +34,7 @@ class sk_javascript_plugin extends sk_plugin
 		{
 			$seed = sk2_rand_str(10);
 			$this->set_option_value('secret_seed', $seed);
-			$this->log_msg(__("Resetting secret seed to: ", 'sk2') . $seed, 5);
+			$this->log_msg(__("Resetting secret seed to: ", 'spam-karma') . $seed, 5);
 		}
 		
 		$max = rand(5, 9);
@@ -107,7 +107,7 @@ class sk_javascript_plugin extends sk_plugin
 	{
 		$seed = sk2_rand_str(10);
 		$this->set_option_value('secret_seed', $seed);
-		$this->log_msg(__("Resetting secret Javascript seed to: ", 'sk2') . $seed, 5);
+		$this->log_msg(__("Resetting secret Javascript seed to: ", 'spam-karma') . $seed, 5);
 		return true;
 	}
 
@@ -116,7 +116,7 @@ class sk_javascript_plugin extends sk_plugin
 		$karma_diff = 0;
 		if ($cmt_object->is_post_proc())
 		{
-			$log = __("Cannot check Javascript payload in post_proc mode.", 'sk2');
+			$log = __("Cannot check Javascript payload in post_proc mode.", 'spam-karma');
 			$this->log_msg($log, 4);
 			return;
 		}	
@@ -128,11 +128,11 @@ class sk_javascript_plugin extends sk_plugin
 		{
 			if ($this->get_option_value("no-penalty"))
 			{
-				$this->log_msg(__("Browser doesn't support Javascript. Penalty disabled", 'sk2'), 4);
+				$this->log_msg(__("Browser doesn't support Javascript. Penalty disabled", 'spam-karma'), 4);
 			}
 			else
 			{
-				$log = __("Browser doesn't support Javascript", 'sk2');
+				$log = __("Browser doesn't support Javascript", 'spam-karma');
 				$karma_diff = -2;				
 			}
 		}
@@ -142,13 +142,13 @@ class sk_javascript_plugin extends sk_plugin
 		
 			if ($_REQUEST['sk2_my_js_check2'] != md5($_REQUEST['sk2_my_js_payload'] . $_REQUEST['sk2_my_js_check1'] . $seed))
 			{
-				$log = __("Fake Javascript Payload.", 'sk2');
+				$log = __("Fake Javascript Payload.", 'spam-karma');
 				$karma_diff = -10;
 				$this->log_msg($log, 6);
 			}
 			else
 			{
-				$log = __("Valid Javascript payload (can be fake).", 'sk2');
+				$log = __("Valid Javascript payload (can be fake).", 'spam-karma');
 				$karma_diff = 0.5;
 			}
 		}

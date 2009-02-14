@@ -66,7 +66,7 @@ class sk_anubis_plugin extends sk_plugin
 		
 		if ($cmt_object->set_DB_status($new_status, get_class($this)))
 		{
-			$this->log_msg(sprintf(__("%s (ID: %d) sent to: %s (Karma: ).", 'sk2'), ucfirst($cmt_object->type), $cmt_object->ID, '<b>' . __($treatment, 'sk2') . '</b>', $cmt_object->karma), 3);
+			$this->log_msg(sprintf(__("%s (ID: %d) sent to: %s (Karma: ).", 'spam-karma'), ucfirst($cmt_object->type), $cmt_object->ID, '<b>' . __($treatment, 'spam-karma') . '</b>', $cmt_object->karma), 3);
 			$sk2_settings->increment_stats($treatment);
 			$sk2_settings->increment_stats($treatment . "_total_karma", $cmt_object->karma);
 		}

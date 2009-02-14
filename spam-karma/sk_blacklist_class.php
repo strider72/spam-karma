@@ -33,7 +33,7 @@ class sk2_blacklist
 		if (($type == "domain_black" || $type == "domain_white") 
 				&& ($grey_rslt = $wpdb->get_results("SELECT * FROM `" . sk2_kBlacklistTable . "` WHERE `type` = 'domain_grey' AND `value` = '$value'")))
 		{
-			$this->log_msg(__("Greylist match. Skipping blacklist entry insertion: ", 'sk2') . "<em>$type</em> - <em> $value</em>.", 7);
+			$this->log_msg(__("Greylist match. Skipping blacklist entry insertion: ", 'spam-karma') . "<em>$type</em> - <em> $value</em>.", 7);
 			return 0;
 		}
 		
@@ -42,19 +42,19 @@ class sk2_blacklist
 		$value = trim($value);
 		if (empty($value))
 		{
-			$this->log_msg(__("Cannot add blacklist entry. Please fill in a value.", 'sk2'), 7);
+			$this->log_msg(__("Cannot add blacklist entry. Please fill in a value.", 'spam-karma'), 7);
 			return false;
 		}
 		elseif ($wpdb->get_var("SELECT COUNT(*) FROM `". sk2_kBlacklistTable . "` WHERE `type`='$type' AND `value`='" . sk2_escape_string($value) . "' LIMIT 1"))
 		{
-			$this->log_msg(__("Skipping duplicate blacklist entry: ", 'sk2') . "<em>$type</em> - <em> $value</em>.", 7);
+			$this->log_msg(__("Skipping duplicate blacklist entry: ", 'spam-karma') . "<em>$type</em> - <em> $value</em>.", 7);
 		}
 		else
 		{
 			if ($wpdb->query("INSERT INTO `". sk2_kBlacklistTable . "` SET `type`='$type', `value`='" . sk2_escape_string($value) . "', `added` = NOW(), `last_used` = NOW(), `score` = $score, `trust` = $trust, `user_reviewed` = '$user_reviewed', `added_by` = '$added_by', `comments` = ''"))
-					$this->log_msg(__("Successfully inserted blacklist entry: ", 'sk2') . "<em>$type</em> - <em>$value</em>.", 3);
+					$this->log_msg(__("Successfully inserted blacklist entry: ", 'spam-karma') . "<em>$type</em> - <em>$value</em>.", 3);
 			else
-					$this->log_msg(__("Failed to insert blacklist entry: ", 'sk2') . "<em>$type</em> - <em>$value</em>.", 8, true);
+					$this->log_msg(__("Failed to insert blacklist entry: ", 'spam-karma') . "<em>$type</em> - <em>$value</em>.", 8, true);
 		}
 		
 		return $wpdb->insert_id;
@@ -67,11 +67,11 @@ class sk2_blacklist
 		$score = min(100, max($score, 0));
 		
 		if (empty($value))
-			$this->log_msg(__("Cannot add blacklist entry. Please fill in a value.", 'sk2'), 7);
+			$this->log_msg(__("Cannot add blacklist entry. Please fill in a value.", 'spam-karma'), 7);
 		elseif	 (($type == "domain_black" || $type == "domain_white")
 			&& ($grey_rslt = $wpdb->get_results("SELECT * FROM `" . sk2_kBlacklistTable . "` WHERE `type` = 'domain_grey' AND `value` = '$value'")))
 		{
-			$this->log_msg(__("Greylist match. Skipping blacklist entry insertion: ", 'sk2') . "<em>$type</em> - <em> $value</em>.", 6);
+			$this->log_msg(__("Greylist match. Skipping blacklist entry insertion: ", 'spam-karma') . "<em>$type</em> - <em> $value</em>.", 6);
 			return;
 		}
 		elseif ($row = $wpdb->get_row("SELECT `id`, `score` FROM `". sk2_kBlacklistTable . "` WHERE `type`='$type' AND `value`='" . sk2_escape_string($value) . "' LIMIT 1"))
@@ -94,11 +94,11 @@ class sk2_blacklist
 		
 		if (! mysql_error())
 		{
-			$this->log_msg(__("Successfully inserted/updated blacklist entry: ", 'sk2') . "<em>$type</em> - <em>$value</em>. " . __("Current score: ", 'sk2') . $score, 3);
+			$this->log_msg(__("Successfully inserted/updated blacklist entry: ", 'spam-karma') . "<em>$type</em> - <em>$value</em>. " . __("Current score: ", 'spam-karma') . $score, 3);
 			return true;
 		}
 		else
-			$this->log_msg(__("Failed to insert blacklist entry: ", 'sk2') . "<em>$type</em> - <em>$value</em>.", 8, true);
+			$this->log_msg(__("Failed to insert blacklist entry: ", 'spam-karma') . "<em>$type</em> - <em>$value</em>.", 8, true);
 	}
 
 
@@ -156,7 +156,7 @@ class sk2_blacklist
 						//echo $regex_rec->value, " ?match? " , $match_value;
 						$res = @preg_match($regex_rec->value, $match_value);
 						if ($res === FALSE)
-							$this->log_msg(sprintf(__("Regex ID: %d (<code>%s</code>) appears to be an invalid regex string! Please fix it in the Blacklist control panel.", 'sk2'), $regex_rec->id, $regex_rec->value), 7);
+							$this->log_msg(sprintf(__("Regex ID: %d (<code>%s</code>) appears to be an invalid regex string! Please fix it in the Blacklist control panel.", 'spam-karma'), $regex_rec->id, $regex_rec->value), 7);
 						elseif ($res)
 							$query_where .= $regex_rec->id . ", ";
 					}
@@ -171,7 +171,7 @@ class sk2_blacklist
 					&& ($grey_rslt = $wpdb->get_results("SELECT * FROM `" . sk2_kBlacklistTable . "` WHERE `type` = 'domain_grey' AND `value` $sql_match")))
 				{
 					$query_where = "";
-					$this->log_msg(__("Grey blacklist match: ignoring.", 'sk2'), 6);				
+					$this->log_msg(__("Grey blacklist match: ignoring.", 'spam-karma'), 6);				
 				}
 				else
 					$query_where = "(`value` $sql_match AND `type` = '" . $match_type . "')";
@@ -189,7 +189,7 @@ class sk2_blacklist
 					&& ($grey_rslt = $wpdb->get_results("SELECT * FROM `" . sk2_kBlacklistTable . "` WHERE `type` = 'domain_grey' AND `value` $sql_match")))
 				{
 					$query_where = "";
-					$this->log_msg(__("Grey blacklist match: ignoring.", 'sk2'), 6);					
+					$this->log_msg(__("Grey blacklist match: ignoring.", 'spam-karma'), 6);					
 				}
 				else
 				{
@@ -231,7 +231,7 @@ class sk2_blacklist
 			$blacklist_rows = $wpdb->get_results($query);
 			if (mysql_error())
 			{
-				$this->log_msg(__("Failed to query blacklist: ", 'sk2') . "<em>$match_type</em> - <em>$match_value</em>. ". __("Query: ", 'sk2') . $query, 8, true);
+				$this->log_msg(__("Failed to query blacklist: ", 'spam-karma') . "<em>$match_type</em> - <em>$match_value</em>. ". __("Query: ", 'spam-karma') . $query, 8, true);
 				return false;
 			}
 			return $blacklist_rows;
@@ -247,7 +247,7 @@ class sk2_blacklist
 		$list = $wpdb->get_results($query);
 		if (mysql_error())
 		{
-			$this->log_msg(__("get_list: Failed to get blacklist entries of type: ", 'sk2') . "<em>$type</em>. " . __("Query: ", 'sk2'). $query, 8, true);
+			$this->log_msg(__("get_list: Failed to get blacklist entries of type: ", 'spam-karma') . "<em>$type</em>. " . __("Query: ", 'spam-karma'). $query, 8, true);
 			return false;
 		}
 	
@@ -269,7 +269,7 @@ class sk2_blacklist
 		$query = "UPDATE `". sk2_kBlacklistTable . "` SET `used_count` = `used_count` + 1, `last_used` = NOW() WHERE `id` IN $str";
 		$wpdb->query($query);
 		if (mysql_error())
-			$this->log_msg(__("Failed to update blacklist used count.", 'sk2') . "</br>" . __("Query: ", 'sk2') . $query, 8, true);
+			$this->log_msg(__("Failed to update blacklist used count.", 'spam-karma') . "</br>" . __("Query: ", 'spam-karma') . $query, 8, true);
 		
 		return $str2;
 	}
@@ -289,7 +289,7 @@ class sk2_blacklist
 		$query = "UPDATE `". sk2_kBlacklistTable . "` SET `score` = 0, `last_used` = NOW() WHERE `id` IN $str";
 		$wpdb->query($query);
 		if (mysql_error())
-			$this->log_msg(__("Failed to downgrade blacklist scores.", 'sk2') . "</br> " . __("Query: ", 'sk2') . $query, 8, true);
+			$this->log_msg(__("Failed to downgrade blacklist scores.", 'spam-karma') . "</br> " . __("Query: ", 'spam-karma') . $query, 8, true);
 		
 		return $str2;
 	}
