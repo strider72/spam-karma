@@ -122,12 +122,12 @@ class sk_rbl_plugin extends sk_plugin
 	
 	function filter_this(&$cmt_object)
 	{					
-		global $sk2_blacklist; 
+		global $sk_blacklist; 
 
 		$check_list[] = implode( '.', array_reverse( explode( '.', $cmt_object->author_ip ) ) );
 		$used_ids = array();
 
-		if ($rbl_list = $sk2_blacklist->get_list('rbl_server'))
+		if ($rbl_list = $sk_blacklist->get_list('rbl_server'))
 		{
 			foreach ($rbl_list as $rbl_row)
 			{
@@ -153,7 +153,7 @@ class sk_rbl_plugin extends sk_plugin
 		}
 
 		// now let's go though the URIs against the URL RBLs
-		if ($rbl_list = $sk2_blacklist->get_list('rbl_server_uri'))
+		if ($rbl_list = $sk_blacklist->get_list('rbl_server_uri'))
 		{
 			foreach ($rbl_list as $rbl_row)
 			{
@@ -194,7 +194,7 @@ class sk_rbl_plugin extends sk_plugin
 		}
 		
 		if (count ($used_ids))
-			$sk2_blacklist->increment_used ($used_ids);
+			$sk_blacklist->increment_used ($used_ids);
 
 	}
 
@@ -202,11 +202,11 @@ class sk_rbl_plugin extends sk_plugin
 	{
 		if ($cur_version == 0)
 		{
-			global $sk2_blacklist; 
+			global $sk_blacklist; 
 			
 			foreach (array("opm.blitzed.org", "bl.blbl.org") as $rbl)
 			{
-				$sk2_blacklist->add_entry("rbl_server", $rbl, 100, "yes", "default", 100);
+				$sk_blacklist->add_entry("rbl_server", $rbl, 100, "yes", "default", 100);
 				$this->log_msg(__("Added default IP RBL server entry: ", 'spam-karma') . $rbl, 4);
 			}
 			
@@ -216,7 +216,7 @@ class sk_rbl_plugin extends sk_plugin
 				//Yes, a foreach() for one item is a bit pointless, but it's future-proof
 				foreach (array("uri-bl.blbl.org") as $rbl)
 				{
-					$sk2_blacklist->add_entry("rbl_server_uri", $rbl, 100, "yes", "default", 100);
+					$sk_blacklist->add_entry("rbl_server_uri", $rbl, 100, "yes", "default", 100);
 					$this->log_msg(__("Added default URI RBL server entry: ", 'spam-karma') . $rbl, 4);
 				}
 			}

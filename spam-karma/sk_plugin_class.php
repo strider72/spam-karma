@@ -52,8 +52,8 @@ class sk_plugin
 		if (! isset($this->settings_format["weight"]))
 			$this->settings_format["weight"] = array("value" => "1.0");
 		
-		global $sk2_settings;
-		$settings = $sk2_settings->get_plugin_settings(get_class($this));
+		global $sk_settings;
+		$settings = $sk_settings->get_plugin_settings(get_class($this));
 	}
 	
 	function __construct()
@@ -78,14 +78,14 @@ class sk_plugin
 
 	function log_msg($msg, $level = 0, $cmt_id = 0)
 	{
-		global $sk2_log;
-		$sk2_log->log_msg($msg, $level, $cmt_id, get_class($this));
+		global $sk_log;
+		$sk_log->log_msg($msg, $level, $cmt_id, get_class($this));
 	}
 	
 	function log_msg_mysql($msg, $level = 0, $cmt_id = 0)
 	{
-		global $sk2_log;
-		$sk2_log->log_msg_mysql($msg, $level, $cmt_id, get_class($this));
+		global $sk_log;
+		$sk_log->log_msg_mysql($msg, $level, $cmt_id, get_class($this));
 	}
 	
 	function hit_karma(&$cmt_object, $karma_diff, $reason = "")
@@ -250,8 +250,8 @@ class sk_plugin
 	
 	function get_option_value($name)
 	{
-		global $sk2_settings;
-		$settings = $sk2_settings->get_plugin_settings(get_class($this));
+		global $sk_settings;
+		$settings = $sk_settings->get_plugin_settings(get_class($this));
 
 		if (isset($settings[$name]))
 			return $settings[$name];
@@ -261,10 +261,10 @@ class sk_plugin
 	
 	function set_option_value($name, $value)
 	{
-		global $sk2_settings;
-		$settings = $sk2_settings->get_plugin_settings(get_class($this));
+		global $sk_settings;
+		$settings = $sk_settings->get_plugin_settings(get_class($this));
 		$settings[$name] = $value;
-		$sk2_settings->set_plugin_settings($settings, get_class($this));
+		$sk_settings->set_plugin_settings($settings, get_class($this));
 	}
 	
 	function display_second_chance(&$cmt_object, $unlock_key)

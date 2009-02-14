@@ -66,16 +66,16 @@ function sk_time_since($original, $today = 0)
 
 function sk2_get_file_list($path, $ext = ".php")
 {
-	global $sk2_log;
+	global $sk_log;
 	$files = array();
 	if (! is_dir($path))
 	{
-		$sk2_log->log_msg(sprintf(__("Cannot get file list: '%s' is not a valid folder path", 'spam-karma'), $path), 9, 'sk2_get_file_list');
+		$sk_log->log_msg(sprintf(__("Cannot get file list: '%s' is not a valid folder path", 'spam-karma'), $path), 9, 'sk2_get_file_list');
 		return $files;
 	}
 	elseif (! is_readable($path))
 	{
-		$sk2_log->log_msg(sprintf(__("Cannot get folder content: '%s'. Please make sure it is readable by everybody (chmod 755).", 'spam-karma'), $path), 9, 'sk2_get_file_list');
+		$sk_log->log_msg(sprintf(__("Cannot get folder content: '%s'. Please make sure it is readable by everybody (chmod 755).", 'spam-karma'), $path), 9, 'sk2_get_file_list');
 	}
 	
 	$file_ptr = dir($path);
@@ -151,9 +151,9 @@ function sk2_rand_str($size, $unambiguous = false)
 	   $feed = "0123456789abcdefghijklmnopqrstuvwxyz";
 	  for ($i=0; $i < $size; $i++)
 	  {
-		 $sk2_rand_str .= substr($feed, rand(0, strlen($feed)-1), 1);
+		 $sk_rand_str .= substr($feed, rand(0, strlen($feed)-1), 1);
 	  }
-	  return $sk2_rand_str;
+	  return $sk_rand_str;
  } 
  
  function sk2_url_fopen($url, $convert_case = false, $postinfo = array())

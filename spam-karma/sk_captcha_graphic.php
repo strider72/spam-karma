@@ -15,14 +15,14 @@
 ?><?php
 header("Content-type: image/png");
 
-global $sk2_log, $wpdb;
+global $sk_log, $wpdb;
 require_once('../../../wp-config.php');
 include_once(dirname(__FILE__) . "/sk_core_class.php");
 
 $comment_ID = (int) @$_REQUEST['c_id'];
 $author_email = @$_REQUEST['c_author'];
 
-$sk2_log->live_output = false;
+$sk_log->live_output = false;
 $this_cmt = new sk2_comment ($comment_ID);
 
 if (@$this_cmt->ID && ($author_email == $this_cmt->author_email))

@@ -46,8 +46,8 @@ class sk_snowball_plugin extends sk_plugin
 		{
 			$my_url = $cmt_object->author_url['domain'];
 
-			global $sk2_blacklist;
-			if ($grey_rows = $sk2_blacklist->match_entries('domain_grey', $my_url, true, 80))
+			global $sk_blacklist;
+			if ($grey_rows = $sk_blacklist->match_entries('domain_grey', $my_url, true, 80))
 				$my_url = $cmt_object->author_url['url'];
 
 			if (count($cmt_object->content_links))
