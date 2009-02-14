@@ -20,7 +20,7 @@
 	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-class sk2_pjw_simpledigest extends sk_plugin
+class SK_PJW_SimpleDigest extends sk_plugin
 {
 	var $name = "Simple Digest";
 	var $plugin_version = 1.30;
@@ -277,5 +277,5 @@ class sk2_pjw_simpledigest extends sk_plugin
 }
 
 /* Move the register to end so that the class is declared first - some versions of PHP require this.*/
-$this->register_plugin("sk2_pjw_simpledigest", 25); //Run Last after Anubis etc.
+$this->register_plugin("SK_PJW_SimpleDigest", 25); //Run Last after Anubis etc.
 ?>
