@@ -1,6 +1,6 @@
 <?php
 /**********************************************************************************************
- Spam Karma (c) 2009 - http://code.google.com/p/spam-karma/
+ Spam Karma 2 (c) 2008 - Dave A. duVerle - http://unknowngenius.com
 
  This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -16,11 +16,11 @@
 // Blacklist Filter
 // Runs URLs and IPs through each blacklist
 
-class sk_blacklist_plugin extends sk_plugin
+class sk2_blacklist_plugin extends sk2_plugin
 {
 	var $name = "Blacklist";
 	var $author = "";
-	var $plugin_help_url = "http://wp-plugins.net/wiki/?title=sk_blacklist_Plugin";
+	var $plugin_help_url = "http://wp-plugins.net/wiki/?title=SK2_Blacklist_Plugin";
 	var $filter = true;
 	var $treatment = true;
 	var $description = "";
@@ -37,15 +37,15 @@ class sk_blacklist_plugin extends sk_plugin
 
 	var $version = 2;
 
-	function sk_blacklist_plugin()
+	function sk2_blacklist_plugin()
 	{
 		parent::__construct();
-		$this->description = "<a href=\"options-general.php?page=" . $_REQUEST['page'] . "&sk_section=blacklist\">Click here</a> to manage your blacklist.";
+		$this->description = "<a href=\"options-general.php?page=" . $_REQUEST['page'] . "&sk2_section=blacklist\">Click here</a> to manage your blacklist.";
 	}
 	
 	function filter_this(&$cmt_object)
 	{
-		global $sk_blacklist;
+		global $sk2_blacklist;
 	//	echo "<pre>";
 	//	print_r($cmt_object->content_links);
 	//	print_r($cmt_object->author_url);
@@ -57,7 +57,7 @@ class sk_blacklist_plugin extends sk_plugin
 		$this->black_ids = array();
 		$this->white_ids = array();
 		
-		$this->log_msg(__("Running sk_blacklist plugin on comment ID: ", 'spam-karma') . $cmt_object->ID, 0);
+		$this->log_msg(__("Running sk2_blacklist plugin on comment ID: ", 'sk2') . $cmt_object->ID, 0);
 		
 		// matching IP
 		if (! empty($cmt_object->author_ip))
@@ -121,7 +121,7 @@ class sk_blacklist_plugin extends sk_plugin
 		foreach (array("white", "black") as $color)
 			if($this->{$color . 'match_count'})
 			{
-				$str = $sk_blacklist->increment_used($this->{$color . '_ids'});
+				$str = $sk2_blacklist->increment_used($this->{$color . '_ids'});
 				
 				$log = $this->{$color . 'match_count'} . " ${color}list match" . (($this->{$color . 'match_count'} > 1) ? "es" : "") . ". ";
 	
@@ -138,7 +138,7 @@ class sk_blacklist_plugin extends sk_plugin
 	
 	function treat_this(&$cmt_obj)
 	{
-		global $sk_blacklist;
+		global $sk2_blacklist;
 
 		$auto_blacklist = -($cmt_obj->karma - min (-5, $this->get_option_value("auto_blacklist")));
 		$auto_whitelist = ($cmt_obj->karma - max (3, $this->get_option_value("auto_whitelist")));
@@ -171,32 +171,32 @@ class sk_blacklist_plugin extends sk_plugin
 				if ($this->{$opposite . 'match_count'})
 				{
 					if ($opposite == "black")
-						$this->log_msg(__("Downgrading blacklist entries.", 'spam-karma'), 5)	;	
+						$this->log_msg(__("Downgrading blacklist entries.", 'sk2'), 5)	;	
 					else
-						$this->log_msg(__("Downgrading whitelist entries.", 'spam-karma'), 5);	
-					$sk_blacklist->downgrade_entries($this->{$opposite . '_ids'});
+						$this->log_msg(__("Downgrading whitelist entries.", 'sk2'), 5);	
+					$sk2_blacklist->downgrade_entries($this->{$opposite . '_ids'});
 				}
 			}
 			
-			$sk_blacklist->auto_add("ip_" . $type, $cmt_obj->author_ip, $score, "no", get_class($this));
+			$sk2_blacklist->auto_add("ip_" . $type, $cmt_obj->author_ip, $score, "no", get_class($this));
 		
 			if (! empty($cmt_obj->author_url['domain']))
-				$sk_blacklist->auto_add("domain_" . $type, $cmt_obj->author_url['domain'], $score, "no", get_class($this));
+				$sk2_blacklist->auto_add("domain_" . $type, $cmt_obj->author_url['domain'], $score, "no", get_class($this));
 
 			foreach ($cmt_obj->content_links as $url)
 				if (! empty($url['domain']))
-					$sk_blacklist->auto_add("domain_" . $type, $url['domain'], $score, "no", get_class($this));
+					$sk2_blacklist->auto_add("domain_" . $type, $url['domain'], $score, "no", get_class($this));
 		}
 	}
 	
 	
 	function find_matches($type, $value, $black_coef = 1, $white_coef = -1)
 	{
-		global $sk_blacklist;
+		global $sk2_blacklist;
 		if ($white_coef < 0)
 			$white_coef = $black_coef;
 			
-		if ($blacklist_rows = $sk_blacklist->match_entries($type, $value, true, $this->min_score))
+		if ($blacklist_rows = $sk2_blacklist->match_entries($type, $value, true, $this->min_score))
 		{
 			foreach($blacklist_rows as $row)
 			{
@@ -251,19 +251,19 @@ class sk_blacklist_plugin extends sk_plugin
 	
 	function update_SQL_schema($cur_version)
 	{
-		global $sk_blacklist; 
+		global $sk2_blacklist; 
 
 		foreach(array("typepad.com", "blogspot.com", "livejournal.com", "xanga.com") as $grey_domain)
 		{
-			$sk_blacklist->add_entry("domain_grey", $grey_domain, 100, "yes", "default", 100);
-			$this->log_msg(__("Added default domain_grey entry: ", 'spam-karma') . $grey_domain, 6);
+			$sk2_blacklist->add_entry("domain_grey", $grey_domain, 100, "yes", "default", 100);
+			$this->log_msg(__("Added default domain_grey entry: ", 'sk2') . $grey_domain, 6);
 		}
 
 		return true;
 	}	
 }
 
-$this->register_plugin("sk_blacklist_plugin", 2);
+$this->register_plugin("sk2_blacklist_plugin", 2);
 
 
 ?>

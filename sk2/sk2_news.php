@@ -1,6 +1,6 @@
 <?php
 /**********************************************************************************************
- Spam Karma (c) 2009 - http://code.google.com/p/spam-karma/
+ Spam Karma 2 (c) 2008 - Dave A. duVerle - http://unknowngenius.com
 
  This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by

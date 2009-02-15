@@ -1,6 +1,6 @@
 <?php
 /**********************************************************************************************
- Spam Karma (c) 2009 - http://code.google.com/p/spam-karma/
+ Spam Karma 2 (c) 2008 - Dave A. duVerle - http://unknowngenius.com
 
  This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -16,12 +16,12 @@
 // Blacklist Filter
 // Runs URLs and IPs through each blacklist
 
-class sk_anubis_plugin extends sk_plugin
+class sk2_anubis_plugin extends sk2_plugin
 {
 	var $name = "Anubis";
 	var $description = "This plugin is the ultimate judge of a comment's fate: the comment's karma is weighted and it is either discarded as spam, moderated or displayed. <strong>Do not</strong> disable, unless you really know what you are doing.";
 	var $author = "";
-	var $plugin_help_url = "http://wp-plugins.net/wiki/?title=sk_Anubis_Plugin";
+	var $plugin_help_url = "http://wp-plugins.net/wiki/?title=SK2_Anubis_Plugin";
 	var $treatment = true;
 	var $weight_levels = array("0" => "Disabled", "1.0" => "Enabled");
 
@@ -34,7 +34,7 @@ class sk_anubis_plugin extends sk_plugin
 	
 	function treat_this(&$cmt_object)
 	{
-		global $wpdb, $sk_settings;
+		global $wpdb, $sk2_settings;
 		
 		if ($cmt_object->is_post_proc())
 			$hell_purgatory_border = min ($this->get_option_value("purgatory_border") + 4, 0);
@@ -66,15 +66,15 @@ class sk_anubis_plugin extends sk_plugin
 		
 		if ($cmt_object->set_DB_status($new_status, get_class($this)))
 		{
-			$this->log_msg(sprintf(__("%s (ID: %d) sent to: %s (Karma: ).", 'spam-karma'), ucfirst($cmt_object->type), $cmt_object->ID, '<b>' . __($treatment, 'spam-karma') . '</b>', $cmt_object->karma), 3);
-			$sk_settings->increment_stats($treatment);
-			$sk_settings->increment_stats($treatment . "_total_karma", $cmt_object->karma);
+			$this->log_msg(sprintf(__("%s (ID: %d) sent to: %s (Karma: ).", 'sk2'), ucfirst($cmt_object->type), $cmt_object->ID, '<b>' . __($treatment, 'sk2') . '</b>', $cmt_object->karma), 3);
+			$sk2_settings->increment_stats($treatment);
+			$sk2_settings->increment_stats($treatment . "_total_karma", $cmt_object->karma);
 		}
 	}
 		
 }
 
-$this->register_plugin("sk_anubis_plugin", 11); // should be loaded last...
+$this->register_plugin("sk2_anubis_plugin", 11); // should be loaded last...
 
 
 ?>

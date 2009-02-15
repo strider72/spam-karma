@@ -1,6 +1,6 @@
 <?php
 /**********************************************************************************************
- Spam Karma (c) 2009 - http://code.google.com/p/spam-karma/
+ Spam Karma 2 (c) 2008 - Dave A. duVerle - http://unknowngenius.com
 
  This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -13,24 +13,24 @@
 
 ************************************************************************************************/
 ?><?php
-include_once("sk_functions.php");
+include_once("sk2_functions.php");
 
 if (isset($table_prefix))
-	define ("SK_KLOGTABLE", $table_prefix . "sk2_logs");
+	define ("sk2_kLogTable", $table_prefix . "sk2_logs");
 else
-	define ("SK_KLOGTABLE", SK_TABLE_PREFIX . "sk2_logs");
+	define ("sk2_kLogTable", sk2_table_prefix . "sk2_logs");
 
-global $sk_log;
-if (! isset($sk_log))
-	$sk_log = new sk_log;
+global $sk2_log;
+if (! isset($sk2_log))
+	$sk2_log = new sk2_log;
 
-global $sk_settings;
-if (! isset($sk_settings))
-	$sk_settings = new sk_settings;
+global $sk2_settings;
+if (! isset($sk2_settings))
+	$sk2_settings = new sk2_settings;
 
-$sk_log->db_threshold = $sk_settings->get_core_settings("log_threshold");
+$sk2_log->db_threshold = $sk2_settings->get_core_settings("log_threshold");
 
-class sk_settings
+class sk2_settings
 {
 	var $core_settings;
 	var $plugins_settings;
@@ -43,10 +43,10 @@ class sk_settings
 											
 											"hover_in_tables" => array("auto_draw" => true, "advanced" => true, "type" => "checkbox", "value" => true, "caption" => "Enable 'hovering' in spam report tables", "after" => " <i>(if using MSIE. or otherwise css-impaired browsers, you should disable this feature).</i>"),
 											
-											"display_sk_footer" => array("auto_draw" => true, "advanced" => false, "type" => "checkbox", "value" => true, "caption" => "Automatically insert SK's 'X spam eaten' message in your blog's footer (enable Advanced Options to customize it)."),
+											"display_sk2_footer" => array("auto_draw" => true, "advanced" => false, "type" => "checkbox", "value" => true, "caption" => "Automatically insert SK2's 'X spam eaten' message in your blog's footer (enable Advanced Options to customize it)."),
 											
-											"sk_footer_msg_0" => array("auto_draw" => true, "advanced" => true, "type" => "text", "value" => "<div id=\"sk-footer\" style=\"color:#FFF; background-color:#444; padding: 3px 2px 3px 2px; border-top: #888 solid 1px;\">Spammers: Beware of the <a href=\"http://unknowngenius.com/blog/wordpress/spam-karma/\" title=\"SK\">Dog</a>.</div>", "caption" => "SK footer message (until there is at least two spams in the DB): ", "size" => 50),
-											"sk_footer_msg_n" => array("auto_draw" => true, "advanced" => true, "type" => "text", "value" => "<div id=\"sk-footer\" style=\"color:#FFF; background-color:#444; padding: 3px 2px 3px 2px; border-top: #888 solid 1px;\">This blog is protected by <a href=\"http://unknowngenius.com/blog/\" title=\"Dave\">Dave</a>'s <strong><a href=\"http://unknowngenius.com/blog/wordpress/spam-karma/\" title=\"SK\">Spam Karma</a></strong>: <strong>{hell}</strong>  Spams eaten and counting...</div>", "caption" => "Standard SK footer message: ", "after" => "<em>The following variables will be replaced by their numeric values: {hell} {purgatory} {paradise} {hell_total_karma} and {paradise_total_karma}</em>", "size" => 50),
+											"sk2_footer_msg_0" => array("auto_draw" => true, "advanced" => true, "type" => "text", "value" => "<div id=\"sk2-footer\" style=\"color:#FFF; background-color:#444; padding: 3px 2px 3px 2px; border-top: #888 solid 1px;\">Spammers: Beware of the <a href=\"http://unknowngenius.com/blog/wordpress/spam-karma/\" title=\"SK2\">Dog</a>.</div>", "caption" => "SK2 footer message (until there is at least two spams in the DB): ", "size" => 50),
+											"sk2_footer_msg_n" => array("auto_draw" => true, "advanced" => true, "type" => "text", "value" => "<div id=\"sk2-footer\" style=\"color:#FFF; background-color:#444; padding: 3px 2px 3px 2px; border-top: #888 solid 1px;\">This blog is protected by <a href=\"http://unknowngenius.com/blog/\" title=\"Dave\">Dave</a>'s <strong><a href=\"http://unknowngenius.com/blog/wordpress/spam-karma/\" title=\"SK2\">Spam Karma 2</a></strong>: <strong>{hell}</strong>  Spams eaten and counting...</div>", "caption" => "Standard SK2 footer message: ", "after" => "<em>The following variables will be replaced by their numeric values: {hell} {purgatory} {paradise} {hell_total_karma} and {paradise_total_karma}</em>", "size" => 50),
 											
 											// no default UI:
 											
@@ -67,7 +67,7 @@ class sk_settings
 											
 	);
 	
-	function sk_settings ()
+	function sk2_settings ()
 	{
 		$this->refresh_settings();
 	}
@@ -76,7 +76,7 @@ class sk_settings
 	{
 		foreach (array("plugins_settings", "core_settings", "stats") as $this_group)
 		{
-			$this->$this_group = get_option('sk2_' . $this_group);
+			$this->$this_group = get_option("sk2_" . $this_group);
 			if (! is_array($this->$this_group))
 				$this->$this_group = array();
 			
@@ -88,11 +88,11 @@ class sk_settings
 		if (! $this->need_to_save)
 			return;
 		$this->need_to_save = false;
-		$this->log_msg(__("Saved all settings to DB.", 'spam-karma'), 1);
+		$this->log_msg(__("Saved all settings to DB.", 'sk2'), 1);
 
-		update_option("sk_core_settings", $this->core_settings);
-		update_option("sk_plugins_settings", $this->plugins_settings);
-		update_option("sk_stats", $this->stats);
+		update_option("sk2_core_settings", $this->core_settings);
+		update_option("sk2_plugins_settings", $this->plugins_settings);
+		update_option("sk2_stats", $this->stats);
 	}
 
 	function get_core_settings($section = 0)
@@ -174,13 +174,13 @@ class sk_settings
 
 	function log_msg($msg, $level = 0)
 	{
-		global $sk_log;
-		$sk_log->log_msg($msg, $level, 0, 'sk_settings');
+		global $sk2_log;
+		$sk2_log->log_msg($msg, $level, 0, 'sk2_settings');
 	}
 
 	function is_wp20 () 
 	{
-// Merged from sk_wp2compatibility_plugin by  Drac (http://lair.fierydragon.org)
+// Merged from sk2_wp2compatibility_plugin by  Drac (http://lair.fierydragon.org)
 		global $wp_db_version;
 
 	// this function will differentiate between a 1.5 and previous codebase and a 1.6 - 2.0 codebase. The $wp_db_version variable is new to 1.6-2.0
@@ -196,14 +196,14 @@ class sk_settings
 
 }
 
-class sk_log
+class sk2_log
 {
 	var $logs = array();
 	var $db_threshold;
 	var $live_threshold;
 	var $live_output = true;
 	
-	function sk_log ($db_threshold = 5, $live_threshold = 7)
+	function sk2_log ($db_threshold = 5, $live_threshold = 7)
 	{
 		global $wpdb;
 		
@@ -220,7 +220,7 @@ class sk_log
 		{
 			if ($div_wrapper)
 				echo "<div class=\"wrap sk_first\">\n";
-			echo "<div class=\"sk_log sk_level_$level\">$msg</div>";
+			echo "<div class=\"sk2_log sk_level_$level\">$msg</div>";
 			if ($div_wrapper)
 				echo "</div>";
 			$echoed = true;
@@ -231,12 +231,12 @@ class sk_log
 		$this->logs[] = array($msg, $level, $comment_id, time(), $echoed);
 		
 		if ($level >= $this->db_threshold)
-			@$wpdb->query("INSERT INTO `". SK_KLOGTABLE ."` SET `msg` = '" . sk_escape_string($msg) . "', `component` = '" . sk_escape_string($component) . "', `level` = $level, `ts` = NOW()" );
+			@$wpdb->query("INSERT INTO `". sk2_kLogTable ."` SET `msg` = '" . sk2_escape_string($msg) . "', `component` = '" . sk2_escape_string($component) . "', `level` = $level, `ts` = NOW()" );
 	}
 
 	function log_msg_mysql($msg, $level = 0, $comment_id = 0, $component = "")
 	{
-		$msg .= "<br/>\n" . __("SQL error: ", 'spam-karma') . "<code>". mysql_error() . "</code>";
+		$msg .= "<br/>\n" . __("SQL error: ", 'sk2') . "<code>". mysql_error() . "</code>";
 		$this->log_msg($msg, $level, $comment_id, $component);
 	}
 		
@@ -244,7 +244,7 @@ class sk_log
 	{
 		foreach ($this->logs as $log)
 			if ($log[1] >= $threshold)
-				echo "<div class=\"sk_log sk_level_$log[1]\">" . __($log[3], 'spam-karma') . " - " . $log[0] . "</div>\n";
+				echo "<div class=\"sk2_log sk_level_$log[1]\">" . __($log[3], 'sk2') . " - " . $log[0] . "</div>\n";
 	}
 	
 	function echo_logs($threshold = 0)
@@ -252,7 +252,7 @@ class sk_log
 		$output = "";
 		foreach ($this->logs as $log)
 			if (! $log[4] && ($log[1] >= $threshold))
-					$output .= "<div class=\"sk_log sk_level_$log[1]\">" . __($log[3], 'spam-karma') . " - " . $log[0] . "</div>\n";
+					$output .= "<div class=\"sk2_log sk_level_$log[1]\">" . __($log[3], 'sk2') . " - " . $log[0] . "</div>\n";
 		if ($output)
 			echo "<div class=\"wrap sk_first\">\n$output<div>";
 	}

@@ -1,6 +1,6 @@
 <?php
 /**********************************************************************************************
- Spam Karma (c) 2009 - http://code.google.com/p/spam-karma/
+ Spam Karma 2 (c) 2008 - Dave A. duVerle - http://unknowngenius.com
 
  This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -15,24 +15,24 @@
 ?><?php
 header("Content-type: image/png");
 
-global $sk_log, $wpdb;
+global $sk2_log, $wpdb;
 require_once('../../../wp-config.php');
-include_once(dirname(__FILE__) . "/sk_core_class.php");
+include_once(dirname(__FILE__) . "/sk2_core_class.php");
 
 $comment_ID = (int) @$_REQUEST['c_id'];
 $author_email = @$_REQUEST['c_author'];
 
-$sk_log->live_output = false;
-$this_cmt = new sk_comment ($comment_ID);
+$sk2_log->live_output = false;
+$this_cmt = new sk2_comment ($comment_ID);
 
 if (@$this_cmt->ID && ($author_email == $this_cmt->author_email))
 {
 	foreach($this_cmt->unlock_keys as $key)
-		if ($key['class'] == "sk_captcha_plugin")
+		if ($key['class'] == "sk2_captcha_plugin")
 			$string = strtoupper($key['key']);
 }
 else
-	$string = __("Invalid ID", 'spam-karma');
+	$string = __("Invalid ID", 'sk2');
 
 $im  = imagecreate(150, 50);
 $bg = imagecolorallocate($im, 0, 0, 0);

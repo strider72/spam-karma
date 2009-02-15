@@ -1,6 +1,6 @@
 <?php
 /**********************************************************************************************
- Spam Karma (c) 2009 - http://code.google.com/p/spam-karma/
+ Spam Karma 2 (c) 2008 - Dave A. duVerle - http://unknowngenius.com
 
  This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -52,7 +52,7 @@ background: #69c;
 color: #fff; 
 }
 
-#sk_settings_pane dl
+#sk2_settings_pane dl
 {
 	background-color: #eee;
 	margin: 2px 10px 4px 10px;
@@ -60,32 +60,32 @@ color: #fff;
 	border: 1px solid #aaa;
 }
 
-#sk_settings_pane dl:hover
+#sk2_settings_pane dl:hover
 {
 	background-color: #ddd;
 	border: 1px solid #333;
 }
 
-#sk_settings_pane dl dl
+#sk2_settings_pane dl dl
 {
 	border: none;
 	margin: 0px 0px 2px 5px;
 	background-color: inherit;
 }
 
-#sk_settings_pane dl dl:hover
+#sk2_settings_pane dl dl:hover
 {
 	border: none;
 }
 
 
-#sk_settings_pane dl dd
+#sk2_settings_pane dl dd
 {
 	font-style: italic;
 	margin: 5px 0px 0px 3px;
 }
 
-#sk_settings_pane dl dd.sk_filter_option 
+#sk2_settings_pane dl dd.sk2_filter_option 
 {
 	font-style: normal;
 	margin-top: 0px;
@@ -141,7 +141,7 @@ color: #fff;
 	background-color: red;
 }
 
-.sk_log 
+.sk2_log 
 {
 	margin:3px 20px 2px 20px;
 	padding: 3px;
@@ -195,7 +195,7 @@ color: #fff;
 	color: #66F;
 }
 
-p.sk_form
+p.sk2_form
 {
 	padding: 0px;
 	margin: 0px 0px 4px 0px;
@@ -268,38 +268,38 @@ border: 2px solid red;
 	text-align: right;
 }
 
-.sk_about
+.sk2_about
 {
 	padding: 25px;
 }
 
-.sk_about p
+.sk2_about p
 {
 	text-indent: 3em;
 }
 
-.sk_about h2
+.sk2_about h2
 {
 	margin-top: 25px;
 }
 
-.sk_about .sk_first
+.sk2_about .sk_first
 {
 	margin-top: 0px;
 }
 
-.sk_about fieldset.sk_cast p
+.sk2_about fieldset.sk2_cast p
 {
 	text-indent: 0px;
 }
 
-.sk_about fieldset.sk_cast
+.sk2_about fieldset.sk2_cast
 {
 	margin-top: 10px;
 	padding: 2px 13px 5px 13px;
 }
 
-.sk_about blockquote
+.sk2_about blockquote
 {
 	border: 1px solid #33a;
 	background-color:#ccf;
@@ -310,7 +310,7 @@ border: 2px solid red;
 	width: 80%;
 }
 
-.sk_about blockquote .source
+.sk2_about blockquote .source
 {
 	font-size: 10px;
 	font-decoration: italic;
@@ -318,7 +318,7 @@ border: 2px solid red;
 	margin-bottom: 5px;
 }
 
-.sk_about blockquote p
+.sk2_about blockquote p
 {
 	line-height: 10px;
 	padding:0;

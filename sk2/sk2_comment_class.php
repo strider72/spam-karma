@@ -1,6 +1,6 @@
 <?php
 /**********************************************************************************************
- Spam Karma (c) 2009 - http://code.google.com/p/spam-karma/
+ Spam Karma 2 (c) 2008 - Dave A. duVerle - http://unknowngenius.com
 
  This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 ************************************************************************************************/
 ?><?php
 
-class sk_comment
+class sk2_comment
 {
 	var $ID;
 	var $type;
@@ -58,16 +58,16 @@ class sk_comment
 	}
 
 	
-	function sk_comment($comment_id, $post_proc = false, $comment_sk_info = 0)
+	function sk2_comment($comment_id, $post_proc = false, $comment_sk_info = 0)
 	{
 		global $wpdb;
 		// SAFE WAY:
 		// $cmt_array = $wpdb->get_values ("SELECT `". $wpdb->comments . "`.*, `". $wpdb->posts . "`.`post_date`, `". $wpdb->posts . "`.`post_modified`, `". $wpdb->users . "`.`user_level` FROM `". $wpdb->comments . "` LEFT JOIN `". $wpdb->posts . "` ON `". $wpdb->posts . "`.`ID` = `". $wpdb->comments . "`.`post_ID`, LEFT JOIN `". $wpdb->users . "` ON `". $wpdb->users . "`.`ID` = `". $wpdb->comments . "`.`user_id` WHERE `comment_id` = $comment_id");
 
 		// LAZY WAY:
-		if (! $cmt_array = $wpdb->get_row ("SELECT `comment_table`.*, `posts_table`.*, `users_table`.*, `spam_table`.*, `spam_table`.`id` AS `spam_table_id`, NOW() AS `now_sql` FROM `". $wpdb->comments . "` AS `comment_table` LEFT JOIN `". $wpdb->posts . "` AS `posts_table` ON `posts_table`.`ID` = `comment_table`.`comment_post_ID` LEFT JOIN `". $wpdb->users . "` AS `users_table` ON `users_table`.`ID` = `comment_table`.`user_id` LEFT JOIN `". SK_KSPAM_TABLE ."` AS `spam_table` ON `spam_table`.`comment_ID` = `comment_table`.`comment_ID` WHERE `comment_table`.`comment_ID` = '" . mysql_escape_string($comment_id) . "'"))
+		if (! $cmt_array = $wpdb->get_row ("SELECT `comment_table`.*, `posts_table`.*, `users_table`.*, `spam_table`.*, `spam_table`.`id` AS `spam_table_id`, NOW() AS `now_sql` FROM `". $wpdb->comments . "` AS `comment_table` LEFT JOIN `". $wpdb->posts . "` AS `posts_table` ON `posts_table`.`ID` = `comment_table`.`comment_post_ID` LEFT JOIN `". $wpdb->users . "` AS `users_table` ON `users_table`.`ID` = `comment_table`.`user_id` LEFT JOIN `". sk2_kSpamTable ."` AS `spam_table` ON `spam_table`.`comment_ID` = `comment_table`.`comment_ID` WHERE `comment_table`.`comment_ID` = '" . mysql_escape_string($comment_id) . "'"))
 		{
-			$this->log_msg(__("sk_comment: Cannot fetch comment record from table.", 'spam-karma'), 9, true);
+			$this->log_msg(__("sk2_comment: Cannot fetch comment record from table.", 'sk2'), 9, true);
 			return false;
 		}	
 		$this->ID = $comment_id;
@@ -129,11 +129,11 @@ class sk_comment
 		}
 		else
 		{
-			global $sk_settings;
+			global $sk2_settings;
 			$this->karma = 0.0;
 			$this->karma_cmts = array();
 			$this->unlock_keys = array();
-			$this->remaining_attempts = $sk_settings->get_core_settings('max_attempts');
+			$this->remaining_attempts = $sk2_settings->get_core_settings('max_attempts');
 		}
 
 		return true;
@@ -168,18 +168,18 @@ class sk_comment
 
 	function log_msg($msg, $level = 0, $mysql = false, $plugin = 'cmt_class')
 	{
-		global $sk_log;
+		global $sk2_log;
 		if ($mysql)
-			$sk_log->log_msg_mysql($msg, $level, $this->ID, $plugin);
+			$sk2_log->log_msg_mysql($msg, $level, $this->ID, $plugin);
 		else
-			$sk_log->log_msg($msg, $level, $this->ID, $plugin);
+			$sk2_log->log_msg($msg, $level, $this->ID, $plugin);
 	}
 
 	function modify_karma($karma_diff, $plugin_name, $reason = "")
 	{
 		$karma_diff = round($karma_diff, 2); // let's not get overly picky...
 		$this->karma += $karma_diff;
-		$this->karma_cmts[] = array("ts" => time(), "hit" => $karma_diff, "plugin" => $plugin_name, "reason" => __($reason, 'spam-karma'));
+		$this->karma_cmts[] = array("ts" => time(), "hit" => $karma_diff, "plugin" => $plugin_name, "reason" => __($reason, 'sk2'));
 	}
 	
 	function set_karma($new_karma, $plugin_name, $reason = "")
@@ -216,23 +216,23 @@ class sk_comment
 		$wpdb->query("UPDATE `$wpdb->comments` SET `comment_approved` = '$wp_status' WHERE `comment_ID` = $id");
 		if (! mysql_error())
 		{
-			global $sk_settings;
+			global $sk2_settings;
 
-			$this->log_msg(sprintf(__("Successfully updated comment entry ID: %d to status: %s.", 'spam-karma'), $id, $new_status), 4, false, $plugin);
+			$this->log_msg(sprintf(__("Successfully updated comment entry ID: %d to status: %s.", 'sk2'), $id, $new_status), 4, false, $plugin);
 			$this->approved = $wp_status;
-			if ($sk_settings->is_wp20())
+			if ($sk2_settings->is_wp20())
 			{
 				$c = $wpdb->get_row( "SELECT count(*) as c FROM {$wpdb->comments} WHERE comment_post_ID = '$this->post_ID' AND comment_approved = '1'" );
 				if( is_object( $c ) ) 
 					$wpdb->query( "UPDATE $wpdb->posts SET comment_count = '$c->c' WHERE ID = '$this->post_ID'" );				
 				else 
-					$this->log_msg(sprintf(__(" Comment count update for comment_id %d failed", 'spam-karma'), $cmt_object->comment_id), 7); 
+					$this->log_msg(sprintf(__(" Comment count update for comment_id %d failed", 'sk2'), $cmt_object->comment_id), 7); 
 			}
 			return true;
 		}
 		else
 		{
-			$this->log_msg(sprintf(__("Error: cannot update comment entry ID: %d to status: %s.", 'spam-karma'), $id, $new_status), 7, true, $plugin);
+			$this->log_msg(sprintf(__("Error: cannot update comment entry ID: %d to status: %s.", 'sk2'), $id, $new_status), 7, true, $plugin);
 			return false;
 		}
 	}

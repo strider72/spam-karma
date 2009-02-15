@@ -1,6 +1,6 @@
 <?php
 /**********************************************************************************************
- Spam Karma (c) 2009 - http://code.google.com/p/spam-karma/
+ Spam Karma 2 (c) 2008 - Dave A. duVerle - http://unknowngenius.com
 
  This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -17,11 +17,11 @@
 // use comment's granularity...
 
 
-class sk_snowball_plugin extends sk_plugin
+class sk2_snowball_plugin extends sk2_plugin
 {
 	var $name = "Snowball Effect";
 	var $author = "";
-	var $plugin_help_url = "http://wp-plugins.net/wiki/?title=sk_Snowball_Plugin";
+	var $plugin_help_url = "http://wp-plugins.net/wiki/?title=SK2_Snowball_Plugin";
 	var $description = "Granularity check (regular commenters get rewarded, unknown commenters are kept on watch).";
 	var $filter = true;
 	var $skip_under = -20;
@@ -46,18 +46,18 @@ class sk_snowball_plugin extends sk_plugin
 		{
 			$my_url = $cmt_object->author_url['domain'];
 
-			global $sk_blacklist;
-			if ($grey_rows = $sk_blacklist->match_entries('domain_grey', $my_url, true, 80))
+			global $sk2_blacklist;
+			if ($grey_rows = $sk2_blacklist->match_entries('domain_grey', $my_url, true, 80))
 				$my_url = $cmt_object->author_url['url'];
 
 			if (count($cmt_object->content_links))
-				$this->snowball_by($cmt_object, "URL", "AND `comments`.`comment_author_url` LIKE '%". sk_escape_string($my_url) ."%'", 1, 0.02);
+				$this->snowball_by($cmt_object, "URL", "AND `comments`.`comment_author_url` LIKE '%". sk2_escape_string($my_url) ."%'", 1, 0.02);
 			else
-				$this->snowball_by($cmt_object, "URL", "AND `comments`.`comment_author_url` LIKE '%". sk_escape_string($my_url) ."%'", 1.5, 1);			
+				$this->snowball_by($cmt_object, "URL", "AND `comments`.`comment_author_url` LIKE '%". sk2_escape_string($my_url) ."%'", 1.5, 1);			
 		}
 
 		if (! empty($cmt_object->author_email))
-			$this->snowball_by($cmt_object, "email", "AND `comments`.`comment_author_email` = '". sk_escape_string($cmt_object->author_email) ."'", 0.5, 2);
+			$this->snowball_by($cmt_object, "email", "AND `comments`.`comment_author_email` = '". sk2_escape_string($cmt_object->author_email) ."'", 0.5, 2);
 	}
 	
 	function snowball_by(&$cmt_object, $criterion, $query_where, $coef_hit, $coef_raise)
@@ -84,24 +84,24 @@ class sk_snowball_plugin extends sk_plugin
 						{
 							// Unleash all minions of Hell on that bad boy's company...
 
-							$log = sprintf(__ngettext("Retro-spanked one comment. ID: ", "Retro-spanked %d comments. IDs: ", count($retro_cmts), 'spam-karma'), count($retro_cmts));
+							$log = sprintf(__ngettext("Retro-spanked one comment. ID: ", "Retro-spanked %d comments. IDs: ", count($retro_cmts), 'sk2'), count($retro_cmts));
 							$this->retro_spanked = true;
-							$retro_spanking_core = new sk_core(0, true, true);
+							$retro_spanking_core = new sk2_core(0, true, true);
 							//$retro_spanking_core->load_plugin_files($);
 							
 							foreach($retro_cmts as $retro_cmt)
 							{
 								$retro_spanking_core->load_comment($retro_cmt->comment_ID);
-								$retro_spanking_core->cur_comment->modify_karma($karma_diff, get_class($this), __("Retro-spanking triggered by comment ID: ", 'spam-karma') . $this->ID);
+								$retro_spanking_core->cur_comment->modify_karma($karma_diff, get_class($this), __("Retro-spanking triggered by comment ID: ", 'sk2') . $this->ID);
 								$retro_spanking_core->treat_comment();
 								$retro_spanking_core->set_comment_sk_info();
 								$log .= $retro_cmt->comment_ID . ", ";
 							}
-							$log = substr($log, 0, -2) . ". " . __("Karma hit: ", 'spam-karma') . $karma_diff;
+							$log = substr($log, 0, -2) . ". " . __("Karma hit: ", 'sk2') . $karma_diff;
 							$this->log_msg($log, 5);
 						}
 						if (mysql_error())
-							$this->log_msg_mysql(__("Retro-spanking sql query failed.", 'spam-karma'), 7, $this->ID);
+							$this->log_msg_mysql(__("Retro-spanking sql query failed.", 'sk2'), 7, $this->ID);
 
 					}
 					elseif ($recent->karma_avg < $recent->cmt_count) // decent average: small penalty
@@ -137,7 +137,7 @@ class sk_snowball_plugin extends sk_plugin
 
 		if ($karma_diff)
 		{
-			$log = sprintf(__("Commenter granularity (based on %s): %d old comment(s) (karma avg: %f), %d recent comment(s) (karma avg: %f).", 'spam-karma'), $criterion, $old->cmt_count, round($old->karma_avg, 2), $recent->cmt_count, round($recent->karma_avg, 2));
+			$log = sprintf(__("Commenter granularity (based on %s): %d old comment(s) (karma avg: %f), %d recent comment(s) (karma avg: %f).", 'sk2'), $criterion, $old->cmt_count, round($old->karma_avg, 2), $recent->cmt_count, round($recent->karma_avg, 2));
 			$this->modify_karma($cmt_object, $karma_diff, $log);
 			$this->log_msg($log, 3);		
 		}
@@ -148,14 +148,14 @@ class sk_snowball_plugin extends sk_plugin
 		global $wpdb;
 		//$now_gmt = gmstrftime("'%Y-%m-%d %H:%M:%S'");
 			
-		$query = "SELECT COUNT(*) AS `cmt_count`, AVG(`spams`.`karma`) AS `karma_avg` FROM `$wpdb->comments` AS `comments` LEFT JOIN `". SK_KSPAM_TABLE ."` AS `spams` ON `spams`.`comment_ID` = `comments`.`comment_ID` WHERE `comments`.`comment_ID` != $this->ID ";
+		$query = "SELECT COUNT(*) AS `cmt_count`, AVG(`spams`.`karma`) AS `karma_avg` FROM `$wpdb->comments` AS `comments` LEFT JOIN `". sk2_kSpamTable ."` AS `spams` ON `spams`.`comment_ID` = `comments`.`comment_ID` WHERE `comments`.`comment_ID` != $this->ID ";
 		if ($before_after == "<")
 			$query .= "AND `comments`.`comment_approved` = '1' ";
 		$query .= "AND `comments`.`comment_date_gmt` $before_after DATE_SUB('$now', INTERVAL ". $this->get_option_value("old_enough") . " DAY) $query_where";
 
 		if (! $counts = $wpdb->get_row($query))
 		{
-			$this->log_msg_mysql(__("get_granularity: query failed.", 'spam-karma') . "<br/> " . __("Query: ", 'spam-karma') . $query, 7, $this->ID);
+			$this->log_msg_mysql(__("get_granularity: query failed.", 'sk2') . "<br/> " . __("Query: ", 'sk2') . $query, 7, $this->ID);
 			return false;
 		}		
 		
@@ -166,6 +166,6 @@ class sk_snowball_plugin extends sk_plugin
 	
 }
 
-$this->register_plugin("sk_snowball_plugin", 6);
+$this->register_plugin("sk2_snowball_plugin", 6);
 
 ?>

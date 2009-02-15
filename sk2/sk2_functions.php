@@ -1,6 +1,6 @@
 <?php
 /**********************************************************************************************
- Spam Karma (c) 2009 - http://code.google.com/p/spam-karma/
+ Spam Karma 2 (c) 2008 - Dave A. duVerle - http://unknowngenius.com
 
  This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -14,18 +14,18 @@
 ************************************************************************************************/
 ?><?php
 
-// This function courtesy of: http://blog.natbat.co.uk/archive/2003/Jun/14/sk_time_since
+// This function courtesy of: http://blog.natbat.co.uk/archive/2003/Jun/14/sk2_time_since
 /* Works out the time since the entry post, takes a an argument in unix time (seconds) */
-function sk_time_since($original, $today = 0) 
+function sk2_time_since($original, $today = 0) 
 {
     // array of time period chunks
     $chunks = array(
-        array(60 * 60 * 24 * 365 , __('year', 'spam-karma'), __('years', 'spam-karma')),
-        array(60 * 60 * 24 * 30 , __('month', 'spam-karma'), __('months', 'spam-karma')),
-        array(60 * 60 * 24 * 7, __('week', 'spam-karma'), __('weeks', 'spam-karma')),
-        array(60 * 60 * 24 , __('day', 'spam-karma'), __('days', 'spam-karma')),
-        array(60 * 60 , __('hour', 'spam-karma'), __('hours', 'spam-karma')),
-        array(60 , __('minute', 'spam-karma'), __('minutes', 'spam-karma')),
+        array(60 * 60 * 24 * 365 , __('year', 'sk2'), __('years', 'sk2')),
+        array(60 * 60 * 24 * 30 , __('month', 'sk2'), __('months', 'sk2')),
+        array(60 * 60 * 24 * 7, __('week', 'sk2'), __('weeks', 'sk2')),
+        array(60 * 60 * 24 , __('day', 'sk2'), __('days', 'sk2')),
+        array(60 * 60 , __('hour', 'sk2'), __('hours', 'sk2')),
+        array(60 , __('minute', 'sk2'), __('minutes', 'sk2')),
     );
     
      if (! $today)
@@ -64,18 +64,18 @@ function sk_time_since($original, $today = 0)
     return $print;
 }
 
-function sk_get_file_list($path, $ext = ".php")
+function sk2_get_file_list($path, $ext = ".php")
 {
-	global $sk_log;
+	global $sk2_log;
 	$files = array();
 	if (! is_dir($path))
 	{
-		$sk_log->log_msg(sprintf(__("Cannot get file list: '%s' is not a valid folder path", 'spam-karma'), $path), 9, 'sk_get_file_list');
+		$sk2_log->log_msg(sprintf(__("Cannot get file list: '%s' is not a valid folder path", 'sk2'), $path), 9, 'sk2_get_file_list');
 		return $files;
 	}
 	elseif (! is_readable($path))
 	{
-		$sk_log->log_msg(sprintf(__("Cannot get folder content: '%s'. Please make sure it is readable by everybody (chmod 755).", 'spam-karma'), $path), 9, 'sk_get_file_list');
+		$sk2_log->log_msg(sprintf(__("Cannot get folder content: '%s'. Please make sure it is readable by everybody (chmod 755).", 'sk2'), $path), 9, 'sk2_get_file_list');
 	}
 	
 	$file_ptr = dir($path);
@@ -88,20 +88,20 @@ function sk_get_file_list($path, $ext = ".php")
 	return $files;
 }
 
-function sk_clean_up_sql_callback(&$val, $key)
+function sk2_clean_up_sql_callback(&$val, $key)
 {
 	if (is_array($val))
-		array_walk($val, 'sk_clean_up_sql_callback', $new);
+		array_walk($val, 'sk2_clean_up_sql_callback', $new);
 	elseif (is_string($val))
 		$val = stripslashes($val);
 }
 
-function sk_clean_up_sql(&$my_array)
+function sk2_clean_up_sql(&$my_array)
 {
-	array_walk($my_array, 'sk_clean_up_sql_callback');
+	array_walk($my_array, 'sk2_clean_up_sql_callback');
 }
 
-function sk_escape_string ($string)
+function sk2_escape_string ($string)
 {
 	if(function_exists('mysql_real_escape_string'))
 		return mysql_real_escape_string($string);
@@ -109,7 +109,7 @@ function sk_escape_string ($string)
 		return mysql_escape_string($string);
  }
 
-function sk_escape_form_string ($string)
+function sk2_escape_form_string ($string)
 {
 	if (get_magic_quotes_gpc())
 		$string = stripslashes($string);
@@ -119,18 +119,18 @@ function sk_escape_form_string ($string)
 		return mysql_escape_string($string);
  }
   
- function sk_unescape_form_string_callback (&$val, $key)
+ function sk2_unescape_form_string_callback (&$val, $key)
 {
 	if (get_magic_quotes_gpc())
 	{
 		if (is_array($val))
-			array_walk($val, 'sk_unescape_form_string_callback', $new);
+			array_walk($val, 'sk2_unescape_form_string_callback', $new);
 		elseif (is_string($val))
 			$val = stripslashes($val);	
 	}
 }
  
- function sk_soft_hyphen($text, $max = 32, $char = "&#8203;") 
+ function sk2_soft_hyphen($text, $max = 32, $char = "&#8203;") 
  { 
 	$words = explode(' ', $text); 
 	  foreach($words as $key => $word) 
@@ -143,7 +143,7 @@ function sk_escape_form_string ($string)
 	  return implode(' ', $words); 
  } 
  
-function sk_rand_str($size, $unambiguous = false)
+function sk2_rand_str($size, $unambiguous = false)
  {
 	 if ($unambiguous)
 	   $feed = "123456789ABCDE";
@@ -151,12 +151,12 @@ function sk_rand_str($size, $unambiguous = false)
 	   $feed = "0123456789abcdefghijklmnopqrstuvwxyz";
 	  for ($i=0; $i < $size; $i++)
 	  {
-		 $sk_rand_str .= substr($feed, rand(0, strlen($feed)-1), 1);
+		 $sk2_rand_str .= substr($feed, rand(0, strlen($feed)-1), 1);
 	  }
-	  return $sk_rand_str;
+	  return $sk2_rand_str;
  } 
  
- function sk_url_fopen($url, $convert_case = false, $postinfo = array())
+ function sk2_url_fopen($url, $convert_case = false, $postinfo = array())
  {
  	global $curl_error;
  	$curl_error = 0;
@@ -181,7 +181,7 @@ function sk_rand_str($size, $unambiguous = false)
 		curl_setopt($curl_handle,CURLOPT_CONNECTTIMEOUT,2);
 		curl_setopt($curl_handle,CURLOPT_RETURNTRANSFER,1);
 		curl_setopt($curl_handle,CURLOPT_FAILONERROR,1);
-  		curl_setopt($curl_handle,CURLOPT_USERAGENT, "PHP Spam Karma Check ");
+  		curl_setopt($curl_handle,CURLOPT_USERAGENT, "PHP Spam Karma 2 Check ");
 	  	if (!empty($postinfo))
  	 	{
  	 		curl_setopt($curl_handle, CURLOPT_POST, true);
@@ -201,12 +201,12 @@ function sk_rand_str($size, $unambiguous = false)
 	return $file_content;
  }
   
-function sk_get_url_content($url, $level = 0, $convert_case = false)
+function sk2_get_url_content($url, $level = 0, $convert_case = false)
 {
 	if ($level > 8)
 		return "";
 		
-	$file_content = sk_url_fopen($url, $convert_case);
+	$file_content = sk2_url_fopen($url, $convert_case);
 
 	if ($level >= 0)
 		if (preg_match_all("/<(?:script|iframe) [^>]*src=\\\"([^\\\"]*)\\\"[^>]*>/", $file_content, $matches))
@@ -219,13 +219,13 @@ function sk_get_url_content($url, $level = 0, $convert_case = false)
 					$new_url = $url . "/" . $new_url;
 				//echo "level: $level - match: $match - url: $new_url<br/>";
 					
-				$file_content .= "***\n" . sk_get_url_content($new_url, $level+1);
+				$file_content .= "***\n" . sk2_get_url_content($new_url, $level+1);
 			}	
 		}
 	return $file_content;
 }
 
-function sk_html_entity_decode ($str, $compat, $encoding)
+function sk2_html_entity_decode ($str, $compat, $encoding)
 {
 	if (! $str)
 		return $str;

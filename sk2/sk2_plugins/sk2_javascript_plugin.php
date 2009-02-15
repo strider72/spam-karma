@@ -1,6 +1,6 @@
 <?php
 /**********************************************************************************************
- Spam Karma (c) 2009 - http://code.google.com/p/spam-karma/
+ Spam Karma 2 (c) 2008 - Dave A. duVerle - http://unknowngenius.com
 
  This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -16,11 +16,11 @@
 // Javascript Plugin
 // Uses JS to test browser
 
-class sk_javascript_plugin extends sk_plugin
+class sk2_javascript_plugin extends sk2_plugin
 {
 	var $name = "Javascript Payload";
 	var $author = "";
-	var $plugin_help_url = "http://wp-plugins.net/wiki/?title=sk_Javascript_Plugin";
+	var $plugin_help_url = "http://wp-plugins.net/wiki/?title=SK2_Javascript_Plugin";
 	var $description = "Embed a few Javascript commands in comment form (most browsers without Javascript abilities are usually spambots). If the browser does not support Javascript, it only receives a small penalty.";
 	var $filter = true;
 	var $skip_under = -20;
@@ -32,9 +32,9 @@ class sk_javascript_plugin extends sk_plugin
 		$seed = $this->get_option_value('secret_seed');
 		if (empty ($seed))
 		{
-			$seed = sk_rand_str(10);
+			$seed = sk2_rand_str(10);
 			$this->set_option_value('secret_seed', $seed);
-			$this->log_msg(__("Resetting secret seed to: ", 'spam-karma') . $seed, 5);
+			$this->log_msg(__("Resetting secret seed to: ", 'sk2') . $seed, 5);
 		}
 		
 		$max = rand(5, 9);
@@ -86,15 +86,15 @@ class sk_javascript_plugin extends sk_plugin
 		$js_command = "Math.round ( Math.abs(" . $str . "))" ;
 		$tot = round(abs($tot));
 		
-		$check1 = sk_rand_str(10);
+		$check1 = sk2_rand_str(10);
 		$check2 = md5($tot . $check1 . $seed);
 
 ?>
-<input type="hidden" id="sk_my_js_check1" name="sk_my_js_check1" value="<?php echo $check1; ?>" />
-<input type="hidden" id="sk_my_js_check2" name="sk_my_js_check2" value="<?php echo $check2; ?>" />
+<input type="hidden" id="sk2_my_js_check1" name="sk2_my_js_check1" value="<?php echo $check1; ?>" />
+<input type="hidden" id="sk2_my_js_check2" name="sk2_my_js_check2" value="<?php echo $check2; ?>" />
 <script type="text/javascript">
 <!--
-	document.write('<input type="hidden" id="sk_my_js_payload" name="sk_my_js_payload" value="');
+	document.write('<input type="hidden" id="sk2_my_js_payload" name="sk2_my_js_payload" value="');
 	document.write(<?php echo $js_command; ?>);
 	document.write('" />');
 -->
@@ -105,9 +105,9 @@ class sk_javascript_plugin extends sk_plugin
 
 	function version_update($cur_version)
 	{
-		$seed = sk_rand_str(10);
+		$seed = sk2_rand_str(10);
 		$this->set_option_value('secret_seed', $seed);
-		$this->log_msg(__("Resetting secret Javascript seed to: ", 'spam-karma') . $seed, 5);
+		$this->log_msg(__("Resetting secret Javascript seed to: ", 'sk2') . $seed, 5);
 		return true;
 	}
 
@@ -116,7 +116,7 @@ class sk_javascript_plugin extends sk_plugin
 		$karma_diff = 0;
 		if ($cmt_object->is_post_proc())
 		{
-			$log = __("Cannot check Javascript payload in post_proc mode.", 'spam-karma');
+			$log = __("Cannot check Javascript payload in post_proc mode.", 'sk2');
 			$this->log_msg($log, 4);
 			return;
 		}	
@@ -124,15 +124,15 @@ class sk_javascript_plugin extends sk_plugin
 		if (! $cmt_object->is_comment())
 			return;
 			
-		if (empty($_REQUEST['sk_my_js_payload']) || empty($_REQUEST['sk_my_js_check1']))
+		if (empty($_REQUEST['sk2_my_js_payload']) || empty($_REQUEST['sk2_my_js_check1']))
 		{
 			if ($this->get_option_value("no-penalty"))
 			{
-				$this->log_msg(__("Browser doesn't support Javascript. Penalty disabled", 'spam-karma'), 4);
+				$this->log_msg(__("Browser doesn't support Javascript. Penalty disabled", 'sk2'), 4);
 			}
 			else
 			{
-				$log = __("Browser doesn't support Javascript", 'spam-karma');
+				$log = __("Browser doesn't support Javascript", 'sk2');
 				$karma_diff = -2;				
 			}
 		}
@@ -140,15 +140,15 @@ class sk_javascript_plugin extends sk_plugin
 		{
 			$seed = $this->get_option_value('secret_seed');
 		
-			if ($_REQUEST['sk_my_js_check2'] != md5($_REQUEST['sk_my_js_payload'] . $_REQUEST['sk_my_js_check1'] . $seed))
+			if ($_REQUEST['sk2_my_js_check2'] != md5($_REQUEST['sk2_my_js_payload'] . $_REQUEST['sk2_my_js_check1'] . $seed))
 			{
-				$log = __("Fake Javascript Payload.", 'spam-karma');
+				$log = __("Fake Javascript Payload.", 'sk2');
 				$karma_diff = -10;
 				$this->log_msg($log, 6);
 			}
 			else
 			{
-				$log = __("Valid Javascript payload (can be fake).", 'spam-karma');
+				$log = __("Valid Javascript payload (can be fake).", 'sk2');
 				$karma_diff = 0.5;
 			}
 		}
@@ -157,6 +157,6 @@ class sk_javascript_plugin extends sk_plugin
 	}
 }
 
-$this->register_plugin("sk_javascript_plugin", 2);
+$this->register_plugin("sk2_javascript_plugin", 2);
 
 ?>
