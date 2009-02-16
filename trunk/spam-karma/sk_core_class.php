@@ -35,14 +35,19 @@ require_once(dirname(__FILE__) . "/sk_functions.php");
 global $sk_plugin_array;
 $sk_plugin_array = 0;
 
-class sk_core
+class SK_Core
 {
 	var $cur_comment = 0;
 	var $post_proc = false;
 	var $plugins = array();
 	var $version = SK_KCORE_VERSION;
 	
-	function sk_core($comment_ID = 0, $post_proc = false, $load_plugins = true)
+	function SK_Core($comment_ID = 0, $post_proc = false, $load_plugins = true)
+	{
+		return $this->__construct($comment_ID, $post_proc, $load_plugins);
+	}
+
+	function __construct($comment_ID = 0, $post_proc = false, $load_plugins = true)
 	{
 		$this->sanity_check();
 

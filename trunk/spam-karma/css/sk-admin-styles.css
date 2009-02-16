@@ -1,18 +1,3 @@
-<?php
-/**********************************************************************************************
- Spam Karma (c) 2009 - http://code.google.com/p/spam-karma/
-
- This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; version 2 of the License.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-************************************************************************************************/
-?><style type="text/css"><!--
 #sk_menu li 
 { 
 display: inline; list-style-type: none; list-style-image: none; list-style-position: outside; text-align: center;
@@ -113,6 +98,11 @@ color: #fff;
 	border: 1px solid #999;
 }
 
+.karma-details {
+	border: 5px solid;
+	padding: 1em;
+}
+
 .show_hide_switch
 {
 	border-bottom: 1px solid #999;
@@ -197,7 +187,7 @@ color: #fff;
 
 p.sk_form
 {
-	padding: 0px;
+	padding: .5em;
 	margin: 0px 0px 4px 0px;
 }
 
@@ -325,7 +315,3 @@ border: 2px solid red;
 	indent:0;
 	margin:8px;
 }
-
-
-//-->
-	</style>

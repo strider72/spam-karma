@@ -86,7 +86,7 @@ class sk_snowball_plugin extends sk_plugin
 
 							$log = sprintf(__ngettext("Retro-spanked one comment. ID: ", "Retro-spanked %d comments. IDs: ", count($retro_cmts), 'spam-karma'), count($retro_cmts));
 							$this->retro_spanked = true;
-							$retro_spanking_core = new sk_core(0, true, true);
+							$retro_spanking_core = new SK_Core(0, true, true);
 							//$retro_spanking_core->load_plugin_files($);
 							
 							foreach($retro_cmts as $retro_cmt)
