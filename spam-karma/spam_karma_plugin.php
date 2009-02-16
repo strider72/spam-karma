@@ -18,7 +18,7 @@ Plugin Name: Spam Karma
 Plugin URI: http://code.google.com/p/spam-karma/
 Description: Ultimate Spam Killer for WordPress.<br/> Activate the plugin and go to <a href="edit.php?page=spamkarma">Manage >> Spam Karma</a> to configure.<br/> See <a href="edit.php?page=spamkarma&sk_section=about">Spam Karma >> About</a> for details.
 Author: dr Dave
-Version: 2.3
+Version: 2.4-alpha
 Author URI: http://unknowngenius.com/blog/
 */
 
@@ -33,8 +33,57 @@ if (! isset($_SERVER['PHP_SELF']))
 		
 function sk_add_options() 
 {
-	add_management_page(__('Spam Karma Options', 'spam-karma'), 'Spam Karma', 7, "spamkarma", 'sk_option_page');
-	add_options_page(__('Spam Karma Options', 'spam-karma'), 'Spam Karma', 7, "spamkarma", 'sk_option_page');
+	$page = add_options_page(__('Spam Karma Options', 'spam-karma'), __('Spam Karma','spam-karma'), 'moderate_comments', 'spamkarma', 'sk_option_page');
+	add_action('load-' . $page, 'sk_output_admin_load');
+}
+
+function sk_admin_init() {
+	include_once(dirname(__FILE__) . "/sk_core_class.php");
+	$sk_core = new SK_Core(0, true);
+	// filter comments through sk plugins
+	if ( isset( $_REQUEST['sk_run_filter'] ) && current_user_can('moderate_comments') ) {
+		check_admin_referer('bulk-karma-filter', '_karma_filter_nonce');
+		ob_flush();
+		if ( isset( $_REQUEST['delete_comments'] ) ) {
+			$which_plugin = $_REQUEST['bulk-karma-filter-plugins'];
+			foreach( (array) $_REQUEST['delete_comments'] as $id ) {
+				if ($which_plugin != "all")
+				{
+					$which_plugin_obj = 0;
+					foreach ($sk_core->plugins as $plugin)
+						if ($plugin[2] == $which_plugin)
+							$which_plugin_obj = $plugin[1];
+
+					if (! $which_plugin_obj)
+						$sk_log->log_msg(sprintf(__('Cannot find plugin: %s', 'spam-karma'), $which_plugin), 10, 0, "web_UI");
+					
+					$comment_obj = new sk_comment($id, true);
+					if ($which_plugin_obj->is_filter())
+					{
+						$sk_log->log_msg(sprintf(__("Running filter: %s on comment ID: %s", 'spam-karma'), $which_plugin_obj->name, $id), 3, $id, "web_UI");
+						$which_plugin_obj->filter_this($comment_obj);
+					}
+					if ($which_plugin_obj->is_treatment())
+					{
+						$sk_log->log_msg(sprintf(__("Running treatment: %s on comment ID %d.", 'spam-karma'),  $which_plugin_obj->name, $id), 3, $id, "web_UI");
+						$which_plugin_obj->treat_this($comment_obj);
+					}
+					$comment_sk_info['comment_ID'] = $id;
+					$comment_sk_info['karma'] =  $comment_obj->karma;
+					$comment_sk_info['karma_cmts'] =  $comment_obj->karma_cmts;
+					$sk_core->set_comment_sk_info($id, $comment_sk_info);
+				}
+				elseif ($which_plugin == "all")
+				{
+					$sk_log->log_msg(sprintf(__('Running all filters on comment ID: %s', 'spam-karma'), $id), 3, $id, "web_UI");
+					$sk_core->filter_comment($id);				
+					$sk_log->log_msg(sprintf(__('Running all treatments on comment ID: %s', 'spam-karma'),  $id), 3, $id, "web_UI");
+					$sk_core->treat_comment($id);
+					$sk_core->set_comment_sk_info();
+				}
+			}
+		}
+	}
 }
 
 function sk_init()
@@ -47,11 +96,12 @@ function sk_init()
 
 function sk_option_page()
 {
-	global $wpdb, $sk_settings;
+	global $wpdb, $sk_log, $sk_settings;
 	include_once(dirname(__FILE__) . "/sk_core_class.php");
-	$sk_core = new sk_core(0, true);
+	$sk_core = new SK_Core(0, true);
+	
 
-	$sk_sections = array ("general" => __("General Settings", 'spam-karma'), "spam" => __("Recent Spam Harvest", 'spam-karma') . $new_spams, "approved" => __("Approved Comments", 'spam-karma') . $new_approved, "blacklist" => __("Blacklist", 'spam-karma'), "logs" => __("SK Logs", 'spam-karma'), "about" => __("About", 'spam-karma'));
+	$sk_sections = array ("general" => __("General Settings", 'spam-karma'), "blacklist" => __("Blacklist", 'spam-karma'), "logs" => __("SK Logs", 'spam-karma'), "about" => __("About", 'spam-karma'));
 
 	if (isset($_REQUEST['sk_section']) && !empty($sk_sections[$_REQUEST['sk_section']]))
 		$cur_section = $_REQUEST['sk_section'];
@@ -527,203 +577,6 @@ function sk_option_page()
 <?php
 		break;
 		
-		// RECENT SPAM SCREEN
-		case 'spam':
-		case 'approved':
-			
-
-			if ($cur_section == 'spam')
-			{
-				$sk_settings->set_core_settings(time(), "last_spam_check");
-				$query_where = "`comment_approved` != '1'";
-			}
-			else
-			{
-				$query_where = "`comment_approved` = '1'";
-				$sk_settings->set_core_settings(time(), "last_approved_check");
-			}
-			
-			$query_limit_str = $query_limit = max(20, @$_REQUEST['sql_rows_per_page']);
-			if (@$_REQUEST['sql_skip_rows'])
-				$query_limit_str = $_REQUEST['sql_skip_rows'] . ", " . ($_REQUEST['sql_skip_rows'] + $query_limit);
-			
-			$score_threshold = intval (isset($_REQUEST['sql_score_threshold']) ? $_REQUEST['sql_score_threshold'] : -20);
-			
-// added some stuff that should fix a mySQL 5 bug			
-			$query = "SELECT `posts_table`.`post_title`,  `spam_table`.`karma`, `spam_table`.`id` as `spam_id`,`spam_table`.`karma_cmts`, `comments_table`.*, IF(`comments_table`.`comment_approved` = '0', 1, 0) AS `display_priority` FROM (`". $wpdb->comments . "` AS `comments_table`, `" . $wpdb->posts ."` AS `posts_table`) LEFT JOIN `". SK_KSPAM_TABLE . "` AS `spam_table` ON `spam_table`.`comment_ID` = `comments_table`.`comment_ID` WHERE  $query_where AND `posts_table`.`ID` = `comments_table`.`comment_post_ID` AND (`spam_table`.`karma` IS NULL  OR `spam_table`.`karma` >= $score_threshold) ORDER BY `display_priority` DESC, `comments_table`.`comment_date_gmt` DESC LIMIT $query_limit_str";
-
-
-			//echo "####" . $query;
-			$spam_rows = $wpdb->get_results($query);
-			if (mysql_error())
-				$sk_log->log_msg_mysql(__("Can't fetch comments.", 'spam-karma') . " <br/>" . __("Query: ", 'spam-karma') . "<code>$query</code>", 7, 0, "web_UI");
-
-
-		sk_echo_check_all_JS();
-?>
-		<div class="wrap sk_first">
-		<h2><?php echo (($cur_section == 'spam') ? __("Spams Caught by SK", 'spam-karma') : __("Comments recently approved", 'spam-karma')); ?></h2>
-		<fieldset class="options">
-			<legend><?php _e("Browse", 'spam-karma'); ?></legend>
-			<p class="sk_form"><form id="sk_spamlist_display_form" name="sk_spamlist_display_form" method="get" action="<?php echo $_SERVER['PHP_SELF'];?>">
-						<?php echo sk_nonce_field(); ?>
-			<input type="hidden" name="page" id="page" value="spamkarma" />
-			<input type="hidden" name="sk_section" id="sk_section" value="<?php echo $cur_section; ?>" /><input type="submit" name="display_cmts" id="display_cmts" value="<?php _e("Display", 'spam-karma'); ?>" /><input type="text" id="sql_rows_per_page" name="sql_rows_per_page" value="<?php echo $query_limit; ?>" size="3"/> <?php _e("comments per page, skipping first: ", 'spam-karma'); ?> <input type="text" id="sql_skip_rows" name="sql_skip_rows" value="<?php echo intval(@$_REQUEST['sql_skip_rows']) ?>" size="3" /> <?php _e('with karma lower than', 'spam-karma'); ?> <input type="text" id="sql_score_threshold" name="sql_score_threshold" value="<?php echo $score_threshold; ?>" size="4"></form></p>
-		</fieldset>		
-		<?php
-		if ($cur_section == 'spam')
-		{
-		?>
-		<fieldset class="options">
-			<legend><?php _e("Clean", 'spam-karma'); ?></legend><form id="sk_spamlist_purge_form" name="sk_spamlist_purge_form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?page=spamkarma&sk_section=<?php echo $cur_section; ?>">
-				<?php 
-				echo sk_nonce_field();
-				if ($cur_moderated)
-				{
-				?><p class="sk_form"><input type="submit" name="confirm_moderation" id="confirm_moderation" value="<?php _e("Confirm All Moderated As Spam", 'spam-karma'); ?>" /> (<?php _e("outlined in red", 'spam-karma'); ?>)</p><?php 
-				}
-				?>
-				<p class="sk_form"><?php
-				printf(__("%sPurge Comment Spams:%s older than %s%s (%s do it automatically from now on).", 'spam-karma'), '<input type="submit" name="purge_spamlist" id="purge_spamlist" value="', '" />', sk_settings_ui("purge_spamlist_duration"), sk_settings_ui("purge_spamlist_unit"), sk_settings_ui('auto_purge_spamlist')); 
-				?></p></form>
-		<form id="sk_spamlist_form" name="sk_spamlist_form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?page=spamkarma&sk_section=<?php echo $cur_section; ?>"><p class="sk_form">
-					<?php echo sk_nonce_field(); ?>
-				<input type="submit" name="remove_checked" id="remove_checked" value="<?php _e("Remove Selected Entries", 'spam-karma'); ?>" /> <a href="javascript:;" onclick="checkAll(document.getElementById('sk_spamlist_form')); return false; " />(<?php _e("Invert Checkbox Selection", 'spam-karma'); ?>)</a></p>
-			</fieldset>
-		<?php
-			}
-			else
-			{
-				?>
-				<form id="sk_spamlist_form" name="sk_spamlist_form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?page=spamkarma&sk_section=<?php echo $cur_section; ?>">
-							<?php echo sk_nonce_field(); ?>
-			<?php
-			}
-
-			$switch =  (($cur_section == 'spam') ? __("Recover", 'spam-karma') : __("Moderate", 'spam-karma')); 
-	?>
-			
-			<fieldset class="options">
-			<legend><?php echo $switch; ?></legend>
-			<input type="submit" id="recover_selection" name="recover_selection" value="<?php echo $switch, " ", __("Selected", 'spam-karma'); ?>" /> <a href="javascript:;" onclick="checkAll(document.getElementById('sk_spamlist_form')); return false; " />(<?php _e("Invert Checkbox Selection", 'spam-karma'); ?>)</a>
-			</fieldset>
-		
-			<fieldset class="options">
-			<legend><?php _e("Filter", 'spam-karma'); ?></legend>
-			<p class="sk_form"><?php
-			printf(__("%sRun selected entries%s through ", 'spam-karma'), '<input type="submit" name="sk_run_filter" id="sk_run_filter" value="', '" />');
-			?><select name="action_param[which_plugin]" id="action_param[which_plugin]">
-			<option value="all" selected><?php _e("All plugins", 'spam-karma'); ?></option>
-			<?php
-				 foreach ($sk_core->plugins as $plugin)
-				 	echo "<option value=\"$plugin[2]\">". $plugin[1]->name . "</option>\n";
-			?>
-			</select>  <a href="javascript:;" onclick="checkAll(document.getElementById('sk_spamlist_form')); return false; " />(<?php _e("Invert Checkbox Selection", 'spam-karma'); ?>)</a></p>
-			</fieldset>
-			<p><table id="sk_spam_list" width="100%" cellpadding="3" cellspacing="3"> 
-			<tr><th colspan="7"><?php printf(__('Only displaying comments with a karma above %d:', 'spam-karma'), $score_threshold);  ?></th></tr>
-			<tr>
-				<th scope="col"><?php _e("ID", 'spam-karma'); ?></th>
-				<th scope="col"><?php _e("Karma", 'spam-karma'); ?></th>
-				<th scope="col"><?php _e("How Long Ago", 'spam-karma'); ?></th>
-				<th scope="col"><?php _e("Author", 'spam-karma'); ?></th>
-				<th scope="col"><?php _e("Post Title", 'spam-karma'); ?></th>
-				<th scope="col"><?php _e("Comment", 'spam-karma'); ?></th>
-				<th scope="col"><?php _e("Type", 'spam-karma'); ?></th>
-			</tr>
-<?php
-		if (is_array($spam_rows))
-			foreach ($spam_rows as $row)
-			{
-				sk_clean_up_sql($row);
-				if (! $row->spam_id)
-				{
-					$row->karma = "[?]";
-					$color = "rgb(200, 200, 256)";
-				}
-				elseif ($row->karma < -20)
-					$color = "rgb(130, 130, 130)";
-				elseif ($row->karma < -10)
-				{
-					$x = (int) (130 + 50 * pow((20 + $row->karma)/10, 2));
-					$color = "rgb($x, $x, $x)";
-				}
-				else
-				{
-					$x = max (0, (int) (180 - 12 * (10 + $row->karma)));
-					$y = min(256, (int) (180 + 7.6 * (10 + $row->karma)));
-					$color = "rgb($x, $y, $x)";
-				}
-				
-				$karma_cmts = "";
-				if (!empty($row->karma_cmts))
-				{
-					$karma_cmts_array = unserialize($row->karma_cmts);
-
-					if (is_array($karma_cmts_array))
-						foreach ($karma_cmts_array as $cmt)
-						{
-							$karma_cmts .=  "<div class=\"";
-							if ($cmt['hit'] >= 0)
-								$karma_cmts .= "good_karma";
-							else
-								$karma_cmts .= "bad_karma";
-							$karma_cmts .= "\">";
-							$karma_cmts .=  "<b>" . $cmt['hit'] . "</b>: <i>" . sk_soft_hyphen($cmt['reason']) . "</i>";	
-							$karma_cmts .= "</div>";
-						}
-				}
-
-				// should we replace <a> tags?
-				//preg_replace();
-
-				echo "<tr style=\"background-color: $color;\"";
-				if ($row->comment_approved == '0')
-					echo " class=\"moderated\"";
-				echo ">";
-				echo "<th scope=\"row\"><input type=\"checkbox\" name=\"comment_grp_check[$row->comment_ID]\" id=\"comment_grp_check[$row->comment_ID]\" value=\"" . $row->spam_id . "\"  /> $row->comment_ID</th>";
-				echo "<td>";
-				if (! empty($karma_cmts))
-					echo sk_table_show_hide($row->karma, $karma_cmts);
-				else
-					echo "<b>$row->karma</b>";
-				echo "</td>";
-				echo "<td>" . sk_table_show_hide(sk_time_since(strtotime($row->comment_date_gmt . " GMT")), $row->comment_date_gmt . "GMT") ." </td>";
-				echo "<td>" . sk_table_show_hide(substr(sk_html_entity_decode($row->comment_author, ENT_QUOTES, "UTF-8"), 0, 20), (strlen($row->comment_author) > 20 ? "<i>" . __("Author: ", 'spam-karma') ."</i><b>" . htmlentities($row->comment_author) . "</b><br/>" : "") . "<i>" . __("E-mail: ", 'spam-karma') . "</i><b>" .  sk_soft_hyphen($row->comment_author_email) . "</b><br/><i>" . __("IP: ", 'spam-karma') . "</i><b>". sk_soft_hyphen($row->comment_author_IP) . "</b><br/><i>" . __("URL: ", 'spam-karma') . "</i><b>" . sk_soft_hyphen($row->comment_author_url) . "</b>") . "</td>";
-				echo "<td>$row->post_title</div></td>";
-				echo "<td>";
-				$row->comment_content = strip_tags($row->comment_content);
-				if (strlen($row->comment_content) > 40)
-					echo sk_table_show_hide(sk_soft_hyphen(substr($row->comment_content, 0, 35)) . " [...]", sk_soft_hyphen(substr($row->comment_content, 35)));
-				else
-					echo sk_soft_hyphen($row->comment_content);
-				echo "</td><td>";
-				switch ($row->comment_type)
-				{
-					case "":
-					case "comment":
-						_e("Cmt", 'spam-karma');
-					break;
-					case "trackback":
-						_e("TB", 'spam-karma');
-					break;
-					case "pingback":
-						_e("PB", 'spam-karma');
-					break;
-					default:
-						echo $row->comment_type;
-					break;
-				}
-				echo "</td>";
-				echo "</tr>";
-			}
-?>
-		</table></p>
-		</form>
-		</div>
-<?php
-		break;
-		
 		// GENERAL SETTINGS SCREEN
 		case 'general':
 		default:			
@@ -894,6 +747,21 @@ function toggleAdvanced(mybutton, myid)
 	*/
 }
 
+function sk_submit_comments_to_plugins()
+{
+	include_once(dirname(__FILE__) . "/sk_core_class.php");
+	$sk_core = new SK_Core(0, true);
+	?><p class="sk_form"><?php
+	wp_nonce_field('bulk-karma-filter', '_karma_filter_nonce');
+	$select = '<select name="bulk-karma-filter-plugins" id="bulk-karma-filter-plugins">';
+	$select .= '<option value="all" selected>' . __('All Spam Karma plugins', 'spam-karma') . '</option>';
+	foreach ($sk_core->plugins as $plugin)
+		$select .= "<option value=\"$plugin[2]\">". $plugin[1]->name . "</option>\n";
+	$select .= '</select>';
+	printf(__('%1$sRun selected entries%2$s through %3$s', 'spam-karma'), '<input type="submit" name="sk_run_filter" class="button-secondary" id="sk_run_filter" value="', '" />', $select);
+	echo '</p>';
+}
+
 function sk_table_show_hide($show, $hide)
 {
 	global $sk_settings;
@@ -907,11 +775,43 @@ function sk_table_show_hide($show, $hide)
 	}
 }
 
-
-function sk_output_admin_css ()
+function sk_output_admin_print()
 {
-	if ($_REQUEST['page'] == 'spamkarma')
-		include_once(dirname(__FILE__) . "/sk_admin_css.php");
+	?>
+	<script type="text/javascript">
+	// <![CDATA[
+	(function () {
+		var head = document.getElementsByTagName("head")[0];
+		if (head) {
+			var scriptStyles = document.createElement("link");
+			scriptStyles.rel = "stylesheet";
+			scriptStyles.type = "text/css";
+			scriptStyles.href = "<?php echo WP_PLUGIN_URL . '/' . plugin_basename(dirname(__FILE__)) . '/css/sk-admin-script-styles.css'; ?>";
+			head.appendChild(scriptStyles);
+		}
+	}());
+
+	if ( 'undefined' != typeof jQuery )
+	jQuery(function(j) {
+		j('.karma-details').hide();
+		j('.column-comment').hover(
+			function() { // over 
+				j('.karma-details', this).fadeIn('slow');
+			},
+			function() { // out
+				j('.karma-details', this).fadeOut('slow');
+			}
+		);
+	});
+	// ]]>
+	</script>
+	<?php 
+}
+
+function sk_output_admin_load()
+{
+	wp_enqueue_style('sk-css', WP_PLUGIN_URL . '/' . plugin_basename(dirname(__FILE__)) . '/css/sk-admin-styles.css');
+	wp_enqueue_script('jquery');
 }
 
 function sk_settings_ui($name, $type = false, $options_size = false)
@@ -1000,7 +900,7 @@ function sk_form_insert($id = 0)
 		$id = $post->ID;
 	}
 	require_once(dirname(__FILE__) ."/sk_core_class.php");
-	$sk_core = new sk_core(0, false);
+	$sk_core = new SK_Core(0, false);
 	$sk_core->form_insert($id);
 	$sk_settings->save_settings();	
 }
@@ -1021,7 +921,7 @@ function sk_filter_comment($comment_ID)
 		$sk_log->log_msg(__("Structural failure: no comment ID sent to comment hook", 'spam-karma'), 10, 0, "web_UI", true, false);
 		die(__("Aborting Spam Karma", 'spam-karma'));
 	}
-	$sk_core = new sk_core($comment_ID, false);
+	$sk_core = new SK_Core($comment_ID, false);
 	$sk_core->process_comment();
 
 	$approved = $sk_core->cur_comment->approved;
@@ -1348,15 +1248,80 @@ function sk_create_nonce($uid, $action = -1)
 		return "";
 }
 
+function sk_comment_row_actions($actions = array(), $comment = null)
+{
+	$details = sk_get_karma_details($comment->comment_ID);
+	if ( ! empty( $details ) ) :
+		$details->karma = ( empty( $details->karma ) ) ? 0 : $details->karma;
+		$color = sk_get_karma_color($details->karma);
+		if ( ! empty( $details->karma_cmts ) )
+		{
+			$karma_cmts_array = unserialize($details->karma_cmts);
+			if (is_array($karma_cmts_array))
+			{
+				$karma_cmts = '<div class="karma-details" style="border-color: ' . $color . ';"><h3>' . __('Karma Details', 'spam-karma') . '</h3><ul>';
+				foreach ($karma_cmts_array as $cmt)
+				{
+					$karma_cmts .=  '<li class="karma-detail ';
+					if ($cmt['hit'] >= 0)
+						$karma_cmts .= "good_karma";
+					else
+						$karma_cmts .= "bad_karma";
+					$karma_cmts .= '"><strong>' . $cmt['hit'] . '</strong>: <em>' . sk_soft_hyphen($cmt['reason']) . '</i>';	
+					$karma_cmts .= "</li>\n";
+				}
+				$karma_cmts .= '</ul></div>';
+				echo $karma_cmts;
+			}
+		}
+	endif;
+	return $actions;
+}
+
+function sk_get_karma_color($karma = 0)
+{
+	if ( empty($karma) )
+	{
+		$color = "rgb(200, 200, 256)";
+	}
+	elseif ($karma < -20)
+		$color = "rgb(130, 130, 130)";
+	elseif ($karma < -10)
+	{
+		$x = (int) (130 + 50 * pow((20 + $karma)/10, 2));
+		$color = "rgb($x, $x, $x)";
+	}
+	else
+	{
+		$x = max (0, (int) (180 - 12 * (10 + $karma)));
+		$y = min(256, (int) (180 + 7.6 * (10 + $karma)));
+		$color = "rgb($x, $y, $x)";
+	}
+	return $color;
+}
+
+function sk_get_karma_details($comment_id = 0) {
+	global $wpdb;
+	$comment_id = intval($comment_id);
+	include_once(dirname(__FILE__) . "/sk_core_class.php");
+	$query = "SELECT `karma`, `karma_cmts` FROM ". SK_KSPAM_TABLE . " WHERE  comment_ID = '{$comment_id}' LIMIT 1";
+	$row = $wpdb->get_row($query);
+	return $row;
+}
+
 
 add_action('init', 'sk_init');
+add_action('admin_init', 'sk_admin_init');
 
 add_action('comment_form', 'sk_form_insert');
 add_action('admin_menu', 'sk_add_options');
-add_action('admin_head', 'sk_output_admin_css');
-add_filter('pre_comment_approved', 'sk_fix_approved');
+add_action('load-edit-comments.php', 'sk_output_admin_load');
+add_action('admin_head-edit-comments.php', 'sk_output_admin_print');
 add_action('comment_post', 'sk_filter_comment');
-
+add_action('manage_comments_nav', 'sk_submit_comments_to_plugins');
 add_action('wp_footer', 'sk_insert_footer', 3);
+
+add_filter('comment_row_actions', 'sk_comment_row_actions', 10, 2);
+add_filter('pre_comment_approved', 'sk_fix_approved');
 
 ?>
