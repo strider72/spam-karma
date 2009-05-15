@@ -7,6 +7,6 @@ Some people have provided third-party plugins that extend the abilities of Spam 
 
 = Plugins =
 
-  * [http://www.sebbi.de/archives/2006/01/31/spam-karma-2-akismet-plugin/ Akismet plugin] -- by Sebastian Herp --use the [http://akismet.com/ Akismet] anti-spam system as just one of the tests within Spam Karma
+  * [http://www.sebbi.de/archives/2006/01/31/spam-karma-2-akismet-plugin/ Akismet plugin] -- by Sebastian Herp -- Uses the [http://akismet.com/ Akismet] anti-spam system as just one of the tests within Spam Karma
   * [http://blog.ftwr.co.uk/wordpress/sk2-simple-digest-plugin/ Simple Digest plugin] -- by Peter Westwood -- Sends the blog admin digest emails about recent activity by Spam Karma
-  * [http://blog.ftwr.co.uk/wordpress/sk2-moderate-plugin/ Moderate plugin] -- by Peter Westwood -- forces all comments through moderation, regardless of "karma" score.
+  * [http://blog.ftwr.co.uk/wordpress/sk2-moderate-plugin/ Moderate plugin] -- by Peter Westwood -- Forces all comments through moderation, regardless of "karma" score.
