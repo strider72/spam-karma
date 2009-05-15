@@ -1,0 +1,10 @@
+#summary A list of third-party Spam Karma plugins
+#labels plugins
+
+= Introduction =
+
+Some people have provided third-party plugins that extend the abilities of Spam Karma
+
+= Plugins =
+
+* [http://www.sebbi.de/archives/2006/01/31/spam-karma-2-akismet-plugin/ Akismet plugin] -- use the Akismet anti-spam system as just one of the tests within Spam Karma
