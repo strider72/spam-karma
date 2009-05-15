@@ -1,4 +1,5 @@
 #summary Introduction to Spam Karma
+#labels Featured
 
 Spam Karma is a powerful and flexible anti-spam system for blogs and other sites that accept comments.
 
