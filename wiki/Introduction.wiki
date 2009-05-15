@@ -1,7 +1,5 @@
 #summary Introduction to Spam Karma
 
-= Introduction =
-
 Spam Karma is a powerful and flexible anti-spam system for blogs and other sites that accept comments.
 
 = Details =
