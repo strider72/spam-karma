@@ -1,0 +1,13 @@
+#summary Introduction to Spam Karma
+
+= Introduction =
+
+Spam Karma is a powerful and flexible anti-spam system for blogs and other sites that accept comments.
+
+= Details =
+
+Spam Karma is a modular system for detecting and blocking comment spam.  It works through the use of various plugins that each test a comment for a particular aspect of "spamminess".  Each of these tests assigns points to the comment, and after all the tests are run they are totaled up.  if the overall points are negative, it's considered spam and blocked.
+
+There are a lot of options for how you want the system to interpret the points and so forth.  You can set the relative strength of each test individually, making some tests more important than others.  There are third-party plugins available as well, which add functionality beyond that of Spam Karma alone.
+
+It is currently only available for [http://wordpress.org/ WordPress], but could probably be adapted to other platforms.
