@@ -221,6 +221,12 @@ border: 2px solid red;
 	margin: 3px;
 }
 
+.msg_good code
+{
+	color: inherit;
+	background-color: transparent;
+}
+
 .msg_bad
 {
 	font-weight:bold;
