@@ -610,7 +610,8 @@ class SK_Core
 	}
 	
 	function set_comment_sk_info($comment_ID = 0, $comment_sk_info = 0, $append = false)
-	{ // if $comment_ID != 0: must provide $comment_sk_info
+	{
+		// if $comment_ID != 0: must provide $comment_sk_info
 		global $sk_settings, $wpdb;
 		
 		if (! $comment_ID)
@@ -719,7 +720,7 @@ class SK_Core
 	}
 	
 	
-	// sanity_check() makes sure we've at least been ran *once*
+	// sanity_check() makes sure we've at least been run *once*
 	function sanity_check()
 	{
 		global $sk_settings;
@@ -741,7 +742,7 @@ class SK_Core
 		}
 		if (!empty ($message))
 		{
-			$message .= " " . sprintf(__("You MUST visit %sSpam Karma's admin page%s at least once before letting it filter your comments (chaos may ensue otherwise).", 'spam-karma'), "<a href=\"". get_bloginfo('wpurl') . "/wp-admin/edit.php?page=spamkarma" . "\">", "</a>");
+			$message .= " " . sprintf(__("You MUST visit %sSpam Karma's admin page%s at least once before letting it filter your comments (chaos may ensue otherwise).", 'spam-karma'), "<a href=\"". get_bloginfo('wpurl') . "/wp-admin/options-general.php?page=spamkarma" . "\">", "</a>");
 		
 			echo "<div class=\"sk-fatal-error\" style=\"position:absolute; left:0; top:0; background-color: red; color: white; border: 1px black solid; padding: 5px; \">$message</div>";
 		}
