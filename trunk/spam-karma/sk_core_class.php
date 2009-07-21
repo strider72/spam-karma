@@ -1,5 +1,5 @@
 <?php
-/**********************************************************************************************
+/******************************************************************************
  Spam Karma (c) 2009 - http://code.google.com/p/spam-karma/
 
  This program is free software; you can redistribute it and/or modify
@@ -11,26 +11,23 @@
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
 
-************************************************************************************************/
+******************************************************************************/
 ?><?php
-/*
-Spam Karma.3rc4
-*/
 
-define ("SK_KPLUGIN_FOLDER", dirname(__FILE__) . "/sk_plugins/");
-define ("SK_KCORE_VERSION", 5);
-define ("SK_KVERSION", 3); // => 2.3
-define ("SK_KRELEASE", "rc4");
+define ('SK_PLUGIN_FOLDER', dirname(__FILE__) . '/sk_plugins/');
+define ('SK_CORE_VERSION', 5);
+define ('SK_VERSION', 4); // => 2.3
+define ('SK_RELEASE', 'alpha');
 if (isset($table_prefix))
-	define ("SK_KSPAM_TABLE", $table_prefix . "sk2_spams");
+	define ('SK_SPAM_TABLE', $table_prefix . 'sk2_spams');
 else
-	define ("SK_KSPAM_TABLE", SK_TABLE_PREFIX . "sk2_spams");
+	define ('SK_SPAM_TABLE', SK_TABLE_PREFIX . 'sk2_spams');
 
-require_once(dirname(__FILE__) . "/sk_util_class.php");
-require_once(dirname(__FILE__) . "/sk_plugin_class.php");
-require_once(dirname(__FILE__) . "/sk_comment_class.php");
-require_once(dirname(__FILE__) . "/sk_blacklist_class.php");
-require_once(dirname(__FILE__) . "/sk_functions.php");
+require_once('sk_util_class.php');
+require_once('sk_plugin_class.php');
+require_once('sk_comment_class.php');
+require_once('sk_blacklist_class.php');
+require_once('sk_functions.php');
 
 global $sk_plugin_array;
 $sk_plugin_array = 0;
@@ -40,7 +37,7 @@ class SK_Core
 	var $cur_comment = 0;
 	var $post_proc = false;
 	var $plugins = array();
-	var $version = SK_KCORE_VERSION;
+	var $version = SK_CORE_VERSION;
 	
 	function SK_Core($comment_ID = 0, $post_proc = false, $load_plugins = true)
 	{
@@ -67,10 +64,10 @@ class SK_Core
 			$this->plugins = $sk_plugin_array;
 			return;
 		}
-		$plugin_files = sk_get_file_list(SK_KPLUGIN_FOLDER);
+		$plugin_files = sk_get_file_list(SK_PLUGIN_FOLDER);
 		foreach($plugin_files as $plugin)
 		{
-			include_once(SK_KPLUGIN_FOLDER . $plugin);	
+			include_once(SK_PLUGIN_FOLDER . $plugin);	
 		}	
 		$sk_plugin_array = $this->plugins;
 	}
@@ -476,7 +473,7 @@ class SK_Core
 		
 		if ($cur_version == 0)
 		{
-			$query = "CREATE TABLE IF NOT EXISTS `" . SK_KSPAM_TABLE . "` (
+			$query = "CREATE TABLE IF NOT EXISTS `" . SK_SPAM_TABLE . "` (
 	 `id` int(11) NOT NULL auto_increment,
 	 `comment_ID` int(11) NOT NULL default '0',
 	 `karma` float(2) NOT NULL default '0',
@@ -491,7 +488,7 @@ class SK_Core
 			$wpdb->query($query);
 			if (mysql_error())
 			{
-				$this->log_msg(__("Could not create SQL table: ", 'spam-karma') . SK_KSPAM_TABLE . ".", 10, true);
+				$this->log_msg(__("Could not create SQL table: ", 'spam-karma') . SK_SPAM_TABLE . ".", 10, true);
 				$success = false;
 			}	
 	
@@ -535,16 +532,16 @@ class SK_Core
 		}
 		elseif ($cur_version == 1)
 		{
-			$query = "ALTER TABLE `" . SK_KSPAM_TABLE . "` ADD INDEX ( `comment_ID` )";
+			$query = "ALTER TABLE `" . SK_SPAM_TABLE . "` ADD INDEX ( `comment_ID` )";
 
 			$wpdb->query($query);
 			if (mysql_error())
 			{
-				$this->log_msg(__("Could not alter SQL table: ", 'spam-karma') . SK_KSPAM_TABLE . ".", 10, true);
+				$this->log_msg(__("Could not alter SQL table: ", 'spam-karma') . SK_SPAM_TABLE . ".", 10, true);
 				$success = false;
 			}
 			else
-				$this->log_msg(__("Successfully created index for SQL table: ", 'spam-karma') . SK_KSPAM_TABLE . ".", 5, false);
+				$this->log_msg(__("Successfully created index for SQL table: ", 'spam-karma') . SK_SPAM_TABLE . ".", 5, false);
 		}
 	
 		// modifying WP's tables to work correctly...
@@ -618,7 +615,7 @@ class SK_Core
 		{
 			if (! $this->cur_comment->ID)
 			{
-				$this->log_msg(__("Cannot update SK_KSPAM_TABLE info (no comment ID provided).", 'spam-karma'), 8);
+				$this->log_msg(__("Cannot update SK_SPAM_TABLE info (no comment ID provided).", 'spam-karma'), 8);
 				return false;
 			}
 
@@ -654,12 +651,12 @@ class SK_Core
 		//	print_r($comment_sk_info);
 			}
 			
-			$query = "UPDATE `". SK_KSPAM_TABLE ."` SET ";
+			$query = "UPDATE `". SK_SPAM_TABLE ."` SET ";
 			$query_end = "`last_mod` = NOW() WHERE `id` = " . $comment_sk_info_orig->id;
 		}
 		else
 		{
-			$query = "INSERT INTO `". SK_KSPAM_TABLE ."` SET ";
+			$query = "INSERT INTO `". SK_SPAM_TABLE ."` SET ";
 			$query_end = "`last_mod` = NOW(), `comment_ID` = $comment_ID";
 		}
 
@@ -678,9 +675,9 @@ class SK_Core
 		//echo $query;
 		$wpdb->query($query);
 		if (! mysql_error())
-			$this->log_msg(__("Inserted/Updated SK_KSPAM_TABLE record for comment ID: ", 'spam-karma') . $comment_ID . " (". ($append ? __("mode: append", 'spam-karma') : __("mode: overwrite", 'spam-karma')) . ").", 0);
+			$this->log_msg(__("Inserted/Updated SK_SPAM_TABLE record for comment ID: ", 'spam-karma') . $comment_ID . " (". ($append ? __("mode: append", 'spam-karma') : __("mode: overwrite", 'spam-karma')) . ").", 0);
 		else
-			$this->log_msg(__("Failed inserting/updating SK_KSPAM_TABLE record for comment ID:", 'spam-karma') . $comment_ID . " (". ($append ? __("mode: append", 'spam-karma') : __("mode: overwrite", 'spam-karma')) . "). <br/>" . __("Query: ", 'spam-karma') . "<code>$query</code>", 8, true);
+			$this->log_msg(__("Failed inserting/updating SK_SPAM_TABLE record for comment ID:", 'spam-karma') . $comment_ID . " (". ($append ? __("mode: append", 'spam-karma') : __("mode: overwrite", 'spam-karma')) . "). <br/>" . __("Query: ", 'spam-karma') . "<code>$query</code>", 8, true);
 
 	}
 	
@@ -694,11 +691,11 @@ class SK_Core
 		if (! $comment_ID)
 		{
 		echo 
-			$this->log_msg(__("get_comment_sk_info: Cannot get SK_KSPAM_TABLE info (no comment ID provided).", 'spam-karma'), 8);
+			$this->log_msg(__("get_comment_sk_info: Cannot get SK_SPAM_TABLE info (no comment ID provided).", 'spam-karma'), 8);
 			return false;
 		}
 
-		if ($comment_sk_info = $wpdb->get_row("SELECT * FROM `". SK_KSPAM_TABLE ."` WHERE `comment_ID` = $comment_ID"))
+		if ($comment_sk_info = $wpdb->get_row("SELECT * FROM `". SK_SPAM_TABLE ."` WHERE `comment_ID` = $comment_ID"))
 		{
 
 			if (! empty($comment_sk_info->karma_cmts))
@@ -777,7 +774,7 @@ class SK_Core
 		if (isset($run_tools['reset_all_tables']))
 		{
 			$this->log_msg(__("Dropping all SK Tables!", 'spam-karma'), 8);
-			$wpdb->query("DROP TABLE `". SK_KSPAM_TABLE . "`;");
+			$wpdb->query("DROP TABLE `". SK_SPAM_TABLE . "`;");
 			$wpdb->query("DROP TABLE `". SK_KLOGTABLE . "`;");
 			$wpdb->query("DROP TABLE `". SK_KBLACKLIST_TABLE . "`;");
 			$this->log_msg(__("Dropped all SK Tables!", 'spam-karma'), 7);

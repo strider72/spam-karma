@@ -108,7 +108,7 @@ class SK_PJW_SimpleDigest extends sk_plugin
 								.$wpdb->comments ."` AS `comments_table` LEFT JOIN `" 
 								.$wpdb->posts ."` AS `posts_table` ON "
 								."`posts_table`.`ID` = `comments_table`.`comment_post_ID` LEFT JOIN `"
-								. SK_KSPAM_TABLE . "` AS `spam_table` ON "
+								. SK_SPAM_TABLE . "` AS `spam_table` ON "
 								."`spam_table`.`comment_ID` = `comments_table`.`comment_ID` WHERE "
 								."(`comment_approved`= '0' OR (`comment_approved` = 'spam' AND `spam_table`.`karma` >= $threshold)) AND "
 								."`comment_date_gmt` > " 
