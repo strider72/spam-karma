@@ -13,7 +13,7 @@
 
 ************************************************************************************************/
 ?><div class="sk_first wrap sk_about">
-<blockquote><p><i>Lasciate ogni speranza, voi ch'entrate</i></p>
+<blockquote><p lang="it"><i>Lasciate ogni speranza, voi ch'entrate</i></p>
 <p class="source"><?php _e("Some dead Italian dude", 'spam-karma'); ?></p></blockquote>
 <blockquote><p><i><?php _e("Hey... Wanna play some poker?", 'spam-karma'); ?></i></p>
 <p class="source"><?php _e("Some Internet jackass", 'spam-karma'); ?></p></blockquote>
@@ -27,7 +27,7 @@ When he is not wasting his time coding ridiculously elaborate anti-spam plugins,
 
 <h2><?php _e("The Bribes", 'spam-karma'); ?></h2>
 <p><?php _e('Donations are in <em>no way</em> mandatory.', 'spam-karma'); ?></p>
-<p><?php _e('Yet, I have been spending considerable amounts of time writing, supporting and debugging both SK1 and SK. Therefore, if you like what you see, and want to see more of it in the future, feel free to help me finance my many costly addictions by droping a buck or two in the tip jar (<a href="http://unknowngenius.com/blog/archives/2006/01/30/the-state-of-spam-karma/#donations">more reasons why you should</a>)...', 'spam-karma'); ?></p>
+<p><?php _e('Yet, I have been spending considerable amounts of time writing, supporting and debugging both SK1 and SK2. Therefore, if you like what you see, and want to see more of it in the future, feel free to help me finance my many costly addictions by dropping a buck or two in the tip jar (<a href="http://unknowngenius.com/blog/archives/2006/01/30/the-state-of-spam-karma/#donations">more reasons why you should</a>)...', 'spam-karma'); ?></p>
 <p><form action="https://www.paypal.com/cgi-bin/webscr" method="post" style="text-align:center;">
 <input type="radio" name="amount" value="2.00" checked="checked"/>$2.00<br />
 <input type="radio" name="amount" value="5.00"/>$5.00<br />

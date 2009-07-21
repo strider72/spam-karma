@@ -148,7 +148,7 @@ class sk_snowball_plugin extends sk_plugin
 		global $wpdb;
 		//$now_gmt = gmstrftime("'%Y-%m-%d %H:%M:%S'");
 			
-		$query = "SELECT COUNT(*) AS `cmt_count`, AVG(`spams`.`karma`) AS `karma_avg` FROM `$wpdb->comments` AS `comments` LEFT JOIN `". SK_KSPAM_TABLE ."` AS `spams` ON `spams`.`comment_ID` = `comments`.`comment_ID` WHERE `comments`.`comment_ID` != $this->ID ";
+		$query = "SELECT COUNT(*) AS `cmt_count`, AVG(`spams`.`karma`) AS `karma_avg` FROM `$wpdb->comments` AS `comments` LEFT JOIN `". SK_SPAM_TABLE ."` AS `spams` ON `spams`.`comment_ID` = `comments`.`comment_ID` WHERE `comments`.`comment_ID` != $this->ID ";
 		if ($before_after == "<")
 			$query .= "AND `comments`.`comment_approved` = '1' ";
 		$query .= "AND `comments`.`comment_date_gmt` $before_after DATE_SUB('$now', INTERVAL ". $this->get_option_value("old_enough") . " DAY) $query_where";
