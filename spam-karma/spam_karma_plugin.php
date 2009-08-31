@@ -18,7 +18,7 @@ Plugin Name: Spam Karma
 Plugin URI: http://code.google.com/p/spam-karma/
 Description: Ultimate Spam Killer for WordPress.<br/> Activate the plugin and go to <a href="options-general.php?page=spamkarma">Spam Karma Settings</a> to configure.
 Author: dr Dave
-Version: 2.4-alpha
+Version: 2.4-alpha-20090801
 Author URI: http://unknowngenius.com/blog/
 */
 
@@ -1036,7 +1036,7 @@ if ( !function_exists('wp_notify_moderator') ) {
 			$notify_message .= __('Comment: ', 'spam-karma') . "\r\n" . $comment->comment_content . "\r\n\r\n";
 
 //### DdV Mods
-			$location = get_bloginfo('wpurl') . '/wp-admin/edit.php?page=spamkarma';
+			$location = get_bloginfo('wpurl') . '/wp-admin/options-general.php?page=spamkarma';
 
 			$notify_message .= sprintf( __('To approve this comment, visit: %s', 'spam-karma'), sk_nonce_email_url($post->post_author, $location . "&recover_selection=1&comment_grp_check%5B$comment_id%5D=$comment_id&sk_section=spam"))  . "\r\n";
 			//### Add l10n:
@@ -1102,7 +1102,7 @@ if ( ! function_exists('wp_notify_postauthor') ) {
 			$notify_message .= get_permalink($comment->comment_post_ID) . "#comments\r\n\r\n";
 
 	//### DdV Mods
-				$location = get_bloginfo('wpurl') . '/wp-admin/edit.php?page=spamkarma';
+				$location = get_bloginfo('wpurl') . '/wp-admin/options-general.php?page=spamkarma';
 	//	echo "##" . print_r($comment_id, true) . "##" . ($location . '&recover_selection=1&comment_grp_check[' . $comment_id . ']=' . $comment_id . '&sk_section=approved') . "**" . sk_nonce_url($location . '&recover_selection=1&comment_grp_check[' . $comment_id . ']=' . $comment_id . '&sk_section=approved') . "**" . sk_nonce_email_url($location . '&recover_selection=1&comment_grp_check[' . $comment_id . ']=' . $comment_id . '&sk_section=approved') . "**";
 				$notify_message .= sprintf( __('To flag this comment as spam, visit: %s', 'spam-karma'), sk_nonce_email_url($post->post_author, $location . "&recover_selection=1&comment_grp_check%5B$comment_id%5D=$comment_id&sk_section=approved&sql_score_threshold=-30")) . "\r\n";
 				$notify_message .= sprintf( __('To delete this comment (without flagging it as spam), visit: %s', 'spam-karma'), get_option('siteurl').'/wp-admin/comment.php?action=cdc&c=' . $comment_id) . "\r\n";
@@ -1179,8 +1179,8 @@ if ( ! function_exists('wp_notify_postauthor') ) {
 			$notify_message .= get_permalink($comment->comment_post_ID) . "#comments\r\n\r\n";
 	
 	//### DdV Mods
-			$location = get_bloginfo('wpurl') . '/wp-admin/edit.php?page=spamkarma';
-	
+			$location = get_bloginfo('wpurl') . '/wp-admin/options-general.php?page=spamkarma';
+
 			$notify_message .= sprintf( __('To flag this comment as spam, visit: %s', 'spam-karma'), sk_nonce_email_url($post->post_author, $location . "&recover_selection=1&comment_grp_check%5B$comment_id%5D=$comment_id&sk_section=approved&sql_score_threshold=-30")) . "\r\n";
 			$notify_message .= sprintf( __('To delete this comment (without flagging it as spam), visit: %s', 'spam-karma'), get_option('siteurl'). '/wp-admin/comment.php?action=cdc&c=' . $comment_id) . "\r\n";
 	//###
