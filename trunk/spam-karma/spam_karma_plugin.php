@@ -16,9 +16,9 @@
 /*
 Plugin Name: Spam Karma
 Plugin URI: http://code.google.com/p/spam-karma/
-Description: Ultimate Spam Killer for WordPress.<br/> Activate the plugin and go to <a href="options-general.php?page=spamkarma">Spam Karma Settings</a> to configure.
+Description: Ultimate Spam Killer for WordPress.
 Author: dr Dave
-Version: 2.4-alpha-20090801
+Version: 2.4-alpha-20090914
 Author URI: http://unknowngenius.com/blog/
 */
 
@@ -93,10 +93,10 @@ function sk_init() {
 }
 
 function sk_option_page() {
+
 	global $wpdb, $sk_log, $sk_settings;
 	include_once(dirname(__FILE__) . '/sk_core_class.php');
 	$sk_core = new SK_Core(0, true);
-	
 
 	$sk_sections = 
 		array (
@@ -685,9 +685,7 @@ function sk_option_page() {
 		<li><?php _e('Total Comments Moderated: ', 'spam-karma'); ?><strong><?php echo (int) $sk_settings->get_stats('purgatory'); ?></strong> <?php 
 		if ($cur_moderated)
 			printf('(' . __ngettext('currently %s%d waiting%s', 'currently %s%d waiting%s', $cur_moderated, 'spam-karma') . ')', '<a href="' . sk_nonce_url('options-general.php?page=' . $_REQUEST['page'] . '&sk_section=spam') . '">', $cur_moderated, '</a>');
-			
 			?></li>
-		<li><?php _e('Current Version: ', 'spam-karma'); ?><strong><?php echo '2.' . SK_VERSION . ' ' . SK_RELEASE; ?></strong></li>
 		</ul>
 		</div>
 <?php
@@ -721,6 +719,7 @@ function toggleAdvanced(mybutton, myid)
 			node.className = node.className.replace(/\bhide\b/, "show"); 
 			mybutton.innerHTML = "<?php _e('Hide Advanced Options', 'spam-karma'); ?>";
 		}
+
 }
 
 //-->
@@ -771,6 +770,21 @@ function toggleAdvanced(mybutton, myid)
 	<?php $sk_log->dump_logs(); ?>
 	</div>
 	*/
+}
+
+function sk_admin_footer() {
+	$here = $_SERVER['REQUEST_URI'];
+	if( stristr( $here, 'options-general.php?page=spamkarma' ) || stristr( $here, 'edit-comments.php' ) ) {
+		// Add homepage link to settings page footer
+		$pluginfo = get_plugin_data( __FILE__ );
+		printf( '%1$s plugin | Version %2$s<br />', $pluginfo['Title'], $pluginfo['Version'] );
+	}
+}
+
+function sk_filter_plugin_actions( $links, $file ){
+	$this_link = '<a href="options-general.php?page=spamkarma">Settings</a>';
+	array_unshift( $links, $this_link ); // before other links
+	return $links;
 }
 
 function sk_submit_comments_to_plugins() {
@@ -1310,5 +1324,9 @@ add_action('wp_footer', 'sk_insert_footer', 3);
 
 add_filter('comment_row_actions', 'sk_comment_row_actions', 10, 2);
 add_filter('pre_comment_approved', 'sk_fix_approved');
+
+add_action( 'in_admin_footer', 'sk_admin_footer', 9 );
+
+add_filter( 'plugin_action_links_'.plugin_basename( __FILE__ ), 'sk_filter_plugin_actions', 10, 2 );
 
 ?>
