@@ -138,7 +138,7 @@ function sk_option_page() {
 			|| ($sk_settings->get_core_settings('auto_purge_logs') 
 				&& ($sk_settings->get_core_settings('next_auto_purge_logs') < time())))
 		{
-			$query = "DELETE FROM  `". SK_KLOGTABLE . "` WHERE `ts`< DATE_SUB(NOW(), INTERVAL ". $sk_settings->get_core_settings('purge_logs_duration') . ' ' . $sk_settings->get_core_settings('purge_logs_unit') .") AND `level` < "  . $sk_settings->get_core_settings('purge_logs_level');
+			$query = "DELETE FROM  `". SK_LOGTABLE . "` WHERE `ts`< DATE_SUB(NOW(), INTERVAL ". $sk_settings->get_core_settings('purge_logs_duration') . ' ' . $sk_settings->get_core_settings('purge_logs_unit') .") AND `level` < "  . $sk_settings->get_core_settings('purge_logs_level');
 			$removed = $wpdb->query($query);
 			
 			if (! mysql_error())
@@ -153,7 +153,7 @@ function sk_option_page() {
 			|| ($sk_settings->get_core_settings('auto_purge_blacklist') 
 				&& ($sk_settings->get_core_settings('next_auto_purge_blacklist') < time())))
 		{
-			$query = ("DELETE FROM  `". SK_KBLACKLIST_TABLE . "` WHERE `". $sk_settings->get_core_settings('purge_blacklist_criterion') ."`< DATE_SUB(NOW(), INTERVAL ". $sk_settings->get_core_settings('purge_blacklist_duration') . ' ' . $sk_settings->get_core_settings('purge_blacklist_unit') .") AND `score` < "  . $sk_settings->get_core_settings('purge_blacklist_score'));
+			$query = ("DELETE FROM  `". SK_BLACKLIST_TABLE . "` WHERE `". $sk_settings->get_core_settings('purge_blacklist_criterion') ."`< DATE_SUB(NOW(), INTERVAL ". $sk_settings->get_core_settings('purge_blacklist_duration') . ' ' . $sk_settings->get_core_settings('purge_blacklist_unit') .") AND `score` < "  . $sk_settings->get_core_settings('purge_blacklist_score'));
 			$removed = $wpdb->query($query);
 			
 			if (! mysql_error())
@@ -333,7 +333,7 @@ function sk_option_page() {
 	{
 		case 'logs':
 			
-			$log_rows = $wpdb->get_results("SELECT *, UNIX_TIMESTAMP(`ts`) AS `ts2` FROM `". SK_KLOGTABLE . "` WHERE 1 ORDER BY `ts` DESC, `id` DESC LIMIT 200");
+			$log_rows = $wpdb->get_results("SELECT *, UNIX_TIMESTAMP(`ts`) AS `ts2` FROM `". SK_LOGTABLE . "` WHERE 1 ORDER BY `ts` DESC, `id` DESC LIMIT 200");
 			if (mysql_error())
 				$sk_log->log_msg_mysql(__("Can't fetch logs.", 'spam-karma'), 7, 0, 'web_UI');
 
@@ -387,7 +387,7 @@ function sk_option_page() {
 				{
 					$id = mysql_escape_string($id);
 					$entry['score'] = (int) $entry['score'];
-					$wpdb->query("UPDATE `" . SK_KBLACKLIST_TABLE . "` SET `type` = '" . sk_escape_form_string($entry['type']) . "', `value` = '" . sk_escape_form_string($entry['val']) . "', `score` = " . $entry['score'] . ", `user_reviewed` = 'yes' WHERE `id` = '$id'");
+					$wpdb->query("UPDATE `" . SK_BLACKLIST_TABLE . "` SET `type` = '" . sk_escape_form_string($entry['type']) . "', `value` = '" . sk_escape_form_string($entry['val']) . "', `score` = " . $entry['score'] . ", `user_reviewed` = 'yes' WHERE `id` = '$id'");
 					if (mysql_error())
 						$sk_log->log_msg_sql(__('Failed to update blacklist entry ID: ', 'spam-karma') .  $id, 8, 0, 'web_UI');
 					else
@@ -399,7 +399,7 @@ function sk_option_page() {
 				foreach($_REQUEST['blacklist_grp_check'] as $id => $spam)
 				{
 					$id = mysql_escape_string($id);
-					$wpdb->query("DELETE FROM  `". SK_KBLACKLIST_TABLE . "` WHERE `id` = $id");
+					$wpdb->query("DELETE FROM  `". SK_BLACKLIST_TABLE . "` WHERE `id` = $id");
 					if (! mysql_error())
 						$sk_log->log_msg(__('Successfully removed blacklist entry ID: ', 'spam-karma') . $id, 4, 0, 'web_UI');
 					else
@@ -427,7 +427,7 @@ function sk_option_page() {
 		if($match_mode)
 			$blacklist_rows = $sk_blacklist->match_entries($match_type, $match_value, false, 0, $show_number);
 		else
-			$blacklist_rows = $wpdb->get_results("SELECT * FROM `". SK_KBLACKLIST_TABLE . "` WHERE 1 ORDER BY `added` DESC LIMIT $show_number");
+			$blacklist_rows = $wpdb->get_results("SELECT * FROM `". SK_BLACKLIST_TABLE . "` WHERE 1 ORDER BY `added` DESC LIMIT $show_number");
 		
 		sk_echo_check_all_JS();
 
