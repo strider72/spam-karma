@@ -13,7 +13,7 @@
 
 ************************************************************************************************/
 ?><?php
-define ("SK_KBLACKLIST_TABLE", "sk2_blacklist");
+define ("SK_BLACKLIST_TABLE", "sk2_blacklist");
 
 global $sk_blacklist;
 if (! isset($sk_blacklist))
@@ -31,7 +31,7 @@ class sk_blacklist
 		global $wpdb;
 		
 		if (($type == "domain_black" || $type == "domain_white") 
-				&& ($grey_rslt = $wpdb->get_results("SELECT * FROM `" . SK_KBLACKLIST_TABLE . "` WHERE `type` = 'domain_grey' AND `value` = '$value'")))
+				&& ($grey_rslt = $wpdb->get_results("SELECT * FROM `" . SK_BLACKLIST_TABLE . "` WHERE `type` = 'domain_grey' AND `value` = '$value'")))
 		{
 			$this->log_msg(__("Greylist match. Skipping blacklist entry insertion: ", 'spam-karma') . "<em>$type</em> - <em> $value</em>.", 7);
 			return 0;
@@ -45,13 +45,13 @@ class sk_blacklist
 			$this->log_msg(__("Cannot add blacklist entry. Please fill in a value.", 'spam-karma'), 7);
 			return false;
 		}
-		elseif ($wpdb->get_var("SELECT COUNT(*) FROM `". SK_KBLACKLIST_TABLE . "` WHERE `type`='$type' AND `value`='" . sk_escape_string($value) . "' LIMIT 1"))
+		elseif ($wpdb->get_var("SELECT COUNT(*) FROM `". SK_BLACKLIST_TABLE . "` WHERE `type`='$type' AND `value`='" . sk_escape_string($value) . "' LIMIT 1"))
 		{
 			$this->log_msg(__("Skipping duplicate blacklist entry: ", 'spam-karma') . "<em>$type</em> - <em> $value</em>.", 7);
 		}
 		else
 		{
-			if ($wpdb->query("INSERT INTO `". SK_KBLACKLIST_TABLE . "` SET `type`='$type', `value`='" . sk_escape_string($value) . "', `added` = NOW(), `last_used` = NOW(), `score` = $score, `trust` = $trust, `user_reviewed` = '$user_reviewed', `added_by` = '$added_by', `comments` = ''"))
+			if ($wpdb->query("INSERT INTO `". SK_BLACKLIST_TABLE . "` SET `type`='$type', `value`='" . sk_escape_string($value) . "', `added` = NOW(), `last_used` = NOW(), `score` = $score, `trust` = $trust, `user_reviewed` = '$user_reviewed', `added_by` = '$added_by', `comments` = ''"))
 					$this->log_msg(__("Successfully inserted blacklist entry: ", 'spam-karma') . "<em>$type</em> - <em>$value</em>.", 3);
 			else
 					$this->log_msg(__("Failed to insert blacklist entry: ", 'spam-karma') . "<em>$type</em> - <em>$value</em>.", 8, true);
@@ -69,21 +69,21 @@ class sk_blacklist
 		if (empty($value))
 			$this->log_msg(__("Cannot add blacklist entry. Please fill in a value.", 'spam-karma'), 7);
 		elseif	 (($type == "domain_black" || $type == "domain_white")
-			&& ($grey_rslt = $wpdb->get_results("SELECT * FROM `" . SK_KBLACKLIST_TABLE . "` WHERE `type` = 'domain_grey' AND `value` = '$value'")))
+			&& ($grey_rslt = $wpdb->get_results("SELECT * FROM `" . SK_BLACKLIST_TABLE . "` WHERE `type` = 'domain_grey' AND `value` = '$value'")))
 		{
 			$this->log_msg(__("Greylist match. Skipping blacklist entry insertion: ", 'spam-karma') . "<em>$type</em> - <em> $value</em>.", 6);
 			return;
 		}
-		elseif ($row = $wpdb->get_row("SELECT `id`, `score` FROM `". SK_KBLACKLIST_TABLE . "` WHERE `type`='$type' AND `value`='" . sk_escape_string($value) . "' LIMIT 1"))
+		elseif ($row = $wpdb->get_row("SELECT `id`, `score` FROM `". SK_BLACKLIST_TABLE . "` WHERE `type`='$type' AND `value`='" . sk_escape_string($value) . "' LIMIT 1"))
 		{
 			if (($old_score = $row->score) >= 100)
 				return true;
-			$query = "UPDATE `". SK_KBLACKLIST_TABLE . "` SET ";
+			$query = "UPDATE `". SK_BLACKLIST_TABLE . "` SET ";
 			$query_where = " WHERE `id` = " . $row->id;
 		}
 		else
 		{
-			$query = "INSERT INTO `". SK_KBLACKLIST_TABLE . "` SET `type`='$type', `value`='" . sk_escape_string($value) . "', `added` = NOW(), `last_used` = NOW(), `trust` = $trust, `user_reviewed` = '$user_reviewed', `added_by` = '$added_by', `comments` = '',";
+			$query = "INSERT INTO `". SK_BLACKLIST_TABLE . "` SET `type`='$type', `value`='" . sk_escape_string($value) . "', `added` = NOW(), `last_used` = NOW(), `trust` = $trust, `user_reviewed` = '$user_reviewed', `added_by` = '$added_by', `comments` = '',";
 			$query_where = "";
 			$old_score = 0;
 		}
@@ -133,7 +133,7 @@ class sk_blacklist
 					$query_where_regex = "`type` = 'regex_white' OR `type` = 'regex_black'";
 				}
 				
-				if ($regex_recs = $wpdb->get_results("SELECT * FROM `" . SK_KBLACKLIST_TABLE . "` WHERE $query_where_regex"))
+				if ($regex_recs = $wpdb->get_results("SELECT * FROM `" . SK_BLACKLIST_TABLE . "` WHERE $query_where_regex"))
 					foreach($regex_recs as $regex_rec)
 					{
 						//echo $regex_rec->value, " ?match? " , $match_value;
@@ -150,7 +150,7 @@ class sk_blacklist
 				else
 					$type = 'regex_content';
 				$query_where = "`id` IN(";
-				if ($regex_recs = $wpdb->get_results("SELECT * FROM `" . SK_KBLACKLIST_TABLE . "` WHERE `type` = '${type}_white' OR `type` = '${type}_black'"))
+				if ($regex_recs = $wpdb->get_results("SELECT * FROM `" . SK_BLACKLIST_TABLE . "` WHERE `type` = '${type}_white' OR `type` = '${type}_black'"))
 					foreach($regex_recs as $regex_rec)
 					{
 						//echo $regex_rec->value, " ?match? " , $match_value;
@@ -168,7 +168,7 @@ class sk_blacklist
 			case 'domain_white':
 			case 'ip_white':
 				if (($match_type == 'domain_black' || $match_type == 'domain_white')
-					&& ($grey_rslt = $wpdb->get_results("SELECT * FROM `" . SK_KBLACKLIST_TABLE . "` WHERE `type` = 'domain_grey' AND `value` $sql_match")))
+					&& ($grey_rslt = $wpdb->get_results("SELECT * FROM `" . SK_BLACKLIST_TABLE . "` WHERE `type` = 'domain_grey' AND `value` $sql_match")))
 				{
 					$query_where = "";
 					$this->log_msg(__("Grey blacklist match: ignoring.", 'spam-karma'), 6);				
@@ -186,14 +186,14 @@ class sk_blacklist
 			case 'ip':
 			case 'regex':
 				if (($match_type == 'domain')
-					&& ($grey_rslt = $wpdb->get_results("SELECT * FROM `" . SK_KBLACKLIST_TABLE . "` WHERE `type` = 'domain_grey' AND `value` $sql_match")))
+					&& ($grey_rslt = $wpdb->get_results("SELECT * FROM `" . SK_BLACKLIST_TABLE . "` WHERE `type` = 'domain_grey' AND `value` $sql_match")))
 				{
 					$query_where = "";
 					$this->log_msg(__("Grey blacklist match: ignoring.", 'spam-karma'), 6);					
 				}
 				else
 				{
-					//$this->log_msg("BLAAAAA: $sql_match. ". "SELECT * FROM `" . SK_KBLACKLIST_TABLE . "` WHERE `type` = 'domain_grey' AND `value` $sql_match", 7);					
+					//$this->log_msg("BLAAAAA: $sql_match. ". "SELECT * FROM `" . SK_BLACKLIST_TABLE . "` WHERE `type` = 'domain_grey' AND `value` $sql_match", 7);					
 
 					$query_where = "(`value` $sql_match AND (`type` = '" . $match_type . "_black' OR `type` = '" . $match_type . "_white'))";
 				}
@@ -221,7 +221,7 @@ class sk_blacklist
 			if ($min_trust)
 				$query_where .= " AND `trust` > $min_trust";
 	
-			$query = "SELECT * FROM `". SK_KBLACKLIST_TABLE . "` WHERE $query_where ORDER BY `score` DESC";
+			$query = "SELECT * FROM `". SK_BLACKLIST_TABLE . "` WHERE $query_where ORDER BY `score` DESC";
 			
 			if ($limit)
 				$query .= ' LIMIT ' . $limit;
@@ -241,7 +241,7 @@ class sk_blacklist
 	function get_list($type, $limit = 0)
 	{
 		global $wpdb;
-		$query = "SELECT * FROM `". SK_KBLACKLIST_TABLE. "` WHERE `type` = '$type'";
+		$query = "SELECT * FROM `". SK_BLACKLIST_TABLE. "` WHERE `type` = '$type'";
 		if ($limit)
 			$query .= " LIMIT $limit";
 		$list = $wpdb->get_results($query);
@@ -266,7 +266,7 @@ class sk_blacklist
 		$str = substr($str, 0, strlen($str) - 2) . ")";
 		$str2 = substr($str2, 0, strlen($str2) - 2) . ")";
 		
-		$query = "UPDATE `". SK_KBLACKLIST_TABLE . "` SET `used_count` = `used_count` + 1, `last_used` = NOW() WHERE `id` IN $str";
+		$query = "UPDATE `". SK_BLACKLIST_TABLE . "` SET `used_count` = `used_count` + 1, `last_used` = NOW() WHERE `id` IN $str";
 		$wpdb->query($query);
 		if (mysql_error())
 			$this->log_msg(__("Failed to update blacklist used count.", 'spam-karma') . "</br>" . __("Query: ", 'spam-karma') . $query, 8, true);
@@ -286,7 +286,7 @@ class sk_blacklist
 		$str = substr($str, 0, strlen($str) - 2) . ")";
 		$str2 = substr($str2, 0, strlen($str2) - 2) . ")";
 		
-		$query = "UPDATE `". SK_KBLACKLIST_TABLE . "` SET `score` = 0, `last_used` = NOW() WHERE `id` IN $str";
+		$query = "UPDATE `". SK_BLACKLIST_TABLE . "` SET `score` = 0, `last_used` = NOW() WHERE `id` IN $str";
 		$wpdb->query($query);
 		if (mysql_error())
 			$this->log_msg(__("Failed to downgrade blacklist scores.", 'spam-karma') . "</br> " . __("Query: ", 'spam-karma') . $query, 8, true);

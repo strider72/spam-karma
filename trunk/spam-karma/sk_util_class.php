@@ -16,9 +16,9 @@
 include_once("sk_functions.php");
 
 if (isset($table_prefix))
-	define ("SK_KLOGTABLE", $table_prefix . "sk2_logs");
+	define ("SK_LOGTABLE", $table_prefix . "sk2_logs");
 else
-	define ("SK_KLOGTABLE", SK_TABLE_PREFIX . "sk2_logs");
+	define ("SK_LOGTABLE", SK_TABLE_PREFIX . "sk2_logs");
 
 global $sk_log;
 if (! isset($sk_log))
@@ -231,7 +231,7 @@ class sk_log
 		$this->logs[] = array($msg, $level, $comment_id, time(), $echoed);
 		
 		if ($level >= $this->db_threshold)
-			@$wpdb->query("INSERT INTO `". SK_KLOGTABLE ."` SET `msg` = '" . sk_escape_string($msg) . "', `component` = '" . sk_escape_string($component) . "', `level` = $level, `ts` = NOW()" );
+			@$wpdb->query("INSERT INTO `". SK_LOGTABLE ."` SET `msg` = '" . sk_escape_string($msg) . "', `component` = '" . sk_escape_string($component) . "', `level` = $level, `ts` = NOW()" );
 	}
 
 	function log_msg_mysql($msg, $level = 0, $comment_id = 0, $component = "")
