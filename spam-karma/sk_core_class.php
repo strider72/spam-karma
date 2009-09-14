@@ -492,7 +492,7 @@ class SK_Core
 				$success = false;
 			}	
 	
-			$query = "CREATE TABLE IF NOT EXISTS `" . SK_KLOGTABLE . "` (
+			$query = "CREATE TABLE IF NOT EXISTS `" . SK_LOGTABLE . "` (
 	`id` INT NOT NULL AUTO_INCREMENT ,
 	`msg` TEXT NOT NULL ,
 	`component` TINYTEXT NOT NULL ,
@@ -504,11 +504,11 @@ class SK_Core
 			 $wpdb->query($query);
 			if (mysql_error())
 			{
-				$this->log_msg(__("Could not create SQL table: ", 'spam-karma') . SK_KLOGTABLE . ".", 10, true);
+				$this->log_msg(__("Could not create SQL table: ", 'spam-karma') . SK_LOGTABLE . ".", 10, true);
 				$success = false;
 			}	
 			
-			$query = "CREATE TABLE IF NOT EXISTS `". SK_KBLACKLIST_TABLE ."` (
+			$query = "CREATE TABLE IF NOT EXISTS `". SK_BLACKLIST_TABLE ."` (
 	 `id` int(11) NOT NULL auto_increment,
 	 `type` tinytext NOT NULL,
 	 `value` text NOT NULL,
@@ -526,7 +526,7 @@ class SK_Core
 			$wpdb->query($query);
 			if (mysql_error())
 			{
-				$this->log_msg(__("Could not create SQL table: ", 'spam-karma') . SK_KBLACKLIST_TABLE . ".", 10, true);
+				$this->log_msg(__("Could not create SQL table: ", 'spam-karma') . SK_BLACKLIST_TABLE . ".", 10, true);
 				$success = false;
 			}	
 		}
@@ -775,8 +775,8 @@ class SK_Core
 		{
 			$this->log_msg(__("Dropping all SK Tables!", 'spam-karma'), 8);
 			$wpdb->query("DROP TABLE `". SK_SPAM_TABLE . "`;");
-			$wpdb->query("DROP TABLE `". SK_KLOGTABLE . "`;");
-			$wpdb->query("DROP TABLE `". SK_KBLACKLIST_TABLE . "`;");
+			$wpdb->query("DROP TABLE `". SK_LOGTABLE . "`;");
+			$wpdb->query("DROP TABLE `". SK_BLACKLIST_TABLE . "`;");
 			$this->log_msg(__("Dropped all SK Tables!", 'spam-karma'), 7);
 			$sk_settings->set_core_settings("", "mysql_updates");
 			$this->log_msg(__("Forcing MySQL updates on core and plugins.", 'spam-karma'), 6, 0, "web_UI");
