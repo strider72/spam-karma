@@ -95,22 +95,29 @@ class sk_settings
 		update_option("sk_stats", $this->stats);
 	}
 
-	function get_core_settings($section = 0)
+	function get_core_settings( $section = 0 )
 	{ 
-		if ($section)
+		if ( $section )
 		{
-			if(isset($this->core_settings[$section]))
+			if ( isset( $this->core_settings[$section] ) )
 				return $this->core_settings[$section];
-			else
+			else if ( isset( $this->core_defaults[$section]['value'] ) )
 				return $this->core_defaults[$section]['value'];
+			else
+				return $this->core_settings;
 		}
 		else
 			return $this->core_settings;
 	}
 		
 	function get_plugin_settings($plugin)
-		{ return $this->plugins_settings[$plugin]; }
-		
+	{
+		if ( isset( $this->plugins_settings[$plugin] ) )
+			return $this->plugins_settings[$plugin];
+		else
+			return null;
+	}
+
 	function get_stats($section = 0)
 	{
 		if ($section)

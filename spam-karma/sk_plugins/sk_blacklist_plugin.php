@@ -40,7 +40,10 @@ class sk_blacklist_plugin extends sk_plugin
 	function sk_blacklist_plugin()
 	{
 		parent::__construct();
-		$this->description = "<a href=\"options-general.php?page=" . $_REQUEST['page'] . "&sk_section=blacklist\">Click here</a> to manage your blacklist.";
+		$page = isset( $_REQUEST['page'] ) == true 
+			? 'page=' . $_REQUEST['page'] . '&'
+			: '';
+		$this->description = '<a href="options-general.php?' . $page . 'sk_section=blacklist">Click here</a> to manage your blacklist.';
 	}
 	
 	function filter_this(&$cmt_object)
