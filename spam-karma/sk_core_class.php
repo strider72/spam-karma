@@ -311,11 +311,11 @@ class SK_Core
 	{
 		$i = 0;
 		foreach ($this->plugins as $elem)
-			if ($elem[0] <= $priority)
+			if ( $elem[0] <= $priority )
 				$i++;
 
 		$this->log_msg(__("Registering plugin: ", 'spam-karma') . "<i>" . $plugin_class . "</i>, " . __("priority: ", 'spam-karma') . $priority);
-		array_splice($this->plugins, $i, 0, array(array($priority, new $plugin_class(), $plugin_class)));
+		array_splice( $this->plugins, $i, 0, array( array( $priority, new $plugin_class(), $plugin_class) ) );
 	}
 	
 	function output_UI()
@@ -721,7 +721,7 @@ class SK_Core
 	function sanity_check()
 	{
 		global $sk_settings;
-		if (isset($_REQUEST['sk_section']) || ($_REQUEST['page'] == 'spamkarma'))
+		if ( isset($_REQUEST['sk_section'] ) || ( isset( $_REQUEST['page'] ) && 'spamkarma' == $_REQUEST['page'] ) )
 			return;
 			
 		$mysql_updates = $sk_settings->get_core_settings("mysql_updates");
