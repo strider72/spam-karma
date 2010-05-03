@@ -27,17 +27,17 @@ class sk_snowball_plugin extends sk_plugin
 	var $skip_under = -20;
 	var $skip_above = 5;
 	var $retro_spanked = false;
-	
+
 	var $settings_format = array ("old_enough" => array("type" => "text", "value"=> 3, "caption" => "On an average you check new comments every", "size" => 2, after => "days."), 
 											"threshold" => array("type" => "text", "value"=> 2, "caption" => "Trigger when somebody posts more than", "size" => 5, after => "comments over the above time-period."),
 											"coef" => array("advanced" => true, "type" => "text", "value"=> 3, "caption" => "Old comments/new comments coefficient: ", "size" => 3),
 											"good_karma" => array("advanced" => true, "type" => "text", "value"=> 5, "caption" => "Good/bad karma average: ", "size" => 3));
-	
+
 	var $ID;
-	
+
 	function filter_this(&$cmt_object)
 	{
-	
+
 		$this->ID = $cmt_object->ID;
 
 		$this->snowball_by($cmt_object, "IP", "AND `comments`.`comment_author_IP` = '". $cmt_object->author_ip ."'", 1, 1);
@@ -59,13 +59,13 @@ class sk_snowball_plugin extends sk_plugin
 		if (! empty($cmt_object->author_email))
 			$this->snowball_by($cmt_object, "email", "AND `comments`.`comment_author_email` = '". sk_escape_string($cmt_object->author_email) ."'", 0.5, 2);
 	}
-	
+
 	function snowball_by(&$cmt_object, $criterion, $query_where, $coef_hit, $coef_raise)
 	{
 		$coef = $this->get_option_value("coef");
 		$good_karma = $this->get_option_value("good_karma");
 		$karma_diff = 0;
-				
+
 		if (($old = $this->get_granularity($query_where, "<", $cmt_object->cmt_date))
 			&& ($recent = $this->get_granularity($query_where, ">", $cmt_object->cmt_date)))
 		{
@@ -84,11 +84,11 @@ class sk_snowball_plugin extends sk_plugin
 						{
 							// Unleash all minions of Hell on that bad boy's company...
 
-							$log = sprintf(__ngettext("Retro-spanked one comment. ID: ", "Retro-spanked %d comments. IDs: ", count($retro_cmts), 'spam-karma'), count($retro_cmts));
+							$log = sprintf(_n("Retro-spanked one comment. ID: ", "Retro-spanked %d comments. IDs: ", count($retro_cmts), 'spam-karma'), count($retro_cmts));
 							$this->retro_spanked = true;
 							$retro_spanking_core = new SK_Core(0, true, true);
 							//$retro_spanking_core->load_plugin_files($);
-							
+
 							foreach($retro_cmts as $retro_cmt)
 							{
 								$retro_spanking_core->load_comment($retro_cmt->comment_ID);
@@ -142,12 +142,12 @@ class sk_snowball_plugin extends sk_plugin
 			$this->log_msg($log, 3);		
 		}
 	}
-	
+
 	function get_granularity($query_where, $before_after, $now)
 	{
 		global $wpdb;
 		//$now_gmt = gmstrftime("'%Y-%m-%d %H:%M:%S'");
-			
+
 		$query = "SELECT COUNT(*) AS `cmt_count`, AVG(`spams`.`karma`) AS `karma_avg` FROM `$wpdb->comments` AS `comments` LEFT JOIN `". SK_SPAM_TABLE ."` AS `spams` ON `spams`.`comment_ID` = `comments`.`comment_ID` WHERE `comments`.`comment_ID` != $this->ID ";
 		if ($before_after == "<")
 			$query .= "AND `comments`.`comment_approved` = '1' ";
@@ -157,13 +157,13 @@ class sk_snowball_plugin extends sk_plugin
 		{
 			$this->log_msg_mysql(__("get_granularity: query failed.", 'spam-karma') . "<br/> " . __("Query: ", 'spam-karma') . $query, 7, $this->ID);
 			return false;
-		}		
-		
+		}
+
 		$this->log_msg("DEBUG LOG:<br/><code>$query</code><br/>" . print_r($counts, true), 2);
-	
+
 		return $counts;
 	}
-	
+
 }
 
 $this->register_plugin("sk_snowball_plugin", 6);
