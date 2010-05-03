@@ -34,8 +34,8 @@ class SK_PJW_SimpleDigest extends sk_plugin
 	var $weight_levels = array("0" => "Disabled", "1.0" => "Enabled");
 	var $settings_format = array (
 								"interval" => array("type" => "text", 
-				   								"value"=> 24, 
-				   								"caption" => "Send digest every ",
+												"value"=> 24, 
+												"caption" => "Send digest every ",
 													"after" => "hours.",
 													"size" => 3
 													),
@@ -47,8 +47,8 @@ class SK_PJW_SimpleDigest extends sk_plugin
 													),
 													
 								"digest_threshold" => array("type" => "text", 
-				   											"value"=> -20, 
-				   											"caption" => "Skip spam with karma under ",
+															"value"=> -20, 
+															"caption" => "Skip spam with karma under ",
 															"size" => 3
 															),
 								"digest_order" => array("type" => "checkbox",
@@ -64,7 +64,7 @@ class SK_PJW_SimpleDigest extends sk_plugin
 		$last_run = $this->get_option_value('last_run');
 		$threshold = $this->get_option_value('digest_threshold');
 		$order_by_karma = $this->get_option_value('digest_order');
-		
+
 		if ($last_run + ($interval * 3600) < time())
 		{
 			//Record a new last run time now to stop multiple concurrent spam digests maybe?
@@ -79,13 +79,13 @@ class SK_PJW_SimpleDigest extends sk_plugin
 			$cur_moderated = $wpdb->get_var("SELECT COUNT(*) FROM `$wpdb->comments` WHERE `comment_approved`= '0'");	
 			
 			$mail_subj = "[". get_option('blogname') ."] Spam Karma: " . __("Simple Digest Report", 'spam-karma');
-			$mail_content = sprintf(__ngettext("There is currently one comment in moderation", "There are currently %d comments in moderation", $cur_moderated, 'spam-karma'), $cur_moderated)."\r\n";
+			$mail_content = sprintf(_n("There is currently one comment in moderation", "There are currently %d comments in moderation", $cur_moderated, 'spam-karma'), $cur_moderated)."\r\n";
 
 			$post = get_post($cmt_object->post_ID);
 
 			$mail_content .= sk_nonce_email_url($post->post_author, get_option('siteurl') . '/wp-admin/edit.php?page=spamkarma&sk_section=spam') ."\r\n\r\n";
 			//### l10n Add
-			$mail_content .= sprintf(__ngettext("There has been one comment spam caught since the last digest report %s ago.", "There have been %s comment spams caught since the last digest report %s ago.", $new_spams, 'spam-karma'), $new_spams, sk_time_since($last_run)) ."\r\n";
+			$mail_content .= sprintf(_n("There has been one comment spam caught since the last digest report %s ago.", "There have been %s comment spams caught since the last digest report %s ago.", $new_spams, 'spam-karma'), $new_spams, sk_time_since($last_run)) ."\r\n";
 			$mail_content .= "\r\n";
 			$mail_content .= sprintf(__("Spam summary report (skipping karma under %d): ", 'spam-karma'), $threshold) . "\r\n";
 			if (true == $order_by_karma)
