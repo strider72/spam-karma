@@ -13,4 +13,4 @@ It is currently only available as a plugin for [http://wordpress.org/ WordPress]
 
 = Install =
 
-Spam Karma for WordPress installs the same as any standard WordPress plugin.  Unzip the zip file and put the resulting folder in your plugins directory.  Then go into WordPress Admin and activate it on the Plugins page.
+Spam Karma for !WordPress installs the same as any standard !WordPress plugin.  Unzip the zip file and put the resulting folder in your plugins directory.  Then go into !WordPress Admin and activate it on the Plugins page.
