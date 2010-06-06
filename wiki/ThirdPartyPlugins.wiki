@@ -1,9 +1,7 @@
 #summary A list of third-party Spam Karma plugins
 #labels plugins
 
-= Introduction =
-
-Some people have provided third-party plugins that extend the abilities of Spam Karma
+Some people have provided third-party plugins that extend the abilities of Spam Karma.
 
 = Plugins =
 
