@@ -9,4 +9,8 @@ Spam Karma is a modular system for detecting and blocking comment spam.  It work
 
 There are a lot of options for how you want the system to interpret the points and so forth.  You can set the relative strength of each test individually, making some tests more important than others.  There are [ThirdPartyPlugins third-party plugins] available as well, which add functionality beyond that of Spam Karma alone.
 
-It is currently only available as a [http://wordpress.org/ WordPress] plugin, but could probably be adapted to other platforms.
+It is currently only available as a plugin for [http://wordpress.org/ WordPress], but could probably be adapted to other platforms.
+
+= Install =
+
+Spam Karma for WordPress installs the same as any standard WordPress plugin.  Unzip the zip file and put the resulting folder in your plugins directory.  Then go into WordPress Admin and activate it on the Plugins page.
