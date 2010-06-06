@@ -1,6 +1,16 @@
 <?php
+
+/*
+Plugin Name: Spam Karma
+Plugin URI: http://code.google.com/p/spam-karma/
+Description: Ultimate Spam Killer for WordPress.
+Author: dr Dave
+Version: 2.4-alpha-20100606
+Author URI: http://unknowngenius.com/blog/
+*/
+
 /******************************************************************************
- Spam Karma (c) 2009 - http://code.google.com/p/spam-karma/
+ Spam Karma (c) 2010 dr Dave - http://code.google.com/p/spam-karma/
 
  This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -12,15 +22,6 @@
   GNU General Public License for more details.
 
 ******************************************************************************/
-?><?php
-/*
-Plugin Name: Spam Karma
-Plugin URI: http://code.google.com/p/spam-karma/
-Description: Ultimate Spam Killer for WordPress.
-Author: dr Dave
-Version: 2.4-alpha-20090914
-Author URI: http://unknowngenius.com/blog/
-*/
 
 define( 'SK_TABLE_PREFIX', $table_prefix );
 define( 'SK_SECOND_CHANCE_FILE', 'sk_second_chance.php');
@@ -32,7 +33,7 @@ if (! isset($_SERVER['PHP_SELF']))
 	$_SERVER['PHP_SELF'] = @$PHP_SELF;
 
 function sk_add_options() {
-	$page = add_options_page(__('Spam Karma Options', 'spam-karma'), __('Spam Karma','spam-karma'), 'moderate_comments', 'spamkarma', 'sk_option_page');
+	$page = add_options_page(__('Spam Karma Settings', 'spam-karma'), __('Spam Karma','spam-karma'), 'moderate_comments', 'spamkarma', 'sk_option_page');
 	add_action('load-' . $page, 'sk_output_admin_load');
 }
 
@@ -1311,12 +1312,12 @@ function sk_get_karma_details($comment_id = 0) {
 	return $row;
 }
 
-add_action('init', 'sk_init');
-add_action('admin_init', 'sk_admin_init');
+add_action('init', 'sk_init'); // load textdomain
+add_action('admin_init', 'sk_admin_init'); // add Plugin Info footer in admin
 
 add_action('comment_form', 'sk_form_insert');
-add_action('admin_menu', 'sk_add_options');
-add_action('load-edit-comments.php', 'sk_output_admin_load');
+add_action('admin_menu', 'sk_add_options'); // add Settings page to Admin, load CSS and JQuery
+add_action('load-edit-comments.php', 'sk_output_admin_load'); // load CSS and JQuery
 add_action('admin_head-edit-comments.php', 'sk_output_admin_print');
 add_action('comment_post', 'sk_filter_comment');
 add_action('manage_comments_nav', 'sk_submit_comments_to_plugins');
