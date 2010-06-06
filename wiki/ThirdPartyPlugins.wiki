@@ -10,5 +10,5 @@ Some people have provided third-party plugins that extend the abilities of Spam 
 
 Also note that some of the plugins included in the main Spam Karma download were created by third parties.  These are:
 
-  * [http://blog.ftwr.co.uk/wordpress/sk2-simple-digest-plugin/ Simple Digest plugin] -- by Peter Westwood -- Sends the blog admin digest emails about recent activity by Spam Karma
   * RBL Check plugin -- by James Seward -- Checks comment IP and URLs against Realtime Blacklist servers
+  * [http://blog.ftwr.co.uk/wordpress/sk2-simple-digest-plugin/ Simple Digest plugin] -- by Peter Westwood -- Sends the blog admin digest emails about recent activity by Spam Karma
