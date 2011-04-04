@@ -37,9 +37,11 @@ class sk_payload_plugin extends sk_plugin
 		$ip = $_SERVER['REMOTE_ADDR'];
 		//echo ("<!--#". $time . "#". $seed . "#". $ip ."#". $post_ID . "#-->"); // debug
 		$payload = md5($time . $seed . $ip . $post_ID); 
+		echo '<div id="sk-payload-fields">';
 		echo "<input type=\"hidden\" id=\"sk_time\" name=\"sk_time\" value=\"$time\" />";
 		echo "<input type=\"hidden\" id=\"sk_ip\" name=\"sk_ip\" value=\"$ip\" />";
 		echo "<input type=\"hidden\" id=\"sk_payload\" name=\"sk_payload\" value=\"$payload\" />";
+		echo '</div>';
 	}
 
 	function version_update($cur_version)
