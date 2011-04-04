@@ -18,14 +18,14 @@
 
 class sk_javascript_plugin extends sk_plugin
 {
-	var $name = "Javascript Payload";
+	var $name = "JavaScript Payload";
 	var $author = "";
 	var $plugin_help_url = "http://wp-plugins.net/wiki/?title=sk_Javascript_Plugin";
-	var $description = "Embed a few Javascript commands in comment form (most browsers without Javascript abilities are usually spambots). If the browser does not support Javascript, it only receives a small penalty.";
+	var $description = "Embed a few JavaScript commands in comment form (most browsers without JavaScript abilities are usually spambots). If the browser does not support JavaScript, it only receives a small penalty.";
 	var $filter = true;
 	var $skip_under = -20;
 	var $skip_above = 10;
-	var $settings_format = array ("no-penalty" => array("advanced" => true, "type" => "checkbox", "value" => false, "caption" => "Do not hit browsers with no Javascript support (only positive karma for JS-enabled browsers)."));
+	var $settings_format = array ("no-penalty" => array("advanced" => true, "type" => "checkbox", "value" => false, "caption" => "Do not hit browsers with no JavaScript support (only positive karma for JS-enabled browsers)."));
 	
 	function form_insert($post_ID)
 	{
@@ -90,15 +90,17 @@ class sk_javascript_plugin extends sk_plugin
 		$check2 = md5($tot . $check1 . $seed);
 
 ?>
-<input type="hidden" id="sk_my_js_check1" name="sk_my_js_check1" value="<?php echo $check1; ?>" />
-<input type="hidden" id="sk_my_js_check2" name="sk_my_js_check2" value="<?php echo $check2; ?>" />
-<script type="text/javascript">
+<div class="sk-form-fields">
+	<input type="hidden" id="sk_my_js_check1" name="sk_my_js_check1" value="<?php echo $check1; ?>" />
+	<input type="hidden" id="sk_my_js_check2" name="sk_my_js_check2" value="<?php echo $check2; ?>" />
+	<script type="text/javascript">
 <!--
 	document.write('<input type="hidden" id="sk_my_js_payload" name="sk_my_js_payload" value="');
 	document.write(<?php echo $js_command; ?>);
 	document.write('" />');
 -->
-</script>
+	</script>
+</div>
 <?php
 		//echo ("<!--#". $time . "#". $seed . "#". $ip ."#". $post_ID . "#-->");
 	}
