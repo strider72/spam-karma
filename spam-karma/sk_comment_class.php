@@ -338,8 +338,9 @@ class sk_comment
 	elseif (preg_match("/^(?:http[s]?:\\/\\/)?(?:.*@)?((?:(?:[^\\?\/\\.]*\\.)*)?([^\\?\/\\.]*\\.))([a-zA-Z0-9]{2,5})(\\.[a-zA-Z0-9]{2,5})(?::[^\/\\?]*)?([\\/|\\?][^\\s\"']*)?.*/i",
 			$str, $matches))
 	{
-		$complex_tlds = array ("ac", "ac.cn", "ac.jp", "ac.uk", "ad.jp", "adm.br", "adv.br", "aero", "ag", "agr.br", "ah.cn", "al", "am", "am.br", "arq.br", "at", "au", "art.br", "as", "asn.au", "ato.br", "av.tr", "az", "ba", "be", "bg", "bio.br", "biz", "biz.tr", "bj.cn", "bel.tr", "bmd.br", "br", "by", "ca", "cc", "cd", "ch", "cim.br", "ck", "cl", "cn", "cng.br", "cnt.br", "com", "com.au", "com.br", "com.cn", "com.eg", "com.hk", "com.mx", "com.tr", "com.ru", "com.tw", "conf.au", "co.at", "co.in", "co.jp", "co.uk", "cq.cn", "csiro.au", "cx", "cy", "cz", "de", "dr.tr", "dk", "dz", "ecn.br", "ee", "edu", "edu.au", "edu.br", "edu.tr", "eg", "es", "esp.br", "etc.br", "eti.br", "eun.eg", "eng.br", "far.br", "fi", "fj", "fj.cn", "fm.br", "fnd.br", "fo", "fot.br", "fst.br", "fr", "gb", "gb.com", "gb.net", "g12.br", "gd.cn", "ge", "gen.tr", "ggf.br", "gl", "gr", "gr.jp", "gs", "gs.cn", "gov.au", "gov.br", "gov.cn", "gov.hk", "gov.tr", "gob.mx", "gs", "gz.cn", "gx.cn", "he.cn", "ha.cn", "hb.cn", "hi.cn", "hl.cn", "hn.cn", "hm", "hk", "hk.cn", "hu", "id.au", "ie", "ind.br", "imb.br", "inf.br", "info", "info.au", "info.tr", "it", "idv.tw", "int", "is", "il", "jl.cn", "jor.br", "jp", "js.cn", "jx.cn", "k12.tr", "ke", "kr", "la", "lel.br", "li", "lk", "ln.cn", "lt", "lu", "lv", "ltd.uk", "ma", "mat.br", "mc", "md", "me.uk", "med.br", "mil", "mil.br", "mil.tr", "mk", "mn", "mo.cn", "ms", "mt", "mus.br", "mx", "name", "name.tr", "ne.jp", "net", "net.au", "net.br", "net.cn", "net.eg", "net.hk", "net.in", "net.lu", "net.mx", "net.uk", "net.ru", "net.tr", "net.tw", "nl", "nm.cn", "no", "no.com", "nom.br", "not.br", "ntr.br", "nu", "nx.cn", "nz", "plc.uk", "odo.br", "oop.br", "or.jp", "or.at", "org", "org.au", "org.br", "org.cn", "org.hk", "org.in", "org.lu", "org.ru", "org.tr", "org.tw", "org.uk", "pk", "pl", "pol.tr", "pp.ru", "ppg.br", "pro.br", "psi.br", "psc.br", "pt", "qh.cn", "qsl.br", "rec.br", "ro", "ru", "sc.cn", "sd.cn", "se", "se.com", "se.net", "sg", "sh", "sh.cn", "si", "sk", "slg.br", "sm", "sn.cn", "srv.br", "st", "su", "sx.cn", "tc", "tel.tr", "th", "tj.cn", "tm", "tn", "tmp.br", "to", "trd.br", "tur.br", "tv", "tv.br", "tw", "tw.cn", "ua", "uk", "uk.com", "uk.net", "us", "us.net", "us.com", "va", "vet.br", "vg", "id.au", "web.tr", "ws", "xj.cn", "xz.cn", "yn.cn", "yu", "za", "zlg.br", "zj.cn");
-	
+		// set $complex_tlds
+		include 'sk_tld_list.php';
+
 		if (in_array($matches[3] . $matches[4], $complex_tlds))
 			$parsed['domain'] = strtolower($matches[2] . $matches[3] . $matches[4]);
 		else
@@ -348,6 +349,7 @@ class sk_comment
 		$parsed['full_domain'] = strtolower($matches[1] . $matches[3] . $matches[4]);
 		$parsed['url'] = $parsed['full_domain'] . @$matches[5];
 	//print_r($matches);
+		unset($complex_tlds);
 	}
 	elseif (preg_match("/^(?:http[s]?:\\/\\/)?(?:.*@)?((?:(?:[^\\?\/\\.]*\\.)*)?([^\\?\/\\.]*\\.?))(\\.[a-zA-Z0-9]{2,5})(?::[^\/\\?]*)?([\\/|\\?][^\\s\"']*)?.*/i",
 			$str, $matches))
@@ -364,15 +366,15 @@ class sk_comment
 		}
 		else
 			return false;
-	
+
 	return $parsed;
 }
-	
+
 	function remove_entities ($str)
 	{
 	//	if (function_exists('html_entity_decode'))
 	//		return html_entity_decode($str, ENT_COMPAT, "UTF-8");
-		
+
 	//	$trans_tbl = get_html_translation_table(HTML_ENTITIES);
 	//	$trans_tbl = array_flip($trans_tbl);
 	//	return strtr($str, $trans_tbl);
