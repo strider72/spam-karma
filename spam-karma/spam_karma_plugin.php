@@ -1244,7 +1244,7 @@ function sk_nonce_email_url($uid, $link, $function = 'form') {
 function sk_nonce_field($function = 'form') {
 	if ( function_exists('wp_create_nonce') ) {
 		//return wp_nonce_field('sk_' . $function);
-		return "<input type=\"hidden\" name=\"_wpnonce\" value=\"" .  wp_create_nonce('sk_' . $function) . "\" />";
+		return '<input type="hidden" name="_wpnonce" value="' .  wp_create_nonce('sk_' . $function) . '" />';
 	} else {
 		return '';
 	}
