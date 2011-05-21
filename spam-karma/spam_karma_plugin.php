@@ -616,6 +616,7 @@ function sk_option_page() {
 			$sk_core->update_components();
 
 			// GET NEWS
+/*  //turning it off for now as there is no new News on the old site.  Maybe re-implement later?
 			if ($sk_settings->get_core_settings('next_news_update') < time())
 			{
 				$url = SK_NEWS_UPDATE_CHECK_URL . '?sk_version=' . urlencode(SK_VERSION) . '&sk_release=' . urlencode(SK_RELEASE) . '&sk_lang=' . urlencode(WPLANG);
@@ -664,6 +665,7 @@ function sk_option_page() {
 
 				$sk_settings->set_core_settings(time() + SK_NEWS_UPDATE_INTERVAL, 'next_news_update');
 			}
+*/
 			
 			if ($sk_settings->get_core_settings('init_install') < 1)
 			{
