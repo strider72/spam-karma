@@ -43,7 +43,7 @@ class sk_settings
 			'log_threshold' => array('auto_draw' => true, 'advanced' => true, 'type' => 'text', 'value' => 4, 'size' => 2, 'caption' => 'Only write logs level ', 'after' => ' and above <em>(logs with a level under this threshold will be displayed in the log dump if they are issued when using the Admin tools, but not written to the database)</em>.'),
 			'max_attempts' => array('auto_draw' => true, 'advanced' => true, 'type' => 'text', 'value' => 5, 'size' => 3, 'caption' => 'How many total backup attempts should be allowed:', 'after' => ' <i>(you need to have backup methods, such as captcha, enabled for this to be taken in account).</i>'),
 
-			'hover_in_tables' => array('auto_draw' => true, 'advanced' => true, 'type' => 'checkbox', 'value' => true, 'caption' => 'Enable 'hovering' in spam report tables', 'after' => ' <i>(if using MSIE. or otherwise css-impaired browsers, you should disable this feature).</i>'),
+			'hover_in_tables' => array('auto_draw' => true, 'advanced' => true, 'type' => 'checkbox', 'value' => true, 'caption' => "Enable 'hovering' in spam report tables", 'after' => ' <i>(if using MSIE. or otherwise css-impaired browsers, you should disable this feature).</i>'),
 
 			'display_sk_footer' => array('auto_draw' => true, 'advanced' => false, 'type' => 'checkbox', 'value' => true, 'caption' => 'Automatically insert SK\'s "X spam eaten" message in your blog\'s footer (enable Advanced Options to customize it).'),
 
