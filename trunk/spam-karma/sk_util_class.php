@@ -16,9 +16,9 @@
 include_once('sk_functions.php');
 
 if (isset($table_prefix))
-	define ('SK_LOGTABLE', $table_prefix . 'sk2_logs');
+	define ('SK_LOGTABLE', $table_prefix . 'sk_logs');
 else
-	define ('SK_LOGTABLE', SK_TABLE_PREFIX . 'sk2_logs');
+	define ('SK_LOGTABLE', SK_TABLE_PREFIX . 'sk_logs');
 
 global $sk_log;
 if (! isset($sk_log))
