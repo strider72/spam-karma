@@ -19,9 +19,9 @@ define ('SK_CORE_VERSION', 5);
 define ('SK_VERSION', 4); // => 2.3
 define ('SK_RELEASE', 'alpha');
 if (isset($table_prefix))
-	define ('SK_SPAM_TABLE', $table_prefix . 'sk2_spams');
+	define ('SK_SPAM_TABLE', $table_prefix . 'sk_spams');
 else
-	define ('SK_SPAM_TABLE', SK_TABLE_PREFIX . 'sk2_spams');
+	define ('SK_SPAM_TABLE', SK_TABLE_PREFIX . 'sk_spams');
 
 require_once('sk_util_class.php');
 require_once('sk_plugin_class.php');
