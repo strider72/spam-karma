@@ -46,7 +46,7 @@ class SK_Core
 
 	function __construct($comment_ID = 0, $post_proc = false, $load_plugins = true)
 	{
-		$this->sanity_check();
+		add_action( 'admin_notices', array( &$this, 'sanity_check' ) );		
 
 		$this->set_post_proc($post_proc);
 		if ($comment_ID)
@@ -728,20 +728,16 @@ class SK_Core
 		$version_updates = $sk_settings->get_core_settings("version_updates");
 		
 		//### add l10n:
-		if (empty($mysql_updates['core']) || empty($version_updates['core']))
-		{
+		if (empty($mysql_updates['core']) || empty($version_updates['core'])) {
 			$message = __("It sounds like SK has been recently installed on this blog, but not configured.", 'spam-karma');
-		}
-		
-		if (($mysql_updates['core'] < $this->version) || ($version_updates['core'] < $this->version))
-		{
+		} elseif (($mysql_updates['core'] < $this->version) || ($version_updates['core'] < $this->version)) {
 			$message = __("It sounds like SK has recently been updated on this blog. But not fully configured.", 'spam-karma');
 		}
-		if (!empty ($message))
-		{
-			$message .= " " . sprintf(__("You MUST visit %sSpam Karma's admin page%s at least once before letting it filter your comments (chaos may ensue otherwise).", 'spam-karma'), "<a href=\"". get_bloginfo('wpurl') . "/wp-admin/options-general.php?page=spamkarma" . "\">", "</a>");
+
+		if (!empty ($message)) {
+			$message .= " " . sprintf(__(" You MUST visit %sSpam Karma's admin page%s at least once before letting it filter your comments (chaos may ensue otherwise).", 'spam-karma'), "<a href=\"". get_bloginfo('wpurl') . "/wp-admin/options-general.php?page=spamkarma" . "\">", "</a>");
 		
-			echo "<div class=\"sk-fatal-error\" style=\"position:absolute; left:0; top:0; background-color: red; color: white; border: 1px black solid; padding: 5px; \">$message</div>";
+			echo "<div class=\"error\">$message</div>";
 		}
 	}
 	
