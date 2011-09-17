@@ -727,15 +727,14 @@ class SK_Core
 		$mysql_updates = $sk_settings->get_core_settings("mysql_updates");
 		$version_updates = $sk_settings->get_core_settings("version_updates");
 		
-		//### add l10n:
 		if (empty($mysql_updates['core']) || empty($version_updates['core'])) {
-			$message = __("It sounds like SK has been recently installed on this blog, but not configured.", 'spam-karma');
+			$message = __('It sounds like SK has been recently installed on this blog, but not configured.', 'spam-karma');
 		} elseif (($mysql_updates['core'] < $this->version) || ($version_updates['core'] < $this->version)) {
-			$message = __("It sounds like SK has recently been updated on this blog. But not fully configured.", 'spam-karma');
+			$message = __('It sounds like SK has recently been updated on this blog. But not fully configured.', 'spam-karma');
 		}
 
 		if (!empty ($message)) {
-			$message .= " " . sprintf(__(" You MUST visit %sSpam Karma's admin page%s at least once before letting it filter your comments (chaos may ensue otherwise).", 'spam-karma'), "<a href=\"". get_bloginfo('wpurl') . "/wp-admin/options-general.php?page=spamkarma" . "\">", "</a>");
+			$message .= ' ' . sprintf(__("You MUST visit %sSpam Karma's admin page%s at least once before letting it filter your comments (chaos may ensue otherwise).", 'spam-karma'), "<a href=\"". get_bloginfo('wpurl') . "/wp-admin/options-general.php?page=spamkarma" . "\">", "</a>");
 		
 			echo "<div class=\"error\">$message</div>";
 		}
