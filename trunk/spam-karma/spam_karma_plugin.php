@@ -5,7 +5,7 @@ Plugin Name: Spam Karma
 Plugin URI: http://code.google.com/p/spam-karma/
 Description: Ultimate Spam Killer for WordPress.
 Author: dr Dave
-Version: 2.4-alpha-20110903
+Version: 2.4-alpha-20110918
 */
 
 /******************************************************************************
@@ -85,11 +85,9 @@ function sk_admin_init() {
 	}
 }
 
-function sk_init() {
+function sk_load_textdomain() {
 	$skdir = basename( dirname( __FILE__ ) );
-	load_plugin_textdomain( 'spam-karma',
-		'wp-content/plugins/' . $skdir . '/lang',
-		$skdir . '/lang' );
+	load_plugin_textdomain( 'spam-karma', 'wp-content/plugins/' . $skdir . '/lang', $skdir . '/lang' );
 }
 
 function sk_option_page() {
@@ -315,368 +313,130 @@ function sk_option_page() {
 		$new_approved = '';
 
 ?>
-	<ul id="sk_menu">
+	<div class="wrap">
+	<h2>Spam Karma</h2>
+	<ul class="subsubsub">
 <?php
 	$url = $_SERVER['PHP_SELF'] . '?page=' . $_REQUEST['page'] . '&sk_section=';
+
+	end($sk_sections);
+	$lastkey = key($sk_sections);
 	foreach ($sk_sections as $section => $name)
 	{
+		if ($section == $lastkey) {
+			$sep = '';
+		} else {
+			$sep = ' | ';
+		}
+			
 		if ($cur_section == $section)
-			echo "<li class=\"current\">$name</li>";
+			echo '<li class="current">' . $name . $sep . '</li>';
 		else
-			echo '<li><a href="' . sk_nonce_url($url . $section) . "\">$name</a></li>";
+			echo '<li><a href="' . sk_nonce_url($url . $section) . "\">$name</a>$sep</li>";
 	}
 ?>
 	</ul>
+	<br>
 <?php
 	
 	switch ($cur_section)
 	{
 		case 'logs':
-			
-			$log_rows = $wpdb->get_results("SELECT *, UNIX_TIMESTAMP(`ts`) AS `ts2` FROM `". SK_LOGTABLE . "` WHERE 1 ORDER BY `ts` DESC, `id` DESC LIMIT 200");
-			if (mysql_error())
-				$sk_log->log_msg_mysql(__("Can't fetch logs.", 'spam-karma'), 7, 0, 'web_UI');
+			sk_option_page_logs();
+			break;
 
-?>
-		<div class="wrap sk_first">
-		<h2><?php _e('SK Logs', 'spam-karma'); ?></h2>			
-			<form id="sk_logs_remove_form" name="sk_logs_remove_form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?page=spamkarma&sk_section=<?php echo $cur_section; ?>">
-			<fieldset class="options">
-			<?php echo sk_nonce_field(); ?>
-			<legend><?php _e('Purge', 'spam-karma'); ?></legend>
-			<p class="sk_form"><?php
-			echo '<input type="submit" name="purge_logs" id="purge_logs" value="' . __('Remove logs:', 'spam-karma') . '" /> ' . sprintf(__('older than %s %s and with a level inferior to %s (%s do it automatically from now on).', 'spam-karma'), sk_settings_ui('purge_logs_duration'), sk_settings_ui('purge_logs_unit'), sk_settings_ui('purge_logs_level'), sk_settings_ui('auto_purge_logs'));
-			?></p>
-			</fieldset>
-			</form>
-			<p><em><?php printf(__('Displaying %i most recent log entries', 'spam-karma'), 200); ?></em>
-			<table id="sk_log_list" width="100%" cellpadding="3" cellspacing="3"> 
-			<tr>
-				<th scope="col"><?php _e('ID', 'spam-karma'); ?></th>
-				<th scope="col"><?php _e('Level', 'spam-karma'); ?></th>
-				<th scope="col"><?php _e('Message', 'spam-karma'); ?></th>
-				<th scope="col"><?php _e('Component', 'spam-karma'); ?></th>
-				<th scope="col"><?php _e('How Long Ago', 'spam-karma'); ?></th>
-			</tr>
-			<?php
-			foreach($log_rows as $row)
-			{
-				echo "<tr class=\"sk_level_$row->level\">";
-				echo "<td>$row->id</td>";
-				echo "<td>$row->level</td>";
-				echo "<td>$row->msg</td>";
-				echo "<td>$row->component</td>";
-				echo "<td>" . sk_table_show_hide(sk_time_since($row->ts2), $row->ts) . "</td>";
-				echo "</tr>";
-			}
-			?>
-		</table></p>
-		<?php
-		break;	
-				
 		case 'blacklist':
-			$sk_settings->set_core_settings(time(), 'last_spam_check');
+			sk_option_page_blacklist();
+			break;
 
-			if (isset($_REQUEST['sk_blacklist_add']))
-			{
-				$sk_blacklist->add_entry($_REQUEST['add_blacklist_type'], $_REQUEST['add_blacklist_value'], $_REQUEST['add_blacklist_score'], 'yes', 'user');
-			}
-			elseif (isset($_REQUEST['sk_edit_rows']) && isset($_REQUEST['blacklist']))
-			{
-				foreach($_REQUEST['blacklist'] as $id => $entry)
-				{
-					$id = mysql_escape_string($id);
-					$entry['score'] = (int) $entry['score'];
-					$wpdb->query("UPDATE `" . SK_BLACKLIST_TABLE . "` SET `type` = '" . sk_escape_form_string($entry['type']) . "', `value` = '" . sk_escape_form_string($entry['val']) . "', `score` = " . $entry['score'] . ", `user_reviewed` = 'yes' WHERE `id` = '$id'");
-					if (mysql_error())
-						$sk_log->log_msg_sql(__('Failed to update blacklist entry ID: ', 'spam-karma') .  $id, 8, 0, 'web_UI');
-					else
-						$sk_log->log_msg(__('Succesfully updated blacklist entry ID: ', 'spam-karma') . $id, 4, 0, 'web_UI');
-				}
-			}
-			elseif (isset($_REQUEST['remove_checked']) && isset($_REQUEST['blacklist_grp_check']))
-			{
-				foreach($_REQUEST['blacklist_grp_check'] as $id => $spam)
-				{
-					$id = mysql_escape_string($id);
-					$wpdb->query("DELETE FROM  `". SK_BLACKLIST_TABLE . "` WHERE `id` = $id");
-					if (! mysql_error())
-						$sk_log->log_msg(__('Successfully removed blacklist entry ID: ', 'spam-karma') . $id, 4, 0, 'web_UI');
-					else
-						$sk_log->log_msg_mysql(__('Failed to remove blacklist entry ID: ', 'spam-karma') . $id, 7, 0, 'web_UI');
-				}
-			}
-	//	print_r($_REQUEST);
-		
-			if (! empty($_REQUEST['sk_show_number']))
-				$show_number = $_REQUEST['sk_show_number'];
-			else
-				$show_number = 20;
+		case 'about':
+			include_once(dirname(__FILE__) .'/sk_about.php');
+			break;
 
-			if (isset($_REQUEST['sk_match']) && ($_REQUEST['sk_match'] == 'true'))
-				$match_mode = true;
-			else
-				$match_mode = false;
-				
-		$match_value = @$_REQUEST['sk_match_value'];
-		if (isset($_REQUEST['sk_match_type']))
-			$match_type = $_REQUEST['sk_match_type'];
-		else
-			$match_type = 'all';
-
-		if($match_mode)
-			$blacklist_rows = $sk_blacklist->match_entries($match_type, $match_value, false, 0, $show_number);
-		else
-			$blacklist_rows = $wpdb->get_results("SELECT * FROM `". SK_BLACKLIST_TABLE . "` WHERE 1 ORDER BY `added` DESC LIMIT $show_number");
-		
-		sk_echo_check_all_JS();
-
-		$blacklist_types = 
-			array (
-				'ip_black' => __('IP Blacklist', 'spam-karma'), 
-				'ip_white' => __('IP Whitelist', 'spam-karma'), 
-				'domain_black' => __('Domain Blacklist', 'spam-karma'), 
-				'domain_white' => __('Domain Whitelist', 'spam-karma'), 
-				'domain_grey' => __('Domain Greylist', 'spam-karma'), 
-				'regex_black' => __('Regex Blacklist', 'spam-karma'), 
-				'regex_white' => __('Regex Whitelist', 'spam-karma'), 
-				'regex_content_black' => __('Regex Content Blacklist', 'spam-karma'), 
-				'regex_content_white' => __('Regex Content Whitelist', 'spam-karma'), 
-				'rbl_server' => __('RBL Server (IP)', 'spam-karma'), 
-				'rbl_server_uri' => __('RBL Server (URI)', 'spam-karma'), 
-				'kumo_seed' => __('Kumo Seed', 'spam-karma')
-			);
-?>
-			<div class="wrap sk_first">
-			<h2><?php _e('Blacklist', 'spam-karma'); ?></h2>
-			<fieldset class="options">
-			<legend><?php _e('Add', 'spam-karma'); ?></legend>
-			<form id="sk_blacklist_add_form" name="sk_blacklist_add_form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?page=spamkarma&sk_section=<?php echo $cur_section; ?>">
-			<p class="sk_form">
-						<?php echo sk_nonce_field(); ?>
-			<select name="add_blacklist_type" id="add_blacklist_type"><?php
-				$default = 'ip_black';
-				foreach($blacklist_types as $type => $type_caption)
-					if ($default == $type)
-						echo "<option value=\"$type\" selected>$type_caption</option>";
-					else
-						echo "<option value=\"$type\">$type_caption</option>";
-			?></select>: <input type="text" size="20" name="add_blacklist_value" id="add_blacklist_value" value="" /> <input type="submit" name="sk_blacklist_add" value="<?php _e('Add entry', 'spam-karma'); ?>" />   (<?php _e('Score: ', 'spam-karma'); ?><input type="text" size="3" name="add_blacklist_score" id="add_blacklist_score" value="100" />)</p>
-			</form>
-			</fieldset>
-
-			<form id="sk_blacklist_remove_form" name="sk_blacklist_remove_form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?page=spamkarma&sk_section=<?php echo $cur_section; ?>">
-			<fieldset class="options">
-			<legend><?php _e('Show', 'spam-karma'); ?></legend>
-			<p class="sk_form">
-			<?php
-			echo sk_nonce_field();
-
-			printf(__("%sShow%s last %s entries.", 'spam-karma'), '<input type="submit" name="sk_show_last"  id="sk_show_last" value="', '" />', '<input type="text" size="3" name="sk_show_number" id="sk_show_number" value="' . $show_number . '" />');
-			?></p>
-			<p class="sk_form"><input type="checkbox" name="sk_match"  id="sk_match" value="true" <?php if ($match_mode) echo 'checked'; ?> /> <?php _e('Match', 'spam-karma'); ?> <input type="text" size="10" name="sk_match_value" id="sk_match_value" value="<?php echo $match_value; ?>" /> <select name="sk_match_type" id="sk_match_type"><?php
-			$options = 
-				array(
-					'all' => __('All', 'spam-karma'), 
-					'ip' => __('IP', 'spam-karma'), 
-					'url' => __('URL', 'spam-karma'), 
-					'regex_content_match' => __('Content', 'spam-karma'), 
-					'rbl_server' => __('RBL Server', 'spam-karma'), 
-					'kumo_seed' => __('Kumo Seed', 'spam-karma'), 
-					'regex' => __('Regex string (non-interpreted)', 'spam-karma')
-				);
-			foreach ($options as $key => $val)
-			{
-				echo "<option value=\"$key\"";
-				if ($key == $match_type)
-					echo ' selected';
-				echo ">$val</option>";
-			}
-			?></select></p>
-			</fieldset>
-			<fieldset class="options">
-			<legend><?php _e('Remove', 'spam-karma'); ?></legend>
-			<p class="sk_form"><?php
-			printf(__('%sRemove entries:%s %s more than %s ago and with a score inferior to %s (%s do it automatically from now on).', 'spam-karma'), '<input type="submit" name="purge_blacklist" id="purge_blacklist" value="', '" /> ', sk_settings_ui('purge_blacklist_criterion'), sk_settings_ui('purge_blacklist_duration') . sk_settings_ui('purge_blacklist_unit'),  sk_settings_ui('purge_blacklist_score'), sk_settings_ui('auto_purge_blacklist')); 
-			?></p>
-
-			<p class="sk_form"><input type="submit" name="remove_checked" id="remove_checked" value="<?php _e('Remove Selected Entries', 'spam-karma'); ?>" /> <a href="javascript:;" onclick="checkAll(document.getElementById('sk_blacklist_remove_form')); return false; " />(<?php _e('Invert Checkbox Selection', 'spam-karma'); ?>)</a></p>
-			</fieldset>
-			<fieldset class="options">
-			<legend><?php
-			if (! $match_mode)
-				printf(__('Last %d Entries', 'spam-karma'), $show_number);
-			else
-				echo __('Entries Matching ', 'spam-karma'), "<em>$match_value</em>";
-			?></legend>
-			<p><table id="sk_spam_list" width="100%" cellpadding="3" cellspacing="3"> 
-			<tr>
-				<th scope="col"><?php _e('ID', 'spam-karma'); ?></th>
-				<th scope="col"><?php _e('Type', 'spam-karma'); ?></th>
-				<th scope="col"><?php _e('Value', 'spam-karma'); ?></th>
-				<th scope="col"><?php _e('Score', 'spam-karma'); ?></th>
-				<th scope="col"><?php _e('How long ago', 'spam-karma'); ?></th>
-				<th scope="col"><?php _e('Used', 'spam-karma'); ?></th>
-			</tr>
-	<?php
-		if (isset($_REQUEST['sk_edit_mode']) && ($_REQUEST['sk_edit_mode'] == "true"))
-			$edit_mode = true;
-		else
-			$edit_mode = false;
-		
-		echo "<input type=\"hidden\" name=\"sk_edit_mode\" id=\"sk_edit_mode\" value=\"$edit_mode\" />";
-		echo "<input type=\"submit\" name=\"switch_mode\" id=\"switch_mode\" value=\"";
-		if ($edit_mode)
-			_e('Switch to view mode', 'spam-karma');
-		else
-			_e('Switch to edit mode', 'spam-karma'); 
-		echo "\" onclick=\"this.form['sk_edit_mode'].value = " . ($edit_mode ? "false" : "true") . ";\" />";
-		
-		if (is_array($blacklist_rows))
-			foreach ($blacklist_rows as $row)
-			{
-				if ($row->score < 30)
-					$color = 'rgb(120, 120, 120)';
-				elseif ($row->score < 50)
-				{
-					$x = min ((int) (120 + 60 * pow(($row->score - 30)/20, 2)), 256);
-					$color = "rgb($x, $x, $x)";
-				}
-				elseif ($row->score < 80)
-				{
-					$x = max (0, (int) (180 - 3 * ($row->score - 50)));
-					$y = min(256, (int) (180 - $row->score + 50));
-					$z = min(256, (int) (180 + 2.3 * ($row->score - 50)));
-					$color = "rgb($x, $y, $z)";
-				}
-				elseif ($row->score < 100)
-				{
-					$color = 'rgb(90, 150, 250)';
-				}
-				else
-				{
-					$color = 'rgb(90, 150, 256)';
-				}
-				echo "<tr style=\"background-color: $color;\">";
-				echo "<th scope=\"row\"><input type=\"checkbox\" name=\"blacklist_grp_check[$row->id]\" id=\"blacklist_grp_check[$row->id]\" value=\"true\" /> $row->id</th>";
-				echo "<td>";
-				if (! isset($blacklist_types[$row->type]))
-					$blacklist_types[$row->type] = __('Unknown', 'spam-karma') . " (" . $row->type . ")";
-				if ($edit_mode)
-				{
-					echo "<select name=\"blacklist[$row->id][type]\" id=\"blacklist[$row->id][type]\">";
-					foreach($blacklist_types as $type => $type_caption)
-						if ($row->type == $type)
-							echo "<option value=\"$type\" selected>$type_caption</option>";
-						else
-							echo "<option value=\"$type\">$type_caption</option>";
-					echo "</select>";
-				}
-				else
-					echo $blacklist_types[$row->type];
-				echo "</td>";
-				echo "<td>";
-				if ($edit_mode)
-					echo "<input type=\"text\" name=\"blacklist[$row->id][val]\" id=\"blacklist[$row->id][val]\" value=\"" . str_replace("\"", "&quot;", $row->value) . "\" size=\"". max(6, min(strlen($row->value), 40)) ."\">";
-				else
-					echo $row->value;
-				echo '</td>';
-				echo '<td>';
-				if ($edit_mode)
-					echo "<input type=\"text\" name=\"blacklist[$row->id][score]\" id=\"blacklist[$row->id][score]\" value=\"$row->score\" size=\"3\">";
-				else
-					echo $row->score;
-				echo "</td>";
-				echo "<td>" . sk_table_show_hide(sk_time_since(strtotime($row->last_used)), __('Added: ', 'spam-karma') . $row->added . '<br/>' . __('Last Used: ', 'spam-karma') . $row->last_used) . '</td>';
-				echo '<td>' . ($row->used_count+1) . '</tr>';
-				echo '</tr>';
-			}
-?>
-			</table></p>
-			<?php
-			if ($edit_mode)
-				echo '<p class="submit"><input type="submit" name="sk_edit_rows" id="sk_edit_rows" value="' . __('Save Changes', 'spam-karma') . '" /></p>';
-			?>
-			</fieldset>
-			</form>
-			</div>
-<?php
-		break;
-		
-		// GENERAL SETTINGS SCREEN
 		case 'general':
-		default:			
-			$sk_core->save_UI_settings($_REQUEST);
-
-			if (isset($_REQUEST['advanced_tools']))
-				$sk_core->advanced_tools($_REQUEST);
-			
-			$sk_core->update_SQL_schema();
-			$sk_core->update_components();
-
-			// GET NEWS
-/*  //turning it off for now as there is no new News on the old site.  Maybe re-implement later?
-			if ($sk_settings->get_core_settings('next_news_update') < time())
-			{
-				$url = SK_NEWS_UPDATE_CHECK_URL . '?sk_version=' . urlencode(SK_VERSION) . '&sk_release=' . urlencode(SK_RELEASE) . '&sk_lang=' . urlencode(WPLANG);
-				if ($update_file = sk_get_url_content($url))
-				{
-					if (is_array($news_array = unserialize($update_file)))
-					{
-						$new_news = array();
-						if (! is_array($old_news = $sk_settings->get_core_settings('news_archive')))
-							$old_news = array();
-						
-						foreach($news_array as $ts => $news_item)
-						{
-							if (! isset($old_news[$ts]))
-								$new_news[$ts] = $news_item;
-							$old_news[$ts] = $news_item;
-						}
-
-						krsort($old_news);
-						while (count($old_news) > 10)
-							array_pop($old_news);
-					
-						$sk_settings->set_core_settings($old_news, 'news_archive');
-						if (count($new_news) > 0)
-						{
-							echo '<div class="wrap sk_first"><h2>' . __('News', 'spam-karma') . '</h2>';
-							foreach ($new_news as $ts => $news_item)
-							{
-								echo '<div class="news_item';
-								if (@$news_item['level'] > 0)
-									echo ' sk_level_' . $news_item['level'];
-								echo '">';
-								echo $news_item['msg'];
-								echo '<div class="news_posted">' . sprintf(__('Posted %s ago', 'spam-karma'), sk_time_since($ts)) . '</div> ';
-								echo '</div>';
-							}
-							echo '</div>';
-						}
-						$sk_log->log_msg(__('Checked news from: ', 'spam-karma') . "<em>$url</em><br/>" . sprintf(__ngettext('One new news item, %d total', '%d new news items, %d total', count($new_news), 'spam-karma'), count($new_news), count($old_news)), 3, 0, 'web_UI');
-					}
-					else
-						$sk_log->log_msg(__('Cannot unserialize news array from URL: ', 'spam-karma') . "<em>$url</em>", 8, 0, 'web_UI');
-				}
-				else
-					$sk_log->log_msg(__('Cannot load news from URL: ', 'spam-karma') . "<em>$url</em>", 7, 0, 'web_UI');
-
-				$sk_settings->set_core_settings(time() + SK_NEWS_UPDATE_INTERVAL, 'next_news_update');
-			}
-*/
-			
-			if ($sk_settings->get_core_settings('init_install') < 1)
-			{
-				echo '<div class="wrap sk_first">';
-				$sk_log->log_msg(__('Running first-time install checks...', 'spam-karma'), 4, 0, 'web_UI', true, false);
-				echo '<br/>';
-				$sk_core->advanced_tools(array('check_comment_form' => true));
-				$sk_settings->set_core_settings(1, 'init_install');
-				echo '</div>';
-			}
+		default:
+			sk_option_page_general($sk_core);
+			break;
+	}
+	$sk_settings->save_settings();	
 ?>
-		<div class="wrap sk_first"><h2><?php _e('Stats', 'spam-karma'); ?></h2>
+</div><!-- /div.wrap -->
+<?php
+}
+
+function sk_option_page_general($sk_core) {
+	global $wpdb, $sk_log, $sk_settings;
+
+	$sk_core->save_UI_settings($_REQUEST);
+
+	if (isset($_REQUEST['advanced_tools']))
+		$sk_core->advanced_tools($_REQUEST);
+
+	$sk_core->update_SQL_schema();
+	$sk_core->update_components();
+
+	// GET NEWS
+	/*  //turning it off for now as there is no new News on the old site.  Maybe re-implement later?
+	if ($sk_settings->get_core_settings('next_news_update') < time())
+	{
+		$url = SK_NEWS_UPDATE_CHECK_URL . '?sk_version=' . urlencode(SK_VERSION) . '&sk_release=' . urlencode(SK_RELEASE) . '&sk_lang=' . urlencode(WPLANG);
+		if ($update_file = sk_get_url_content($url))
+		{
+			if (is_array($news_array = unserialize($update_file)))
+			{
+				$new_news = array();
+				if (! is_array($old_news = $sk_settings->get_core_settings('news_archive')))
+					$old_news = array();
+
+				foreach($news_array as $ts => $news_item)
+				{
+					if (! isset($old_news[$ts]))
+						$new_news[$ts] = $news_item;
+					$old_news[$ts] = $news_item;
+				}
+
+				krsort($old_news);
+				while (count($old_news) > 10)
+					array_pop($old_news);
+
+				$sk_settings->set_core_settings($old_news, 'news_archive');
+				if (count($new_news) > 0)
+				{
+					echo '<div class="wrap sk_first"><h2>' . __('News', 'spam-karma') . '</h2>';
+					foreach ($new_news as $ts => $news_item)
+					{
+						echo '<div class="news_item';
+						if (@$news_item['level'] > 0)
+							echo ' sk_level_' . $news_item['level'];
+						echo '">';
+						echo $news_item['msg'];
+						echo '<div class="news_posted">' . sprintf(__('Posted %s ago', 'spam-karma'), sk_time_since($ts)) . '</div> ';
+						echo '</div>';
+					}
+					echo '</div>';
+				}
+				$sk_log->log_msg(__('Checked news from: ', 'spam-karma') . "<em>$url</em><br/>" . sprintf(__ngettext('One new news item, %d total', '%d new news items, %d total', count($new_news), 'spam-karma'), count($new_news), count($old_news)), 3, 0, 'web_UI');
+			}
+			else
+				$sk_log->log_msg(__('Cannot unserialize news array from URL: ', 'spam-karma') . "<em>$url</em>", 8, 0, 'web_UI');
+		}
+		else
+			$sk_log->log_msg(__('Cannot load news from URL: ', 'spam-karma') . "<em>$url</em>", 7, 0, 'web_UI');
+
+		$sk_settings->set_core_settings(time() + SK_NEWS_UPDATE_INTERVAL, 'next_news_update');
+	}
+	*/
+
+	if ($sk_settings->get_core_settings('init_install') < 1)
+	{
+		$sk_log->log_msg(__('Running first-time install checks...', 'spam-karma'), 4, 0, 'web_UI', true, false);
+		echo '<br/>';
+		$sk_core->advanced_tools(array('check_comment_form' => true));
+		$sk_settings->set_core_settings(1, 'init_install');
+	}
+	?>
+		<div class="sk_first">
+		<h3 style="clear: left;"><?php _e('Stats', 'spam-karma'); ?></h3>
 		<ul>
 		<li><?php _e('Total Spam Caught: ', 'spam-karma'); ?><strong><?php echo $hell_count = (int) $sk_settings->get_stats('hell'); ?></strong> <?php 
 		if ($hell_count > 0)
@@ -690,88 +450,346 @@ function sk_option_page() {
 			?></li>
 		</ul>
 		</div>
-<?php
+	<?php
 		$sk_core->output_UI();
-?>
-	<div class="wrap">
-	<h2><?php _e('Advanced Options', 'spam-karma'); ?></h2>
-	<form name="sk_advanced_tools_form" id="sk_advanced_tools_form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?page=spamkarma&sk_section=<?php echo $cur_section; ?>">
-				<?php echo sk_nonce_field(); ?>
-	<input type="hidden" name="advanced_tools" id="advanced_tools" value="true">
-<script type="text/javascript">
-<!--
+	?>
+		<div class="wrap">
+		<h3><?php _e('Advanced Options', 'spam-karma'); ?></h3>
+		<form name="sk_advanced_tools_form" id="sk_advanced_tools_form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?page=spamkarma&sk_section=<?php echo $cur_section; ?>">
+					<?php echo sk_nonce_field(); ?>
+		<input type="hidden" name="advanced_tools" id="advanced_tools" value="true">
+	<script type="text/javascript">
+	<!--
 
-function toggleAdvanced(mybutton, myid)
-{
-	var node = document.getElementById(myid);
-
-	if(node == null) 
-	{
-		alert('<?php _e('Bad ID', 'spam-karma'); ?>');
-		return;
-	}
-
-	if(node.className.match(/\bshow\b/) != null)
-	{
-		node.className = node.className.replace(/\bshow\b/, "hide");
-		mybutton.innerHTML = "<?php _e('Show Advanced Options', 'spam-karma'); ?>";
-	} 
-	else	if(node.className.match(/\bhide\b/) != null)
+		function toggleAdvanced(mybutton, myid)
 		{
-			node.className = node.className.replace(/\bhide\b/, "show"); 
-			mybutton.innerHTML = "<?php _e('Hide Advanced Options', 'spam-karma'); ?>";
+			var node = document.getElementById(myid);
+
+			if(node == null) 
+			{
+				alert('<?php _e('Bad ID', 'spam-karma'); ?>');
+				return;
+			}
+
+			if(node.className.match(/\bshow\b/) != null)
+			{
+				node.className = node.className.replace(/\bshow\b/, "hide");
+				mybutton.innerHTML = "<?php _e('Show Advanced Options', 'spam-karma'); ?>";
+			} 
+			else	if(node.className.match(/\bhide\b/) != null)
+				{
+					node.className = node.className.replace(/\bhide\b/, "show"); 
+					mybutton.innerHTML = "<?php _e('Hide Advanced Options', 'spam-karma'); ?>";
+				}
+
 		}
 
+	//-->
+	</script>
+			<fieldset class="themecheck">
+				<p><button name="advance_toggle" id="advance_toggle" onclick="toggleAdvanced(this, 'sk_settings_pane');return false;"><?php _e('Show Advanced Settings', 'spam-karma'); ?></button> <i><?php _e('Will show/hide advanced options in the form above', 'spam-karma'); ?></i></p>
+			</fieldset>
+			<fieldset class="dbtools">
+				<legend><?php _e('Database Tools', 'spam-karma'); ?></legend>
+			    <p><input type="submit" id="force_sql_update" name="force_sql_update" value="<?php _e('Force MySQL updates', 'spam-karma'); ?>"> 
+			    <input type="submit" id="reinit_plugins" name="reinit_plugins" value="<?php _e('Reinit Plugins', 'spam-karma'); ?>">
+			    <input type="submit" id="reset_all_tables" name="reset_all_tables" onclick="javascript:return confirm('<?php _e('Do you really want to reset all SK tables.', 'spam-karma'); ?>');" value="<?php _e('Reset All Tables', 'spam-karma'); ?>">
+
+			  <input type="submit" id="reinit_all" name="reinit_all" onclick="javascript:return confirm('<?php _e('Do you really want to reset all SK settings?', 'spam-karma'); ?>');" value="<?php _e('Reset to Factory Settings', 'spam-karma'); ?>"></p>
+			</fieldset>
+
+			<fieldset class="themecheck">
+				<legend><?php _e('Theme Check', 'spam-karma'); ?></legend>
+				<p><?php
+				_e('SK will not work properly if your theme is not 100% 1.5-compatible. In particular, oftentimes, the comment form of some custom themes does not contain the proper code to work with 1.5 plugins. For more details and a guide on how to fix, please <a href="http://wp-plugins.net/wiki/index.php?title=sk_Theme_Compatibility">check out the wiki</a>.', 'spam-karma'); 
+				echo '<em>' . __('You do not have to worry about this if you are using a standard out-of-the-box 1.5 install and the theme that came with it.', 'spam-karma') . '</em>'; 
+				?></p>
+			    <ul>
+			    <li><input type="submit" id="check_comment_form" name="check_comment_form" value="<?php _e('Theme Compatibility Check', 'spam-karma'); ?>"> (<?php _e("attempts to examine your theme's files and check for compatibility", 'spam-karma'); ?>).</form></li>
+			    <li><strong><?php _e('Advanced Compatibility Check', 'spam-karma'); ?></strong> <i><?php _e('Enter the URL of a page on your blog where the comment form appears (most likely the URL to any single entry, or the URL to your pop-up comment form if you are using the pop-up view) and click Submit', 'spam-karma'); ?></i><br/>
+			   	<form name="sk_advanced_tools_form_2" id="sk_advanced_tools_form_2" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?page=spamkarma&sk_section=<?php echo $cur_section; ?>">
+		<input type="hidden" name="advanced_tools" id="advanced_tools" value="true"><input type="text" id="check_comment_form_2_url" name="check_comment_form_2_url" size="30"> 
+							<?php echo sk_nonce_field(); ?>
+				<input type="submit" id="check_comment_form_2" name="check_comment_form_2" value="<?php _e('Submit', 'spam-karma'); ?>"></li>
+			    </ul>
+			</fieldset>
+		</form>
+		</div>
+	<?php
 }
 
-//-->
-</script>
-		<fieldset class="themecheck">
-			<p><button name="advance_toggle" id="advance_toggle" onclick="toggleAdvanced(this, 'sk_settings_pane');return false;"><?php _e('Show Advanced Settings', 'spam-karma'); ?></button> <i><?php _e('Will show/hide advanced options in the form above', 'spam-karma'); ?></i></p>
+function sk_option_page_blacklist() {
+	global $wpdb, $sk_log, $sk_settings;
+	$sk_settings->set_core_settings(time(), 'last_spam_check');
+
+	if (isset($_REQUEST['sk_blacklist_add']))
+	{
+		$sk_blacklist->add_entry($_REQUEST['add_blacklist_type'], $_REQUEST['add_blacklist_value'], $_REQUEST['add_blacklist_score'], 'yes', 'user');
+	}
+	elseif (isset($_REQUEST['sk_edit_rows']) && isset($_REQUEST['blacklist']))
+	{
+		foreach($_REQUEST['blacklist'] as $id => $entry)
+		{
+			$id = mysql_escape_string($id);
+			$entry['score'] = (int) $entry['score'];
+			$wpdb->query("UPDATE `" . SK_BLACKLIST_TABLE . "` SET `type` = '" . sk_escape_form_string($entry['type']) . "', `value` = '" . sk_escape_form_string($entry['val']) . "', `score` = " . $entry['score'] . ", `user_reviewed` = 'yes' WHERE `id` = '$id'");
+			if (mysql_error())
+				$sk_log->log_msg_sql(__('Failed to update blacklist entry ID: ', 'spam-karma') .  $id, 8, 0, 'web_UI');
+			else
+				$sk_log->log_msg(__('Succesfully updated blacklist entry ID: ', 'spam-karma') . $id, 4, 0, 'web_UI');
+		}
+	}
+	elseif (isset($_REQUEST['remove_checked']) && isset($_REQUEST['blacklist_grp_check']))
+	{
+		foreach($_REQUEST['blacklist_grp_check'] as $id => $spam)
+		{
+			$id = mysql_escape_string($id);
+			$wpdb->query("DELETE FROM  `". SK_BLACKLIST_TABLE . "` WHERE `id` = $id");
+			if (! mysql_error())
+				$sk_log->log_msg(__('Successfully removed blacklist entry ID: ', 'spam-karma') . $id, 4, 0, 'web_UI');
+			else
+				$sk_log->log_msg_mysql(__('Failed to remove blacklist entry ID: ', 'spam-karma') . $id, 7, 0, 'web_UI');
+		}
+	}
+//print_r($_REQUEST);
+
+	if (! empty($_REQUEST['sk_show_number']))
+		$show_number = $_REQUEST['sk_show_number'];
+	else
+		$show_number = 20;
+
+	if (isset($_REQUEST['sk_match']) && ($_REQUEST['sk_match'] == 'true'))
+		$match_mode = true;
+	else
+		$match_mode = false;
+
+	$match_value = @$_REQUEST['sk_match_value'];
+	if (isset($_REQUEST['sk_match_type']))
+		$match_type = $_REQUEST['sk_match_type'];
+	else
+		$match_type = 'all';
+
+	if($match_mode)
+		$blacklist_rows = $sk_blacklist->match_entries($match_type, $match_value, false, 0, $show_number);
+	else
+		$blacklist_rows = $wpdb->get_results("SELECT * FROM `". SK_BLACKLIST_TABLE . "` WHERE 1 ORDER BY `added` DESC LIMIT $show_number");
+
+	sk_echo_check_all_JS();
+
+	$blacklist_types = 
+		array (
+			'ip_black' => __('IP Blacklist', 'spam-karma'), 
+			'ip_white' => __('IP Whitelist', 'spam-karma'), 
+			'domain_black' => __('Domain Blacklist', 'spam-karma'), 
+			'domain_white' => __('Domain Whitelist', 'spam-karma'), 
+			'domain_grey' => __('Domain Greylist', 'spam-karma'), 
+			'regex_black' => __('Regex Blacklist', 'spam-karma'), 
+			'regex_white' => __('Regex Whitelist', 'spam-karma'), 
+			'regex_content_black' => __('Regex Content Blacklist', 'spam-karma'), 
+			'regex_content_white' => __('Regex Content Whitelist', 'spam-karma'), 
+			'rbl_server' => __('RBL Server (IP)', 'spam-karma'), 
+			'rbl_server_uri' => __('RBL Server (URI)', 'spam-karma'), 
+			'kumo_seed' => __('Kumo Seed', 'spam-karma')
+		);
+?>
+		<div class="sk_first">
+		<h3 style="clear: left;"><?php _e('Blacklist', 'spam-karma'); ?></h3>
+		<fieldset class="options">
+		<legend><?php _e('Add', 'spam-karma'); ?></legend>
+		<form id="sk_blacklist_add_form" name="sk_blacklist_add_form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?page=spamkarma&sk_section=<?php echo $cur_section; ?>">
+		<p class="sk_form">
+					<?php echo sk_nonce_field(); ?>
+		<select name="add_blacklist_type" id="add_blacklist_type"><?php
+			$default = 'ip_black';
+			foreach($blacklist_types as $type => $type_caption)
+				if ($default == $type)
+					echo "<option value=\"$type\" selected>$type_caption</option>";
+				else
+					echo "<option value=\"$type\">$type_caption</option>";
+		?></select>: <input type="text" size="20" name="add_blacklist_value" id="add_blacklist_value" value="" /> <input type="submit" name="sk_blacklist_add" value="<?php _e('Add entry', 'spam-karma'); ?>" />   (<?php _e('Score: ', 'spam-karma'); ?><input type="text" size="3" name="add_blacklist_score" id="add_blacklist_score" value="100" />)</p>
+		</form>
 		</fieldset>
-		<fieldset class="dbtools">
-			<legend><?php _e('Database Tools', 'spam-karma'); ?></legend>
-		    <p><input type="submit" id="force_sql_update" name="force_sql_update" value="<?php _e('Force MySQL updates', 'spam-karma'); ?>"> 
-		    <input type="submit" id="reinit_plugins" name="reinit_plugins" value="<?php _e('Reinit Plugins', 'spam-karma'); ?>">
-		    <input type="submit" id="reset_all_tables" name="reset_all_tables" onclick="javascript:return confirm('<?php _e('Do you really want to reset all SK tables.', 'spam-karma'); ?>');" value="<?php _e('Reset All Tables', 'spam-karma'); ?>">
-		  
-		  <input type="submit" id="reinit_all" name="reinit_all" onclick="javascript:return confirm('<?php _e('Do you really want to reset all SK settings?', 'spam-karma'); ?>');" value="<?php _e('Reset to Factory Settings', 'spam-karma'); ?>"></p>
+
+		<form id="sk_blacklist_remove_form" name="sk_blacklist_remove_form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?page=spamkarma&sk_section=<?php echo $cur_section; ?>">
+		<fieldset class="options">
+		<legend><?php _e('Show', 'spam-karma'); ?></legend>
+		<p class="sk_form">
+		<?php
+		echo sk_nonce_field();
+
+		printf(__("%sShow%s last %s entries.", 'spam-karma'), '<input type="submit" name="sk_show_last"  id="sk_show_last" value="', '" />', '<input type="text" size="3" name="sk_show_number" id="sk_show_number" value="' . $show_number . '" />');
+		?></p>
+		<p class="sk_form"><input type="checkbox" name="sk_match"  id="sk_match" value="true" <?php if ($match_mode) echo 'checked'; ?> /> <?php _e('Match', 'spam-karma'); ?> <input type="text" size="10" name="sk_match_value" id="sk_match_value" value="<?php echo $match_value; ?>" /> <select name="sk_match_type" id="sk_match_type"><?php
+		$options = 
+			array(
+				'all' => __('All', 'spam-karma'), 
+				'ip' => __('IP', 'spam-karma'), 
+				'url' => __('URL', 'spam-karma'), 
+				'regex_content_match' => __('Content', 'spam-karma'), 
+				'rbl_server' => __('RBL Server', 'spam-karma'), 
+				'kumo_seed' => __('Kumo Seed', 'spam-karma'), 
+				'regex' => __('Regex string (non-interpreted)', 'spam-karma')
+			);
+		foreach ($options as $key => $val)
+		{
+			echo "<option value=\"$key\"";
+			if ($key == $match_type)
+				echo ' selected';
+			echo ">$val</option>";
+		}
+		?></select></p>
 		</fieldset>
-		
-		<fieldset class="themecheck">
-			<legend><?php _e('Theme Check', 'spam-karma'); ?></legend>
-			<p><?php
-			_e('SK will not work properly if your theme is not 100% 1.5-compatible. In particular, oftentimes, the comment form of some custom themes does not contain the proper code to work with 1.5 plugins. For more details and a guide on how to fix, please <a href="http://wp-plugins.net/wiki/index.php?title=sk_Theme_Compatibility">check out the wiki</a>.', 'spam-karma'); 
-			echo '<em>' . __('You do not have to worry about this if you are using a standard out-of-the-box 1.5 install and the theme that came with it.', 'spam-karma') . '</em>'; 
-			?></p>
-		    <ul>
-		    <li><input type="submit" id="check_comment_form" name="check_comment_form" value="<?php _e('Theme Compatibility Check', 'spam-karma'); ?>"> (<?php _e("attempts to examine your theme's files and check for compatibility", 'spam-karma'); ?>).</form></li>
-		    <li><strong><?php _e('Advanced Compatibility Check', 'spam-karma'); ?></strong> <i><?php _e('Enter the URL of a page on your blog where the comment form appears (most likely the URL to any single entry, or the URL to your pop-up comment form if you are using the pop-up view) and click Submit', 'spam-karma'); ?></i><br/>
-		   	<form name="sk_advanced_tools_form_2" id="sk_advanced_tools_form_2" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?page=spamkarma&sk_section=<?php echo $cur_section; ?>">
-	<input type="hidden" name="advanced_tools" id="advanced_tools" value="true"><input type="text" id="check_comment_form_2_url" name="check_comment_form_2_url" size="30"> 
-						<?php echo sk_nonce_field(); ?>
-			<input type="submit" id="check_comment_form_2" name="check_comment_form_2" value="<?php _e('Submit', 'spam-karma'); ?>"></li>
-		    </ul>
+		<fieldset class="options">
+		<legend><?php _e('Remove', 'spam-karma'); ?></legend>
+		<p class="sk_form"><?php
+		printf(__('%sRemove entries:%s %s more than %s ago and with a score inferior to %s (%s do it automatically from now on).', 'spam-karma'), '<input type="submit" name="purge_blacklist" id="purge_blacklist" value="', '" /> ', sk_settings_ui('purge_blacklist_criterion'), sk_settings_ui('purge_blacklist_duration') . sk_settings_ui('purge_blacklist_unit'),  sk_settings_ui('purge_blacklist_score'), sk_settings_ui('auto_purge_blacklist')); 
+		?></p>
+
+		<p class="sk_form"><input type="submit" name="remove_checked" id="remove_checked" value="<?php _e('Remove Selected Entries', 'spam-karma'); ?>" /> <a href="javascript:;" onclick="checkAll(document.getElementById('sk_blacklist_remove_form')); return false; " />(<?php _e('Invert Checkbox Selection', 'spam-karma'); ?>)</a></p>
+		</fieldset>
+		<fieldset class="options">
+		<legend><?php
+		if (! $match_mode)
+			printf(__('Last %d Entries', 'spam-karma'), $show_number);
+		else
+			echo __('Entries Matching ', 'spam-karma'), "<em>$match_value</em>";
+		?></legend>
+		<p><table id="sk_spam_list" width="100%" cellpadding="3" cellspacing="3"> 
+		<tr>
+			<th scope="col"><?php _e('ID', 'spam-karma'); ?></th>
+			<th scope="col"><?php _e('Type', 'spam-karma'); ?></th>
+			<th scope="col"><?php _e('Value', 'spam-karma'); ?></th>
+			<th scope="col"><?php _e('Score', 'spam-karma'); ?></th>
+			<th scope="col"><?php _e('How long ago', 'spam-karma'); ?></th>
+			<th scope="col"><?php _e('Used', 'spam-karma'); ?></th>
+		</tr>
+<?php
+	if (isset($_REQUEST['sk_edit_mode']) && ($_REQUEST['sk_edit_mode'] == "true"))
+		$edit_mode = true;
+	else
+		$edit_mode = false;
+
+	echo "<input type=\"hidden\" name=\"sk_edit_mode\" id=\"sk_edit_mode\" value=\"$edit_mode\" />";
+	echo "<input type=\"submit\" name=\"switch_mode\" id=\"switch_mode\" value=\"";
+	if ($edit_mode)
+		_e('Switch to view mode', 'spam-karma');
+	else
+		_e('Switch to edit mode', 'spam-karma'); 
+	echo "\" onclick=\"this.form['sk_edit_mode'].value = " . ($edit_mode ? "false" : "true") . ";\" />";
+
+	if (is_array($blacklist_rows))
+		foreach ($blacklist_rows as $row)
+		{
+			if ($row->score < 30)
+				$color = 'rgb(120, 120, 120)';
+			elseif ($row->score < 50)
+			{
+				$x = min ((int) (120 + 60 * pow(($row->score - 30)/20, 2)), 256);
+				$color = "rgb($x, $x, $x)";
+			}
+			elseif ($row->score < 80)
+			{
+				$x = max (0, (int) (180 - 3 * ($row->score - 50)));
+				$y = min(256, (int) (180 - $row->score + 50));
+				$z = min(256, (int) (180 + 2.3 * ($row->score - 50)));
+				$color = "rgb($x, $y, $z)";
+			}
+			elseif ($row->score < 100)
+			{
+				$color = 'rgb(90, 150, 250)';
+			}
+			else
+			{
+				$color = 'rgb(90, 150, 256)';
+			}
+			echo "<tr style=\"background-color: $color;\">";
+			echo "<th scope=\"row\"><input type=\"checkbox\" name=\"blacklist_grp_check[$row->id]\" id=\"blacklist_grp_check[$row->id]\" value=\"true\" /> $row->id</th>";
+			echo "<td>";
+			if (! isset($blacklist_types[$row->type]))
+				$blacklist_types[$row->type] = __('Unknown', 'spam-karma') . " (" . $row->type . ")";
+			if ($edit_mode)
+			{
+				echo "<select name=\"blacklist[$row->id][type]\" id=\"blacklist[$row->id][type]\">";
+				foreach($blacklist_types as $type => $type_caption)
+					if ($row->type == $type)
+						echo "<option value=\"$type\" selected>$type_caption</option>";
+					else
+						echo "<option value=\"$type\">$type_caption</option>";
+				echo "</select>";
+			}
+			else
+				echo $blacklist_types[$row->type];
+			echo "</td>";
+			echo "<td>";
+			if ($edit_mode)
+				echo "<input type=\"text\" name=\"blacklist[$row->id][val]\" id=\"blacklist[$row->id][val]\" value=\"" . str_replace("\"", "&quot;", $row->value) . "\" size=\"". max(6, min(strlen($row->value), 40)) ."\">";
+			else
+				echo $row->value;
+			echo '</td>';
+			echo '<td>';
+			if ($edit_mode)
+				echo "<input type=\"text\" name=\"blacklist[$row->id][score]\" id=\"blacklist[$row->id][score]\" value=\"$row->score\" size=\"3\">";
+			else
+				echo $row->score;
+			echo "</td>";
+			echo "<td>" . sk_table_show_hide(sk_time_since(strtotime($row->last_used)), __('Added: ', 'spam-karma') . $row->added . '<br/>' . __('Last Used: ', 'spam-karma') . $row->last_used) . '</td>';
+			echo '<td>' . ($row->used_count+1) . '</tr>';
+			echo '</tr>';
+		}
+?>
+		</table></p>
+		<?php
+		if ($edit_mode)
+			echo '<p class="submit"><input type="submit" name="sk_edit_rows" id="sk_edit_rows" value="' . __('Save Changes', 'spam-karma') . '" /></p>';
+		?>
+		</fieldset>
+		</form>
+		</div>
+<?php
+}
+
+function sk_option_page_logs() {
+	global $wpdb, $sk_log;
+	$log_rows = $wpdb->get_results("SELECT *, UNIX_TIMESTAMP(`ts`) AS `ts2` FROM `". SK_LOGTABLE . "` WHERE 1 ORDER BY `ts` DESC, `id` DESC LIMIT 200");
+	if (mysql_error())
+		$sk_log->log_msg_mysql(__("Can't fetch logs.", 'spam-karma'), 7, 0, 'web_UI');
+
+?>
+	<div class="sk_first">
+	<h3 style="clear: left;"><?php _e('SK Logs', 'spam-karma'); ?></h3>
+	<form id="sk_logs_remove_form" name="sk_logs_remove_form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?page=spamkarma&sk_section=logs">
+		<fieldset class="options">
+		<?php echo sk_nonce_field(); ?>
+		<legend><?php _e('Purge', 'spam-karma'); ?></legend>
+		<p class="sk_form"><?php
+		echo '<input type="submit" name="purge_logs" id="purge_logs" value="' . __('Remove logs:', 'spam-karma') . '" /> ' . sprintf(__('older than %s %s and with a level inferior to %s (%s do it automatically from now on).', 'spam-karma'), sk_settings_ui('purge_logs_duration'), sk_settings_ui('purge_logs_unit'), sk_settings_ui('purge_logs_level'), sk_settings_ui('auto_purge_logs'));
+		?></p>
 		</fieldset>
 	</form>
+	<p><em><?php printf(__('Displaying %i most recent log entries', 'spam-karma'), 200); ?></em></p>
+	<table id="sk_log_list" width="100%" cellpadding="3" cellspacing="3"> 
+		<tr>
+			<th scope="col"><?php _e('ID', 'spam-karma'); ?></th>
+			<th scope="col"><?php _e('Level', 'spam-karma'); ?></th>
+			<th scope="col"><?php _e('Message', 'spam-karma'); ?></th>
+			<th scope="col"><?php _e('Component', 'spam-karma'); ?></th>
+			<th scope="col"><?php _e('How Long Ago', 'spam-karma'); ?></th>
+		</tr>
+	<?php
+	foreach($log_rows as $row)
+	{
+		echo "<tr class=\"sk_level_$row->level\">";
+		echo "<td>$row->id</td>";
+		echo "<td>$row->level</td>";
+		echo "<td>$row->msg</td>";
+		echo "<td>$row->component</td>";
+		echo "<td>" . sk_table_show_hide(sk_time_since($row->ts2), $row->ts) . "</td>";
+		echo "</tr>";
+	}
+	?>
+	</table>
 	</div>
 <?php
-		break;
-	
-		case 'about':
-			include_once(dirname(__FILE__) .'/sk_about.php');
-			return;
-		break;
-	}
-	$sk_settings->save_settings();	
-
-	// DEBUG
-	/* No longer necessary...
-	<div class="wrap">
-	<?php _e('Log Dump: ', 'spam-karma'); ?><br/>
-	<?php $sk_log->dump_logs(); ?>
-	</div>
-	*/
 }
 
 function sk_admin_footer() {
@@ -1313,7 +1331,7 @@ function sk_get_karma_details($comment_id = 0) {
 	return $row;
 }
 
-add_action('init', 'sk_init'); // load textdomain
+add_action('init', 'sk_load_textdomain');
 add_action('admin_init', 'sk_admin_init'); // add Plugin Info footer in admin
 
 add_action('comment_form', 'sk_form_insert');
