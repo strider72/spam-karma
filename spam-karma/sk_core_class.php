@@ -321,10 +321,9 @@ class SK_Core
 	function output_UI()
 	{
 ?>
-	  <div class="wrap hide" id="sk_settings_pane"><h2><?php _e("Spam Karma Settings", 'spam-karma'); ?></h2>
+	  <div class="hide" id="sk_settings_pane"><h3><?php _e("General Settings", 'spam-karma'); ?></h3>
 	  <form name="sk_settings_form" id="sk_settings_form" method="post">
 		<fieldset class="options">
-			<legend><?php _e("General Settings", 'spam-karma'); ?></legend>
 		<ul>
 <?php
 		echo sk_nonce_field();
@@ -366,16 +365,16 @@ class SK_Core
 ?>	
 		</ul></fieldset>
 		  <p class="submit"><input type="submit" id="sk_settings_save" name="sk_settings_save" value="<?php _e("Save new settings", 'spam-karma'); ?>"></p>
+		<h3><?php _e("Filter Plugins Settings", 'spam-karma'); ?></h3>
 		<fieldset class="options">
-			<legend><?php _e("Filter Plugins Settings", 'spam-karma'); ?></legend>
 <?php
 		foreach ($this->plugins as $plugin)
 			if ($plugin[1]->is_filter())
 				$plugin[1]->output_plugin_UI();
 ?>
 		</fieldset>
+		<h3><?php _e("Treatment Plugins Settings", 'spam-karma'); ?></h3>
 		<fieldset class="options">
-			<legend><?php _e("Treatment Plugins Settings", 'spam-karma'); ?></legend>
 <?php
 		foreach ($this->plugins as $plugin)
 			if ($plugin[1]->is_treatment() && ! $plugin[1]->is_filter())
