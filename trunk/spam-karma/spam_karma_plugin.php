@@ -5,7 +5,7 @@ Plugin Name: Spam Karma
 Plugin URI: http://code.google.com/p/spam-karma/
 Description: Ultimate Spam Killer for WordPress.
 Author: dr Dave
-Version: 2.4-alpha-20110918
+Version: 2.4-alpha-20120512
 */
 
 /******************************************************************************
@@ -1332,7 +1332,7 @@ function sk_get_karma_details($comment_id = 0) {
 }
 
 add_action('init', 'sk_load_textdomain');
-add_action('admin_init', 'sk_admin_init'); // add Plugin Info footer in admin
+add_action('admin_init', 'sk_admin_init');
 
 add_action('comment_form', 'sk_form_insert');
 add_action('admin_menu', 'sk_add_options'); // add Settings page to Admin, load CSS and JQuery
@@ -1345,7 +1345,7 @@ add_action('wp_footer', 'sk_insert_footer', 3);
 add_filter('comment_row_actions', 'sk_comment_row_actions', 10, 2);
 add_filter('pre_comment_approved', 'sk_fix_approved');
 
-add_action( 'in_admin_footer', 'sk_admin_footer', 9 );
+add_action( 'in_admin_footer', 'sk_admin_footer', 9 ); // add Plugin Info footer in admin
 
 add_filter( 'plugin_action_links_'.plugin_basename( __FILE__ ), 'sk_filter_plugin_actions', 10, 2 );
 

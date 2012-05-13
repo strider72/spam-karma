@@ -715,7 +715,6 @@ class SK_Core
 			return false;
 	}
 	
-	
 	// sanity_check() makes sure we've at least been run *once*
 	function sanity_check()
 	{

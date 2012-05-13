@@ -13,7 +13,7 @@
 
 ************************************************************************************************/
 
-//FIXME: WE should never call wp-config.php directly!
+//FIXME: We should never call wp-config.php directly!
 require_once('../../../wp-config.php');
 global $sk_log;
 echo '<html><head></head><body>';
