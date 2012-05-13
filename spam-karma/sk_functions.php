@@ -107,7 +107,7 @@ function sk_escape_string ($string)
 		return mysql_real_escape_string($string);
 	else 
 		return mysql_escape_string($string);
- }
+}
 
 function sk_escape_form_string ($string)
 {
@@ -117,9 +117,9 @@ function sk_escape_form_string ($string)
 		return mysql_real_escape_string($string);
 	else 
 		return mysql_escape_string($string);
- }
+}
   
- function sk_unescape_form_string_callback (&$val, $key)
+function sk_unescape_form_string_callback (&$val, $key)
 {
 	if (get_magic_quotes_gpc())
 	{
@@ -130,38 +130,38 @@ function sk_escape_form_string ($string)
 	}
 }
  
- function sk_soft_hyphen($text, $max = 32, $char = "&#8203;") 
- { 
+function sk_soft_hyphen($text, $max = 32, $char = "&#8203;") 
+{
 	$words = explode(' ', $text); 
-	  foreach($words as $key => $word) 
-	  { 
-		 $length = strlen($word); 
+	foreach($words as $key => $word) 
+	{ 
+		$length = strlen($word); 
 			if($length > $max) 
-		  		 $word = chunk_split($word, $max, $char); 
-		 $words[$key] = $word; 
-	  } 
-	  return implode(' ', $words); 
- } 
- 
+				$word = chunk_split($word, $max, $char); 
+		$words[$key] = $word; 
+	}
+	return implode(' ', $words);
+}
+
 function sk_rand_str($size, $unambiguous = false)
- {
-	 if ($unambiguous)
-	   $feed = "123456789ABCDE";
-	 else
-	   $feed = "0123456789abcdefghijklmnopqrstuvwxyz";
-	  for ($i=0; $i < $size; $i++)
-	  {
-		 $sk_rand_str .= substr($feed, rand(0, strlen($feed)-1), 1);
-	  }
-	  return $sk_rand_str;
- } 
+{
+	if ($unambiguous)
+		$feed = "123456789ABCDE";
+	else
+		$feed = "0123456789abcdefghijklmnopqrstuvwxyz";
+	for ($i=0; $i < $size; $i++)
+	{
+		$sk_rand_str .= substr($feed, rand(0, strlen($feed)-1), 1);
+	}
+	return $sk_rand_str;
+}
  
- function sk_url_fopen($url, $convert_case = false, $postinfo = array())
- {
- 	global $curl_error;
- 	$curl_error = 0;
- 	$file_content = "";
- 	
+function sk_url_fopen($url, $convert_case = false, $postinfo = array())
+{
+	global $curl_error;
+	$curl_error = 0;
+	$file_content = "";
+
 	if(ini_get('allow_url_fopen') && (empty($postinfo)) && ($file = @fopen ($url, "rb")) )
 	{
 		$i = 0;
@@ -181,25 +181,24 @@ function sk_rand_str($size, $unambiguous = false)
 		curl_setopt($curl_handle,CURLOPT_CONNECTTIMEOUT,2);
 		curl_setopt($curl_handle,CURLOPT_RETURNTRANSFER,1);
 		curl_setopt($curl_handle,CURLOPT_FAILONERROR,1);
-  		curl_setopt($curl_handle,CURLOPT_USERAGENT, "PHP Spam Karma Check ");
-	  	if (!empty($postinfo))
- 	 	{
- 	 		curl_setopt($curl_handle, CURLOPT_POST, true);
- 	 		curl_setopt($curl_handle, CURLOPT_POSTFIELDS, $postinfo);
- 	 	}
+		curl_setopt($curl_handle,CURLOPT_USERAGENT, "PHP Spam Karma Check ");
+		if (!empty($postinfo))
+		{
+			curl_setopt($curl_handle, CURLOPT_POST, true);
+			curl_setopt($curl_handle, CURLOPT_POSTFIELDS, $postinfo);
+		}
 		$file_content = curl_exec($curl_handle);
 		$curl_error = curl_errno($curl_handle);
-		
+
 		curl_close($curl_handle);
 	}
 	else
 	{
 		$file_content = "";
-		
 	}
 	
 	return $file_content;
- }
+}
   
 function sk_get_url_content($url, $level = 0, $convert_case = false)
 {
@@ -218,9 +217,9 @@ function sk_get_url_content($url, $level = 0, $convert_case = false)
 				if (strncasecmp($new_url, "http", 4) != 0)
 					$new_url = $url . "/" . $new_url;
 				//echo "level: $level - match: $match - url: $new_url<br/>";
-					
+
 				$file_content .= "***\n" . sk_get_url_content($new_url, $level+1);
-			}	
+			}
 		}
 	return $file_content;
 }
