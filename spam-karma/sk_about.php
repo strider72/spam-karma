@@ -35,7 +35,7 @@ When he is not wasting his time coding ridiculously elaborate anti-spam plugins,
 "Peter Westwood" => "http://blog.ftwr.co.uk/",
 "Owen Winkler" => "http://www.asymptomatic.net/",
 "Jason" => "http://ushimitsudoki.com/",
-"Drac" => "http://fierydragon.org",
+"Drac" => "http://fierydragon.org/",
 'Alexander Concha' => 'http://www.buayacorp.com/',
 'priv' => 'http://privism.org/blog/',
 'Priit Laes' => 'http://plaes.org/'

@@ -29,8 +29,8 @@ class sk_snowball_plugin extends sk_plugin
 	var $retro_spanked = false;
 
 	var $settings_format = array (
-		'old_enough' => array('type' => 'text', 'value'=> 3, 'caption' => 'On an average you check new comments every', 'size' => 2, after => 'days.'), 
-		'threshold' => array('type' => 'text', 'value'=> 2, 'caption' => 'Trigger when somebody posts more than', 'size' => 5, after => 'comments over the above time-period.'), 
+		'old_enough' => array('type' => 'text', 'value'=> 3, 'caption' => 'On an average you check new comments every', 'size' => 2, 'after' => 'days.'),
+		'threshold' => array('type' => 'text', 'value'=> 2, 'caption' => 'Trigger when somebody posts more than', 'size' => 5, 'after' => 'comments over the above time-period.'),
 		'coef' => array('advanced' => true, 'type' => 'text', 'value'=> 3, 'caption' => 'Old comments/new comments coefficient: ', 'size' => 3), 
 		'good_karma' => array('advanced' => true, 'type' => 'text', 'value'=> 5, 'caption' => 'Good/bad karma average: ', 'size' => 3)
 		);
