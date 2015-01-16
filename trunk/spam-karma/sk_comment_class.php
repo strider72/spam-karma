@@ -326,7 +326,7 @@ class sk_comment
 				
 		$this->content_filtered = $raw_text . substr($str, $cur_pos);
 	}
-	
+
 
 	function extract_domain($str)
 	{

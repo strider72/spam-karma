@@ -1,7 +1,9 @@
 <?php
 
 // Last updated ???
-// This should be sourced from the list maintained by Mozilla at http://publicsuffix.org/
+// FIXME: TLD list is grossly outdated. Should have source that gets updated --
+// maybe the list maintained by Mozilla at http://publicsuffix.org/
+// probably easiest to actively match complex TLDs only and otherwise assume last post-dot string is TLD.
 
 $complex_tlds = array (
 'ac', 

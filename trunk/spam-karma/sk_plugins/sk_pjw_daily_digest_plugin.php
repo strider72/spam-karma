@@ -207,7 +207,7 @@ class SK_PJW_SimpleDigest extends sk_plugin
 	}
 
 	//Overrides
-	function output_plugin_UI()
+	function output_plugin_UI($output_dls = true)
 	{
 		echo "<dl>";
 		parent::output_plugin_UI(false);

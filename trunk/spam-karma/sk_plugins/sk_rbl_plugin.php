@@ -69,12 +69,13 @@ class sk_rbl_plugin extends sk_plugin
   Looks up host in RBL
   Returns the returned RBL host if found, else the empty string
  */
- function rbl_lookup($rbl_host)
- {
-  if (empty($rbl_host)) {
-   return '';
-  }
-  
+	function rbl_lookup($rbl_host)
+	 {
+	  if (empty($rbl_host)) {
+	   return '';
+	  }
+
+		 // TODO see next note.  WP requires PHP 5, so we can switch to dns_get_record?
   /* gethostbyname() seems to hate hostnames with "/" in
     if we have a "/" in the host, look it up this way
     instead which works but doesn't give us the returned data.
@@ -118,7 +119,6 @@ class sk_rbl_plugin extends sk_plugin
    return '';
   }
  }
-	
 	
 	function filter_this(&$cmt_object)
 	{					
@@ -224,7 +224,7 @@ class sk_rbl_plugin extends sk_plugin
 		return true;
 	}
 	
-	function treat_this($cmt_object)
+	function treat_this(&$cmt_object)
 	{
 		if ($this->get_option_value('do_submit') != "on") {
 			return;

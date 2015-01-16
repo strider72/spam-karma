@@ -168,8 +168,8 @@ class SK_Core
 			if ($plugin[1]->is_enabled())
 				$plugin[1]->form_insert($post_ID);
 	}
-	
-	
+
+
 	function second_chance()
 	{
 		if (! $this->cur_comment)
@@ -306,7 +306,7 @@ class SK_Core
 		$this->set_comment_sk_info();
 	}
 	
-	
+	// TODO: maybe change default priority to 10 just for consistency with WP hook priority norms.
 	function register_plugin($plugin_class, $priority = 5)
 	{
 		$i = 0;
