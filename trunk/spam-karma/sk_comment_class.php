@@ -54,12 +54,6 @@ class sk_comment
 	
 	function __construct($comment_id, $post_proc = false, $comment_sk_info = 0)
 	{
-		$this->{__CLASS__}($comment_id, $post_proc, $comment_sk_info);
-	}
-
-	
-	function sk_comment($comment_id, $post_proc = false, $comment_sk_info = 0)
-	{
 		global $wpdb;
 		// SAFE WAY:
 		// $cmt_array = $wpdb->get_values ("SELECT `". $wpdb->comments . "`.*, `". $wpdb->posts . "`.`post_date`, `". $wpdb->posts . "`.`post_modified`, `". $wpdb->users . "`.`user_level` FROM `". $wpdb->comments . "` LEFT JOIN `". $wpdb->posts . "` ON `". $wpdb->posts . "`.`ID` = `". $wpdb->comments . "`.`post_ID`, LEFT JOIN `". $wpdb->users . "` ON `". $wpdb->users . "`.`ID` = `". $wpdb->comments . "`.`user_id` WHERE `comment_id` = $comment_id");
