@@ -38,11 +38,6 @@ class SK_Core
 	var $post_proc = false;
 	var $plugins = array();
 	var $version = SK_CORE_VERSION;
-	
-	function SK_Core($comment_ID = 0, $post_proc = false, $load_plugins = true)
-	{
-		return $this->__construct($comment_ID, $post_proc, $load_plugins);
-	}
 
 	function __construct($comment_ID = 0, $post_proc = false, $load_plugins = true)
 	{
