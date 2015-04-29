@@ -2,10 +2,12 @@
 
 /*
 Plugin Name: Spam Karma
-Plugin URI: http://code.google.com/p/spam-karma/
-Description: Ultimate Spam Killer for WordPress.
-Author: dr Dave
-Version: 2.4-alpha-20120512
+Plugin URI: http://github.com/strider72/spam-karma
+Description: The Ultimate Spam Killer for WordPress.
+Author: dr Dave and friends
+Version: 2.4-alpha-20150428
+TextDomain: spam-karma
+DomainPath: /lang/
 */
 
 /******************************************************************************
