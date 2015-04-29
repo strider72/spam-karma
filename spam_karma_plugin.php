@@ -810,13 +810,14 @@ function sk_filter_plugin_actions( $links, $file ){
 function sk_submit_comments_to_plugins() {
 	include_once(dirname(__FILE__) . '/sk_core_class.php');
 	$sk_core = new SK_Core(0, true);
-	?><p class="sk_form"><?php
+	?>
+	<p class="sk_form"><?php
 	wp_nonce_field('bulk-karma-filter', '_karma_filter_nonce');
-	$select = '<select name="bulk-karma-filter-plugins" id="bulk-karma-filter-plugins">';
-	$select .= '<option value="all" selected>' . __('All Spam Karma plugins', 'spam-karma') . '</option>';
+	$select = '<select name="bulk-karma-filter-plugins" id="bulk-karma-filter-plugins">' . "\n";
+	$select .= '<option value="all" selected="selected">' . __('All Spam Karma plugins', 'spam-karma') . "</option>\n";
 	foreach ($sk_core->plugins as $plugin)
 		$select .= "<option value=\"$plugin[2]\">". $plugin[1]->name . "</option>\n";
-	$select .= '</select>';
+	$select .= "</select>\n";
 	printf(__('Run selected entries through %3$s %1$sApply%2$s', 'spam-karma'), '<input type="submit" name="sk_run_filter" class="button-secondary" id="sk_run_filter" value="', '" />', $select);
 	echo '</p>';
 }
