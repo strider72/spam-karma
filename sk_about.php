@@ -1,6 +1,6 @@
 <?php
 /**********************************************************************************************
- Spam Karma (c) 2011 - http://code.google.com/p/spam-karma/
+ Spam Karma (c) 2015 - http://github.com/strider72/spam-karma
 
  This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 <p class="source"><?php _e("Some Internet jackass", 'spam-karma'); ?></p></blockquote>
 <br/>
 <h2 class="sk_first"><?php _e("The Machine", 'spam-karma'); ?></h2>
-<p><strong><?php _e('<a href="http://code.google.com/p/spam-karma/" target="_blank">Spam Karma 2</a></strong> is the proud successor to Spam Karma, with whom it shares most of the development ideas, but absolutely none of the code. It is meant to stop all forms of automated Blog spam effortlessly, while remaining as unobtrusive as possible to regular commenters.', 'spam-karma');?></p>
+<p><strong><?php _e('<a href="http://github.com/strider72/spam-karma" target="_blank">Spam Karma 2</a></strong> is the proud successor to Spam Karma, with whom it shares most of the development ideas, but absolutely none of the code. It is meant to stop all forms of automated Blog spam effortlessly, while remaining as unobtrusive as possible to regular commenters.', 'spam-karma');?></p>
 
 <h2><?php _e("The People", 'spam-karma'); ?></h2>
 <p><strong><?php _e('<a href="http://unknowngenius.com/blog/me/" target="_blank">Dr Dave</a></strong> is a card-carrying Evil Genius still busy plotting world domination from his secret hideout in the Parisian catacombs (having recently relocated from his volcanic lair in Tokyo, Japan).
@@ -97,6 +97,6 @@ When he is not wasting his time coding ridiculously elaborate anti-spam plugins,
 	}
 ?>
 </p></fieldset>
-<p>Please <a href="http://code.google.com/p/spam-karma/issues/list">drop us a line</a> if you too would like to contribute to Spam Karma.</p>
+<p>Please <a href="http://github.com/strider72/spam-karma/issues">drop us a line</a> if you too would like to contribute to Spam Karma.</p>
 
 </div>

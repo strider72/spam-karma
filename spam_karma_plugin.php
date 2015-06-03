@@ -11,7 +11,7 @@ DomainPath: /lang/
 */
 
 /******************************************************************************
- Spam Karma (c) 2010 dr Dave - http://code.google.com/p/spam-karma/
+ Spam Karma (c) 2015 dr Dave and friends - http://github.com/strider72/spam-karma
 
  This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
