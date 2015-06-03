@@ -24,9 +24,10 @@ DomainPath: /lang/
 
 ******************************************************************************/
 
+global $table_prefix;
 define( 'SK_TABLE_PREFIX', $table_prefix );
 define( 'SK_SECOND_CHANCE_FILE', 'sk_second_chance.php');
-define( 'SK_NEWS_UPDATE_CHECK_URL', 'http://wp-plugins.net/sk2/sk2_news.php');
+// define( 'SK_NEWS_UPDATE_CHECK_URL', 'http://wp-plugins.net/sk2/sk2_news.php'); // see sk_option_page_general()
 define( 'SK_NEWS_UPDATE_INTERVAL',  86400 ); 
 define( 'SK_AUTO_PURGE_INTERVAL',  600 );
 
