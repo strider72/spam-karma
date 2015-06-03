@@ -40,7 +40,7 @@ class sk_plugin
 	
 // abstract (override as needed):
 
-	function sk_plugin()
+	function __construct()
 	{
 		
 		if (empty($this->name))
@@ -55,15 +55,7 @@ class sk_plugin
 		global $sk_settings;
 		$settings = $sk_settings->get_plugin_settings(get_class($this));
 	}
-	
-	function __construct()
-	{
-		if (! defined('__CLASS__'))
-			$this->sk_plugin();
-		else
-			$this->{__CLASS__}();
-	}
-	
+
 	function filter_this(&$cmt_object)
 	{ // override this to do your own filtering
 		log_msg (__('Default filter (no action) called for plugin: ', 'spam-karma') . $name, 3, $cmt_object->ID);
