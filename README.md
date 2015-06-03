@@ -6,7 +6,7 @@ The current version of Spam Karma is NOT fully tested and should not be consider
 About Spam Karma 2
 --------
 
-Spam Karma 2 (SK2) is a flexible and modular anti-spam plugin for WordPress.
+Spam Karma is a flexible and modular anti-spam plugin for WordPress.
 
 Spam Karma is meant to stop all forms of automated blog spam effortlessly, while remaining as unobtrusive as possible to regular commenters. It is a modular system that itself includes various plugins, each of which examines a certain aspect of an incoming comment and assigns a positive or negative Karma score depending on whether that aspect seems "spammy" or not. 
 For example, one plugin looks at how long the poster was on the page before posting a comment. If they posted extremely quickly after loading the page, it's more likely that's a spambot.  
