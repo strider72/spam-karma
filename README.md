@@ -1,9 +1,8 @@
 IMPORTANT NOTE
 --------
-The current version of Spam Karma is NOT fully tested and should not be considered stable.  For the time being, it is recommended that you use version 2.3, which can be downloaded from the old Google Code project: https://code.google.com/p/spam-karma/downloads/list
+The current version of Spam Karma is NOT fully tested and should not be considered stable.  For the time being, it is recommended that you use version 2.3, which can be downloaded from the "Releases" tab.
 
-
-About Spam Karma 2
+About Spam Karma
 --------
 
 Spam Karma is a flexible and modular anti-spam plugin for WordPress.
