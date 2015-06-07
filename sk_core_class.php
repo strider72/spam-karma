@@ -668,8 +668,10 @@ class SK_Core
 				continue;
 			if (is_array($val))
 				$val = serialize($val);
-			if (is_int($val) || is_float($val))
+			if (is_int($val))
 				$query .= "`$key` = " . $val . ",";
+			elseif (is_float($val))
+			      $query .= "`$key` = " . sprintf("%F", $val) . ",";
 			else
 				$query .= "`$key` = '" . sk_escape_string($val) . "', ";
 		}
