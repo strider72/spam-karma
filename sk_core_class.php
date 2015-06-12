@@ -486,7 +486,7 @@ class SK_Core
 	 `remaining_attempts` INT NOT NULL,
 		PRIMARY KEY (`id`),
 		KEY `comment_ID` (`comment_ID`)
-	) TYPE=MyISAM;";
+	) CHARACTER SET = 'utf8' ENGINE = 'InnoDB';";
 	
 			$wpdb->query($query);
 			if (mysql_error())
@@ -502,7 +502,7 @@ class SK_Core
 	`level` TINYINT NOT NULL ,
 	`ts` DATETIME NOT NULL ,
 	PRIMARY KEY ( `id` ) 
-	) TYPE=MyISAM;";
+	) CHARACTER SET = 'utf8' ENGINE = 'InnoDB';";
 		
 			 $wpdb->query($query);
 			if (mysql_error())
@@ -524,7 +524,7 @@ class SK_Core
 	 `used_count` int(11) NOT NULL default '0',
 	 `user_reviewed` enum('yes','no') NOT NULL default 'no',
 	 PRIMARY KEY (`id`)
-	) TYPE=MyISAM ;";
+	) CHARACTER SET = 'utf8' ENGINE = 'InnoDB';";
 		
 			$wpdb->query($query);
 			if (mysql_error())
