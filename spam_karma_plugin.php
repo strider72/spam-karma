@@ -5,7 +5,7 @@ Plugin Name: Spam Karma
 Plugin URI: http://github.com/strider72/spam-karma
 Description: The Ultimate Spam Killer for WordPress.
 Author: dr Dave and friends
-Version: 2.4-alpha-20150428
+Version: 2.4-alpha-20150612
 TextDomain: spam-karma
 DomainPath: /lang/
 */
