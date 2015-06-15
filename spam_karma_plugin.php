@@ -377,58 +377,6 @@ function sk_option_page_general($sk_core) {
 	$sk_core->update_SQL_schema();
 	$sk_core->update_components();
 
-	// GET NEWS
-	/*  //turning it off for now as there is no new News on the old site.  Maybe re-implement later?
-	if ($sk_settings->get_core_settings('next_news_update') < time())
-	{
-		$url = SK_NEWS_UPDATE_CHECK_URL . '?sk_version=' . urlencode(SK_VERSION) . '&sk_release=' . urlencode(SK_RELEASE) . '&sk_lang=' . urlencode(WPLANG);
-		if ($update_file = sk_get_url_content($url))
-		{
-			if (is_array($news_array = unserialize($update_file)))
-			{
-				$new_news = array();
-				if (! is_array($old_news = $sk_settings->get_core_settings('news_archive')))
-					$old_news = array();
-
-				foreach($news_array as $ts => $news_item)
-				{
-					if (! isset($old_news[$ts]))
-						$new_news[$ts] = $news_item;
-					$old_news[$ts] = $news_item;
-				}
-
-				krsort($old_news);
-				while (count($old_news) > 10)
-					array_pop($old_news);
-
-				$sk_settings->set_core_settings($old_news, 'news_archive');
-				if (count($new_news) > 0)
-				{
-					echo '<div class="wrap sk_first"><h2>' . __('News', 'spam-karma') . '</h2>';
-					foreach ($new_news as $ts => $news_item)
-					{
-						echo '<div class="news_item';
-						if (@$news_item['level'] > 0)
-							echo ' sk_level_' . $news_item['level'];
-						echo '">';
-						echo $news_item['msg'];
-						echo '<div class="news_posted">' . sprintf(__('Posted %s ago', 'spam-karma'), sk_time_since($ts)) . '</div> ';
-						echo '</div>';
-					}
-					echo '</div>';
-				}
-				$sk_log->log_msg(__('Checked news from: ', 'spam-karma') . "<em>$url</em><br/>" . sprintf(__ngettext('One new news item, %d total', '%d new news items, %d total', count($new_news), 'spam-karma'), count($new_news), count($old_news)), 3, 0, 'web_UI');
-			}
-			else
-				$sk_log->log_msg(__('Cannot unserialize news array from URL: ', 'spam-karma') . "<em>$url</em>", 8, 0, 'web_UI');
-		}
-		else
-			$sk_log->log_msg(__('Cannot load news from URL: ', 'spam-karma') . "<em>$url</em>", 7, 0, 'web_UI');
-
-		$sk_settings->set_core_settings(time() + SK_NEWS_UPDATE_INTERVAL, 'next_news_update');
-	}
-	*/
-
 	if ($sk_settings->get_core_settings('init_install') < 1)
 	{
 		$sk_log->log_msg(__('Running first-time install checks...', 'spam-karma'), 4, 0, 'web_UI', true, false);
