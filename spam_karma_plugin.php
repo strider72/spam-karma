@@ -89,8 +89,7 @@ function sk_admin_init() {
 }
 
 function sk_load_textdomain() {
-	$skdir = basename( dirname( __FILE__ ) );
-	load_plugin_textdomain( 'spam-karma', 'wp-content/plugins/' . $skdir . '/lang', $skdir . '/lang' );
+	load_plugin_textdomain( 'spam-karma', false, dirname( plugin_basename( __FILE__ ) ) . '/lang' );
 }
 
 function sk_option_page() {
