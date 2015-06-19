@@ -206,14 +206,15 @@ class sk_blacklist_plugin extends sk_plugin
 				//echo "<pre>";
 				//print_r($row);
 				//echo"</pre>";
-			
+
+				$coef = 1; // FIXME: Use $coef or remove it.  Was this part of old code left behind?
 				if ($row->type == "regex_white" || $row->type == "regex_black")
 					$coef *= 0.75;
 				elseif ($row->type == "regex_content_white" || $row->type == "regex_content_black")
 					$coef *= 0.70;
 				if ($row->user_reviewed != 'yes')
 					$coef *= 0.75;
-				
+
 				if($row->type == "domain_grey")
 				{
 					return 0;

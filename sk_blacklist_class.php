@@ -216,13 +216,14 @@ class sk_blacklist
 		}
 		else
 		{
-			if ($min_score)
+			// FIXME: Use min_<var>s or lose them.  Leftover code?
+			if ( isset( $min_score ) )
 				$query_where .= " AND `score` > $min_score";
-			if ($min_trust)
+			if ( isset( $min_trust ) )
 				$query_where .= " AND `trust` > $min_trust";
-	
+
 			$query = "SELECT * FROM `". SK_BLACKLIST_TABLE . "` WHERE $query_where ORDER BY `score` DESC";
-			
+
 			if ($limit)
 				$query .= ' LIMIT ' . $limit;
 			//echo $query;
