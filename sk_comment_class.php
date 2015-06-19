@@ -364,17 +364,10 @@ class sk_comment
 	return $parsed;
 }
 
-	function remove_entities ($str)
-	{
-	//	if (function_exists('html_entity_decode'))
-	//		return html_entity_decode($str, ENT_COMPAT, "UTF-8");
-
-	//	$trans_tbl = get_html_translation_table(HTML_ENTITIES);
-	//	$trans_tbl = array_flip($trans_tbl);
-	//	return strtr($str, $trans_tbl);
-		if (function_exists('utf8_encode'))
-			$str = utf8_encode($str);
-		return preg_replace( '/&#(\\d+);/e', '$this->code2utf($1)', $str);
+	function remove_entities ($str) {
+		if ( function_exists( 'utf8_encode' ) )
+			$str = utf8_encode( $str );
+		return preg_replace_callback( '|&#(\\d+);|', array( &$this, 'code2utf' ), $str );
 	}
 
 	 function code2utf($num)
