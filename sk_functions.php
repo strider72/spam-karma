@@ -143,6 +143,7 @@ function sk_soft_hyphen($text, $max = 32, $char = "&#8203;")
 
 function sk_rand_str($size, $unambiguous = false)
 {
+	$sk_rand_str = '';
 	if ($unambiguous)
 		$feed = "123456789ABCDE";
 	else
