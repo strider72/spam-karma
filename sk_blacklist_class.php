@@ -21,7 +21,7 @@ if (! isset($sk_blacklist))
 
 class sk_blacklist
 {
-	function sk_blacklist()
+	function __construct()
 	{
 	
 	}

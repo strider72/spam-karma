@@ -68,7 +68,7 @@ class sk_settings
 			'purge_logs_level' => array('value' => 8, 'type' => 'text', 'size' => 3),
 		);
 	
-	function sk_settings ()
+	function __construct()
 	{
 		$this->refresh_settings();
 	}
@@ -211,7 +211,7 @@ class sk_log
 	var $live_threshold;
 	var $live_output = true;
 	
-	function sk_log ($db_threshold = 5, $live_threshold = 7)
+	function __construct($db_threshold = 5, $live_threshold = 7)
 	{
 		global $wpdb;
 		
