@@ -103,10 +103,8 @@ function sk_clean_up_sql(&$my_array)
 
 function sk_escape_string ($string)
 {
-	if(function_exists('mysql_real_escape_string'))
-		return mysql_real_escape_string($string);
-	else 
-		return mysql_escape_string($string);
+	// FIXME: this is a quick fix. Really we should replace each usage of this function with a proper direct usage of $wpdb->prepare
+	return esc_sql($string);
 }
 
 function sk_escape_form_string ($string)
