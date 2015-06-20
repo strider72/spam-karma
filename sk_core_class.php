@@ -71,7 +71,9 @@ class SK_Core
 	{
 		if (! $comment_ID)
 			return false;
-		$this->cur_comment = new sk_comment($comment_ID, $this->post_proc, $comment_sk_info);
+		// FIXME: this may be right, but need to examine in greater context to see what was intended. Should $comment_sk_info be a global?
+//		$this->cur_comment = new sk_comment($comment_ID, $this->post_proc, $comment_sk_info);
+		$this->cur_comment = new sk_comment($comment_ID, $this->post_proc, false);
 		if ($this->post_proc)
 			$comment_sk_info = $this->get_comment_sk_info();
 		
