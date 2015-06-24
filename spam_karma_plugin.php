@@ -945,26 +945,7 @@ function sk_filter_comment($comment_ID) {
 		{
 			if ($sk_core->cur_comment->can_unlock())
 			{
-				// redirect to Second Chance page
-                header('Expires: Mon, 26 Aug 1980 09:00:00 GMT');
-                header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
-                header('Cache-Control: no-cache, must-revalidate');
-                header('Pragma: no-cache');
-
-				$location = get_bloginfo('wpurl') .  '/' . strstr(str_replace("\\", '/', dirname(__FILE__)), 'wp-content/') . '/' . SK_SECOND_CHANCE_FILE ."?c_id=$comment_ID&c_author=" . urlencode($sk_core->cur_comment->author_email);
-
-                //$location = str_replace($_SERVER['DOCUMENT_ROOT'], '/', dirname(__FILE__)) . '/' . SK_SECOND_CHANCE_FILE ."?c_id=$comment_ID&c_author=" . urlencode($sk_core->cur_comment->author_email);
-
-				 $can_use_location = ( @preg_match('/Microsoft|WebSTAR|Xitami/', getenv('SERVER_SOFTWARE')) ) ? false : true;
-				 if (!$can_use_location && ($phpver >= '4.0.1') && @preg_match('/Microsoft/', getenv('SERVER_SOFTWARE')) && (php_sapi_name() == 'isapi'))
-						$can_use_location = true;
-
-				if ($can_use_location)
-					header("Location: $location");
-				else
-					header("Refresh: 0;url=$location");
-				
-				exit();
+				sk_run_second_chance();
 			}
 			else
 				wp_notify_moderator($comment_ID);
@@ -974,6 +955,19 @@ function sk_filter_comment($comment_ID) {
 			wp_notify_postauthor($comment_ID, $sk_core->cur_comment->type);
 		}
 	}
+}
+
+function sk_run_second_chance() {
+	$location = plugins_url( 'sk_second_chance.php', __FILE__ );
+	$can_use_location = ( @preg_match( '/Microsoft|WebSTAR|Xitami/', getenv( 'SERVER_SOFTWARE' ) ) ) ? false : true;
+	if ( ! $can_use_location && @preg_match( '/Microsoft/', getenv('SERVER_SOFTWARE' ) ) && ( php_sapi_name() == 'isapi' ) ) {
+		$can_use_location = true;
+	}
+	if ( $can_use_location ) {
+		wp_redirect( $location );
+	}
+
+	exit();
 }
 
 function sk_insert_footer() {

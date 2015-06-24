@@ -13,9 +13,12 @@
 
 ************************************************************************************************/
 
-//FIXME: We should never call wp-config.php directly!
-require_once('../../../wp-config.php');
 global $sk_log;
+header('Expires: Mon, 26 Aug 1980 09:00:00 GMT');
+header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+header('Cache-Control: no-cache, must-revalidate');
+header('Pragma: no-cache');
+
 echo '<html><head></head><body>';
 
 include_once(dirname(__FILE__) . '/sk_core_class.php');
