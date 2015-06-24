@@ -26,7 +26,6 @@ DomainPath: /lang/
 
 global $table_prefix;
 define( 'SK_TABLE_PREFIX', $table_prefix );
-define( 'SK_SECOND_CHANCE_FILE', 'sk_second_chance.php');
 define( 'SK_AUTO_PURGE_INTERVAL',  600 );
 
 if (! isset($_SERVER['PHP_SELF']))
