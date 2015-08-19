@@ -16,8 +16,6 @@
 
 define ('SK_PLUGIN_FOLDER', dirname(__FILE__) . '/sk_plugins/');
 define ('SK_CORE_VERSION', 5);
-define ('SK_VERSION', 4); // => 2.3
-define ('SK_RELEASE', 'alpha');
 if (isset($table_prefix))
 	define ('SK_SPAM_TABLE', $table_prefix . 'sk_spams');
 else
